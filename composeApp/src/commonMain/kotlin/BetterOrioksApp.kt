@@ -1,6 +1,5 @@
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,6 +11,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import model.AppScreens
 import ui.common.LoadingScreen
+import ui.scheduleScreen.ScheduleScreen
 
 @Composable
 fun BetterOrioksApp(
@@ -24,13 +24,19 @@ fun BetterOrioksApp(
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = AppScreens.Loading.name,
+            startDestination = AppScreens.Schedule.name,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(
                 route = AppScreens.Loading.name
             ) {
                 LoadingScreen()
+            }
+
+            composable(
+                route = AppScreens.Schedule.name
+            ) {
+                ScheduleScreen()
             }
         }
     }

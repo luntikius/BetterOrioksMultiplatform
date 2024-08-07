@@ -16,7 +16,7 @@ data class ScheduleClass (
     val room: String = "",
 ): ScheduleElement
 
-data class ScheduleWindow (
+data class ScheduleGap (
     override val day: Int = 0,
     override val number: Int = 0,
     val windowDuration: Int = 0
