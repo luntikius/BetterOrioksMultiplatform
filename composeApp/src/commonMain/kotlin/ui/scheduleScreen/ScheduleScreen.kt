@@ -11,7 +11,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.gap_minutes
 import betterorioks.composeapp.generated.resources.room_number
@@ -54,7 +54,8 @@ fun ClassItem(
     recalculateWindows: (Int, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    ElevatedCard(
+        colors = CardDefaults.elevatedCardColors(),
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
@@ -72,7 +73,7 @@ fun ClassItem(
                 SmallSpacer()
                 Text(
                     text = scheduleClass.type,
-                    fontSize = 14.sp,
+                    style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier
                         .padding(4.dp)
                         .wrapContentSize(Alignment.Center)
@@ -87,7 +88,7 @@ fun ClassItem(
             )
             Text(
                 text = scheduleClass.teacher,
-                fontSize = 14.sp,
+                style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
             MediumSpacer()
@@ -102,7 +103,7 @@ fun ClassItem(
 }
 
 @Composable
-fun CircleNumber(number: Int, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.surfaceVariant) {
+fun CircleNumber(number: Int, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.surfaceTint) {
     Surface(
         shape = CircleShape,
         modifier = modifier.size(26.dp),
@@ -110,7 +111,7 @@ fun CircleNumber(number: Int, modifier: Modifier = Modifier, color: Color = Mate
     ) {
         Text(
             text = number.toString(),
-            fontSize = 14.sp,
+            style = MaterialTheme.typography.labelMedium,
             modifier = Modifier
                 .wrapContentSize(Alignment.Center)
         )
@@ -182,7 +183,5 @@ fun ScheduleItemsPreview() {
 
 @Composable
 fun ScheduleScreen() {
-    Surface (color = Color.Black) {
-        ScheduleItemsPreview()
-    }
+    ScheduleItemsPreview()
 }
