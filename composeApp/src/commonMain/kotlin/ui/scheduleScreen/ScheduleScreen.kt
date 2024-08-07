@@ -3,35 +3,47 @@ package ui.scheduleScreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import betterorioks.composeapp.generated.resources.Res
+import betterorioks.composeapp.generated.resources.gap_minutes
+import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.scheldule
-import betterorioks.composeapp.generated.resources.window_minutes
 import model.ScheduleClass
 import model.ScheduleElement
 import model.ScheduleGap
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import ui.common.MediumSpacer
 import ui.common.SmallSpacer
 
 private const val MIN_SCHEDULE_ITEM_HEIGHT = 72
+private const val CHANGEABLE = 3
 
 @Composable
 fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: (Int,Int) -> Unit){
     when (scheduleElement) {
         is ScheduleClass -> ClassItem(scheduleElement, recalculateWindows)
-        is ScheduleGap -> WindowItem(scheduleElement)
+        is ScheduleGap -> GapItem(scheduleElement)
         else -> throw IllegalArgumentException()
     }
 }
@@ -42,11 +54,71 @@ fun ClassItem(
     recalculateWindows: (Int, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(horizontal = 16.dp)
+            .defaultMinSize(minHeight = MIN_SCHEDULE_ITEM_HEIGHT.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CircleNumber(scheduleClass.number)
+                SmallSpacer()
+                Text(
+                    text = scheduleClass.type,
+                    fontSize = 14.sp,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .wrapContentSize(Alignment.Center)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(text = "${scheduleClass.fromTime} - ${scheduleClass.toTime}")
+            }
+            MediumSpacer()
+            Text(
+                text = scheduleClass.subject,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Text(
+                text = scheduleClass.teacher,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            MediumSpacer()
+            Text(
+                text = stringResource(Res.string.room_number, scheduleClass.room),
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            MediumSpacer()
+        }
+    }
 }
 
 @Composable
-fun WindowItem(
+fun CircleNumber(number: Int, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.surfaceVariant) {
+    Surface(
+        shape = CircleShape,
+        modifier = modifier.size(26.dp),
+        color = color
+    ) {
+        Text(
+            text = number.toString(),
+            fontSize = 14.sp,
+            modifier = Modifier
+                .wrapContentSize(Alignment.Center)
+        )
+    }
+}
+
+@Composable
+fun GapItem(
     scheduleGap: ScheduleGap,
     modifier: Modifier = Modifier
 ) {
@@ -61,36 +133,48 @@ fun WindowItem(
         Icon(
             painter = painterResource(Res.drawable.scheldule),
             contentDescription = null,
-            tint = MaterialTheme.colors.primary,
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(32.dp)
         )
-        SmallSpacer()
+        MediumSpacer()
         Text(
-            pluralStringResource(Res.plurals.window_minutes, scheduleGap.windowDuration, scheduleGap.windowDuration)
+            pluralStringResource(Res.plurals.gap_minutes, scheduleGap.windowDuration, scheduleGap.windowDuration)
         )
     }
 }
 
 @Preview
 @Composable
-fun WindowItemsPreview() {
+fun ScheduleItemsPreview() {
     Column {
-        WindowItem(
+        GapItem(
             scheduleGap = ScheduleGap(windowDuration = 1)
         )
-        WindowItem(
+        ClassItem(
+            scheduleClass = ScheduleClass(),
+            recalculateWindows = {_,_ ->}
+        )
+        GapItem(
             scheduleGap = ScheduleGap(windowDuration = 2)
         )
-        WindowItem(
+        ClassItem(
+            scheduleClass = ScheduleClass(),
+            recalculateWindows = {_,_ ->}
+        )
+        GapItem(
             scheduleGap = ScheduleGap(windowDuration = 3)
         )
-        WindowItem(
+        ClassItem(
+            scheduleClass = ScheduleClass(),
+            recalculateWindows = {_,_ ->}
+        )
+        GapItem(
             scheduleGap = ScheduleGap(windowDuration = 5)
         )
-        WindowItem(
+        GapItem(
             scheduleGap = ScheduleGap(windowDuration = 11)
         )
-        WindowItem(
+        GapItem(
             scheduleGap = ScheduleGap(windowDuration = 31)
         )
     }
@@ -98,5 +182,7 @@ fun WindowItemsPreview() {
 
 @Composable
 fun ScheduleScreen() {
-    WindowItemsPreview()
+    Surface (color = Color.Black) {
+        ScheduleItemsPreview()
+    }
 }

@@ -113,7 +113,7 @@
     <string name="Semester">Семестр</string>
 
 <!--    new-->
-    <plurals name="window_minutes">
+    <plurals name="gap_minutes">
         <item quantity="one">Окно %1$d минута</item>
         <item quantity="few">Окно %1$d минуты</item>
         <item quantity="other">Окно %1$d минут</item>

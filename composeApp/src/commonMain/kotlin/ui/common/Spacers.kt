@@ -8,15 +8,15 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SmallSpacer(){
-    Spacer(modifier = Modifier.size(8.dp))
+    Spacer(modifier = Modifier.size(4.dp))
 }
 
 @Composable
 fun MediumSpacer(){
-    Spacer(modifier = Modifier.size(16.dp))
+    Spacer(modifier = Modifier.size(8.dp))
 }
 
 @Composable
 fun LargeSpacer(){
-    Spacer(modifier = Modifier.size(32.dp))
+    Spacer(modifier = Modifier.size(16.dp))
 }
