@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  DETEKT_VERSION: v1.15.0
+  DETEKT_VERSION: 1.23.6
 
 jobs:
   scan:
@@ -22,7 +22,7 @@ jobs:
 
     - name: Download Detekt CLI
       run: |
-        curl -sSLO https://github.com/detekt/detekt/releases/download/${{ env.DETEKT_VERSION }}/detekt-cli-${{ env.DETEKT_VERSION }}-all.jar
+        curl -sSLO https://github.com/detekt/detekt/releases/download/v${{ env.DETEKT_VERSION }}/detekt-cli-${{ env.DETEKT_VERSION }}-all.jar
 
     - name: Run Detekt
       continue-on-error: true
