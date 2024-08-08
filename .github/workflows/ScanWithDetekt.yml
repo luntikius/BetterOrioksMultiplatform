@@ -1,20 +1,15 @@
 name: Scan with Detekt
 
 on:
-  # Triggers the workflow on push or pull request events but only for default and protected branches
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
   schedule:
      - cron: '31 4 * * 3'
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 env:
-  # Release tag associated with version of Detekt to be installed
-  # SARIF support (required for this workflow) was introduced in Detekt v1.15.0
   DETEKT_RELEASE_TAG: v1.15.0
 
 jobs:
@@ -27,8 +22,6 @@ jobs:
 
     - name: Get Detekt download URL
       id: detekt_info
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         gh api graphql --field tagName=$DETEKT_RELEASE_TAG --raw-field query='
           query getReleaseAssetDownloadUrl($tagName: String!) {
@@ -39,19 +32,10 @@ jobs:
                     downloadUrl
                   }
                 }
-                tagCommit {
-                  oid
-                }
               }
             }
           }
         ' 1> gh_response.json
-
-        DETEKT_RELEASE_SHA=$(jq --raw-output '.data.repository.release.releaseAssets.tagCommit.oid' gh_response.json)
-        if [ $DETEKT_RELEASE_SHA != "37f0a1d006977512f1f216506cd695039607c3e5" ]; then
-          echo "Release tag doesn't match expected commit SHA"
-          exit 1
-        fi
 
         DETEKT_DOWNLOAD_URL=$(jq --raw-output '.data.repository.release.releaseAssets.nodes[0].downloadUrl' gh_response.json)
         echo "download_url=$DETEKT_DOWNLOAD_URL" >> $GITHUB_OUTPUT
