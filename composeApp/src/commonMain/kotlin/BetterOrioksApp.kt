@@ -15,7 +15,7 @@ import ui.scheduleScreen.ScheduleScreen
 fun BetterOrioksApp(
     navController: NavHostController = rememberNavController()
 ) {
-    // val backStackEntry by navController.currentBackStackEntryAsState()
+    val backStackEntry by navController.currentBackStackEntryAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
