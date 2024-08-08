@@ -34,7 +34,7 @@ fun LoadingScreen(
     modifier: Modifier = Modifier,
     text: String = ""
 ) {
-    Column (
+    Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
@@ -43,7 +43,7 @@ fun LoadingScreen(
     ) {
         LoadingAnimation()
         Spacer(modifier = Modifier.size(16.dp))
-        if(text.isNotBlank()) {
+        if (text.isNotBlank()) {
             Text(text = text)
         }
     }
@@ -103,5 +103,4 @@ fun LoadingAnimation(
             )
         }
     }
-
 }
