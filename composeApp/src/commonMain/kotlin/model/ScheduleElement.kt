@@ -21,5 +21,5 @@ data class ScheduleClass (
 data class ScheduleGap (
     override val day: Int = 0,
     override val number: Int = 0,
-    val windowDuration: Int = 0
+    val gapDuration: Int = 0
 ): ScheduleElement

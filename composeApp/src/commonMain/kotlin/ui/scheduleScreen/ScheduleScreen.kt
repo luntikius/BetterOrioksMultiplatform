@@ -1,6 +1,8 @@
 package ui.scheduleScreen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,22 +12,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Res
+import betterorioks.composeapp.generated.resources.change_lesson_time
 import betterorioks.composeapp.generated.resources.gap_minutes
 import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.scheldule
+import betterorioks.composeapp.generated.resources.swap_vert
 import model.ScheduleClass
 import model.ScheduleElement
 import model.ScheduleGap
@@ -39,8 +50,43 @@ import ui.common.SmallSpacer
 private const val MIN_SCHEDULE_ITEM_HEIGHT = 72
 private const val CHANGEABLE = 3
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: (Int,Int) -> Unit){
+fun SchedulePager(
+    schedule: List<List<ScheduleElement>>,
+    pagerState: PagerState,
+    recalculateWindows: (number: Int, day: Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    HorizontalPager (
+        state = pagerState,
+        modifier = modifier
+    ) { page ->
+        ScheduleColumn(
+            scheduleList = schedule[page],
+            recalculateWindows = recalculateWindows
+        )
+    }
+}
+
+@Composable
+fun ScheduleColumn(
+    scheduleList: List<ScheduleElement>,
+    recalculateWindows: (number: Int, day: Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(modifier = modifier) {
+        items(scheduleList) {
+            ScheduleItem(
+                scheduleElement = it,
+                recalculateWindows = { recalculateWindows(it.number, it.day) }
+            )
+        }
+    }
+}
+
+@Composable
+fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: () -> Unit){
     when (scheduleElement) {
         is ScheduleClass -> ClassItem(scheduleElement, recalculateWindows)
         is ScheduleGap -> GapItem(scheduleElement)
@@ -51,54 +97,90 @@ fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: (Int,Int)
 @Composable
 fun ClassItem(
     scheduleClass: ScheduleClass,
-    recalculateWindows: (Int, Int) -> Unit,
+    recalculateWindows: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val shouldDisplaySwitchButton = scheduleClass.number == CHANGEABLE
+
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(horizontal = 16.dp)
             .defaultMinSize(minHeight = MIN_SCHEDULE_ITEM_HEIGHT.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CircleNumber(scheduleClass.number)
-                SmallSpacer()
-                Text(
-                    text = scheduleClass.type,
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .wrapContentSize(Alignment.Center)
+        Box {
+            ClassItemContent(scheduleClass)
+            if (shouldDisplaySwitchButton) {
+                SwitchButton(
+                    recalculateWindows,
+                    modifier = Modifier.align(Alignment.BottomEnd)
                 )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(text = "${scheduleClass.fromTime} - ${scheduleClass.toTime}")
             }
-            MediumSpacer()
-            Text(
-                text = scheduleClass.subject,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-            Text(
-                text = scheduleClass.teacher,
-                style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-            MediumSpacer()
-            Text(
-                text = stringResource(Res.string.room_number, scheduleClass.room),
-                style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-            MediumSpacer()
         }
+    }
+}
+
+@Composable
+fun ClassItemContent(
+    scheduleClass: ScheduleClass,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CircleNumber(scheduleClass.number)
+            SmallSpacer()
+            Text(
+                text = scheduleClass.type,
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .wrapContentSize(Alignment.Center)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(text = "${scheduleClass.fromTime} - ${scheduleClass.toTime}")
+        }
+        MediumSpacer()
+        Text(
+            text = scheduleClass.subject,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+        Text(
+            text = scheduleClass.teacher,
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+        MediumSpacer()
+        Text(
+            text = stringResource(Res.string.room_number, scheduleClass.room),
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+        MediumSpacer()
+    }
+}
+
+@Composable
+fun SwitchButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+        .padding(4.dp)) {
+        Icon(
+            painterResource(Res.drawable.swap_vert),
+            contentDescription = stringResource(Res.string.change_lesson_time),
+            modifier = Modifier.size(28.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
@@ -139,46 +221,23 @@ fun GapItem(
         )
         MediumSpacer()
         Text(
-            pluralStringResource(Res.plurals.gap_minutes, scheduleGap.windowDuration, scheduleGap.windowDuration)
+            pluralStringResource(Res.plurals.gap_minutes, scheduleGap.gapDuration, scheduleGap.gapDuration)
         )
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun ScheduleItemsPreview() {
-    Column {
-        GapItem(
-            scheduleGap = ScheduleGap(windowDuration = 1)
-        )
-        ClassItem(
-            scheduleClass = ScheduleClass(),
-            recalculateWindows = {_,_ ->}
-        )
-        GapItem(
-            scheduleGap = ScheduleGap(windowDuration = 2)
-        )
-        ClassItem(
-            scheduleClass = ScheduleClass(),
-            recalculateWindows = {_,_ ->}
-        )
-        GapItem(
-            scheduleGap = ScheduleGap(windowDuration = 3)
-        )
-        ClassItem(
-            scheduleClass = ScheduleClass(),
-            recalculateWindows = {_,_ ->}
-        )
-        GapItem(
-            scheduleGap = ScheduleGap(windowDuration = 5)
-        )
-        GapItem(
-            scheduleGap = ScheduleGap(windowDuration = 11)
-        )
-        GapItem(
-            scheduleGap = ScheduleGap(windowDuration = 31)
-        )
-    }
+    val viewModel = ScheduleScreenViewModel()
+    val uiState = viewModel.uiState.collectAsState()
+    val pagerState = rememberPagerState { uiState.value.schedule.size }
+    SchedulePager(
+        uiState.value.schedule,
+        pagerState,
+        {_,_ ->}
+    )
 }
 
 @Composable
