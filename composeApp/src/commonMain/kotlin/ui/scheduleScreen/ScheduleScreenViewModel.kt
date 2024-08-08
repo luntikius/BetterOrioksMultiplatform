@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+private const val REFRESH_DELAY = 5000L
+
 class ScheduleScreenViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(ScheduleScreenUiState())
@@ -16,9 +18,8 @@ class ScheduleScreenViewModel : ViewModel() {
     fun refreshSchedule() {
         viewModelScope.launch {
             _uiState.update { uis -> uis.copy(isRefreshing = true) }
-            delay(5000L)
+            delay(REFRESH_DELAY)
             _uiState.update { uis -> uis.copy(isRefreshing = false) }
         }
     }
-
 }
