@@ -58,7 +58,7 @@ fun SchedulePager(
     recalculateWindows: (number: Int, day: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    HorizontalPager (
+    HorizontalPager(
         state = pagerState,
         modifier = modifier
     ) { page ->
@@ -86,11 +86,11 @@ fun ScheduleColumn(
 }
 
 @Composable
-fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: () -> Unit){
+fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: () -> Unit) {
     when (scheduleElement) {
         is ScheduleClass -> ClassItem(scheduleElement, recalculateWindows)
         is ScheduleGap -> GapItem(scheduleElement)
-        else -> throw IllegalArgumentException()
+        else -> throw IllegalArgumentException("There is no such ScheduleElement")
     }
 }
 
@@ -174,7 +174,8 @@ fun SwitchButton(
     IconButton(
         onClick = onClick,
         modifier = modifier
-        .padding(4.dp)) {
+            .padding(4.dp)
+    ) {
         Icon(
             painterResource(Res.drawable.swap_vert),
             contentDescription = stringResource(Res.string.change_lesson_time),
@@ -236,7 +237,7 @@ fun ScheduleItemsPreview() {
     SchedulePager(
         uiState.value.schedule,
         pagerState,
-        {_,_ ->}
+        { _, _ -> }
     )
 }
 

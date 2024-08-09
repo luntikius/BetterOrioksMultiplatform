@@ -4,7 +4,7 @@ import model.ScheduleClass
 import model.ScheduleElement
 import model.ScheduleGap
 
-data class ScheduleScreenUiState (
+data class ScheduleScreenUiState(
     val isRefreshing: Boolean = false,
     val schedule: List<List<ScheduleElement>> = listOf(
         listOf(

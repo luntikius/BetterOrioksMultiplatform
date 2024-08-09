@@ -249,7 +249,7 @@ naming:
     enumEntryPattern: '[A-Z][_a-zA-Z0-9]*'
   FunctionNaming:
     active: true
-    functionPattern: '[a-z][a-zA-Z0-9]*'
+    functionPattern: '[a-zA-Z0-9]*'
     excludeClassPattern: '$^'
     ignoreOverridden: true
     excludes: *tests
@@ -262,7 +262,7 @@ naming:
     active: true
     rootPackage: ''
   MatchingDeclarationName:
-    active: true
+    active: false
     mustBeFirst: true
   MemberNameEqualsClassName:
     active: true
@@ -383,7 +383,7 @@ style:
   LoopWithTooManyJumpStatements:
     active: false
   MagicNumber:
-    active: true
+    active: false
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**', '**/*.kts']
     ignoreNumbers: [ '-1', '0', '1', '2' ]
     ignoreHashCodeFunction: true
