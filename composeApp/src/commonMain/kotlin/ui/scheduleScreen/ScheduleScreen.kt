@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -223,7 +224,7 @@ fun ClassItemContent(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CircleNumber(scheduleClass.number)
+            CircleText(text = scheduleClass.number.toString(), modifier = Modifier.size(26.dp))
             SmallSpacer()
             Text(
                 text = scheduleClass.type,
@@ -233,7 +234,7 @@ fun ClassItemContent(
                     .wrapContentSize(Alignment.Center)
             )
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "${scheduleClass.fromTime} - ${scheduleClass.toTime}")
+            CircleText(text = "${scheduleClass.fromTime} - ${scheduleClass.toTime}", modifier = Modifier.height(26.dp))
         }
         MediumSpacer()
         Text(
@@ -275,17 +276,18 @@ fun SwitchButton(
 }
 
 @Composable
-fun CircleNumber(number: Int, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.surfaceTint) {
+fun CircleText(text: String, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.surfaceTint) {
     Surface(
         shape = CircleShape,
-        modifier = modifier.size(26.dp),
+        modifier = modifier,
         color = color
     ) {
         Text(
-            text = number.toString(),
-            style = MaterialTheme.typography.labelMedium,
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
             modifier = Modifier
                 .wrapContentSize(Alignment.Center)
+                .padding(horizontal = 8.dp)
         )
     }
 }
