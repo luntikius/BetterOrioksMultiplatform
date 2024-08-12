@@ -167,7 +167,7 @@ fun ScheduleColumn(
     recalculateWindows: (number: Int, day: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(modifier = modifier) {
+    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(scheduleList) {
             ScheduleItem(
                 scheduleElement = it,
