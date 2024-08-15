@@ -44,12 +44,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.change_lesson_time
 import betterorioks.composeapp.generated.resources.gap_minutes
 import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.scheldule
 import betterorioks.composeapp.generated.resources.swap_vert
+import betterorioks.composeapp.generated.resources.week_number
 import kotlinx.datetime.LocalDate
 import model.ScheduleClass
 import model.ScheduleDay
@@ -64,6 +66,30 @@ import ui.common.SmallSpacer
 import utils.getWeekStringRes
 
 private const val MIN_SCHEDULE_ITEM_HEIGHT = 72
+
+@Composable
+fun WeekInfoRow(
+    scheduleDay: ScheduleDay
+) {
+    Row(
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            stringResource(scheduleDay.weekType.stringRes),
+            fontSize = 14.sp,
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f)
+        )
+        Text("", modifier = Modifier.padding(horizontal = 8.dp))
+        Text(
+            stringResource(Res.string.week_number, scheduleDay.weekNumber),
+            fontSize = 14.sp,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
 
 @Composable
 fun DatePicker(
@@ -346,6 +372,9 @@ fun ScheduleItemsPreview() {
     }
 
     Column {
+        WeekInfoRow(
+            uiState.value.selectedDay
+        )
         DatePicker(
             viewModel,
             uiState.value,

@@ -104,10 +104,10 @@
     <string name="ok_mark">Удовлетворительно</string>
     <string name="good_mark">Хорошо</string>
     <string name="excellent_mark">Отлично</string>
-    <string name="type1">Числитель - 1</string>
-    <string name="type2">Знаменатель - 1</string>
-    <string name="type3">Числитель - 2</string>
-    <string name="type4">Знаменатель - 2</string>
+    <string name="first_higher">Числитель - 1</string>
+    <string name="first_lower">Знаменатель - 1</string>
+    <string name="second_higher">Числитель - 2</string>
+    <string name="second_lower">Знаменатель - 2</string>
     <string name="error_message">текст ошибки</string>
     <string name="Credit">Зачёт</string>
     <string name="Semester">Семестр</string>
@@ -118,4 +118,5 @@
         <item quantity="few">Окно %1$d минуты</item>
         <item quantity="other">Окно %1$d минут</item>
     </plurals>
+    <string name="week_number">%1$d - неделя</string>
 </resources>

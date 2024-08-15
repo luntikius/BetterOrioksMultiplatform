@@ -14,10 +14,11 @@ data class ScheduleScreenUiState(
     val selectedDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
     val isRefreshing: Boolean = false,
     val schedule: List<ScheduleDay> = buildList {
-        repeat(25) {
+        repeat(100) {
             add(
                 ScheduleDay(
                     date = LocalDate(2024, 8, 9).plus(it, DateTimeUnit.DAY),
+                    weekNumber = it / 7,
                     scheduleList = listOf(
                         ScheduleClass(number = 1),
                         ScheduleClass(number = 2),
@@ -37,4 +38,5 @@ data class ScheduleScreenUiState(
     }
 ) {
     val selectedDayIndex = schedule.indexOfFirst { it.date == selectedDate }
+    val selectedDay = schedule[selectedDayIndex]
 }
