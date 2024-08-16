@@ -18,7 +18,9 @@ fun BetterOrioksTheme(isDarkTheme: Boolean = isSystemInDarkTheme(), content: @Co
     val typography = Typography(
         labelSmall = MaterialTheme.typography.labelSmall.copy(fontSize = 14.sp),
         labelMedium = MaterialTheme.typography.labelMedium.copy(fontSize = 14.sp, color = colorScheme.onSurfaceVariant),
-        headlineMedium = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
+        headlineSmall = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+        headlineMedium = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+        headlineLarge = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold)
     )
 
     val shapes = Shapes(

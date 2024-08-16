@@ -103,7 +103,7 @@ fun MonthInfoRow(
         ) {
             Text(
                 stringResource(date.getMonthStringRes()),
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineSmall
             )
             SmallSpacer()
             Icon(

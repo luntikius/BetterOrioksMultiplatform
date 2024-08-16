@@ -13,8 +13,8 @@ data class ScheduleScreenUiState(
         repeat(100) {
             add(
                 ScheduleDay(
-                    date = LocalDate(2024, 8, 9).plus(it, DateTimeUnit.DAY),
-                    weekNumber = it / 7,
+                    date = LocalDate(2024, 8, 12).plus(it, DateTimeUnit.DAY),
+                    weekNumber = it / 7 + 1,
                     scheduleList = listOf(
                         ScheduleClass(number = 1),
                         ScheduleClass(number = 2),
