@@ -35,18 +35,18 @@
     <string name="SATURDAY">Сб</string>
     <string name="SUNDAY">Вс</string>
     <string name="error_short">err</string>
-    <string name="january">Январь</string>
-    <string name="february">Февраль</string>
-    <string name="march">Март</string>
-    <string name="april">Апрель</string>
-    <string name="may">Май</string>
-    <string name="june">Июнь</string>
-    <string name="july">Июль</string>
-    <string name="august">Август</string>
-    <string name="september">Сентябрь</string>
-    <string name="october">Октябрь</string>
-    <string name="november">Ноябрь</string>
-    <string name="december">Декабрь</string>
+    <string name="JANUARY">Январь</string>
+    <string name="FEBRUARY">Февраль</string>
+    <string name="MARCH">Март</string>
+    <string name="APRIL">Апрель</string>
+    <string name="MAY">Май</string>
+    <string name="JUNE">Июнь</string>
+    <string name="JULY">Июль</string>
+    <string name="AUGUST">Август</string>
+    <string name="SEPTEMBER">Сентябрь</string>
+    <string name="OCTOBER">Октябрь</string>
+    <string name="NOVEMBER">Ноябрь</string>
+    <string name="DECEMBER">Декабрь</string>
     <string name="january_short">янв</string>
     <string name="february_short">фев</string>
     <string name="march_short">мар</string>
@@ -119,4 +119,6 @@
         <item quantity="other">Окно %1$d минут</item>
     </plurals>
     <string name="week_number">%1$d - неделя</string>
+    <string name="schedule_scroll_to_today">выбрать сегодняшний день в расписании</string>
+    <string name="drop_down_menu">открыть выпадающее меню</string>
 </resources>

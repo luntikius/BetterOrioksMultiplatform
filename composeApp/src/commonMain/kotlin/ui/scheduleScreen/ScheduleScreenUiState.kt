@@ -1,17 +1,13 @@
 package ui.scheduleScreen
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
 import model.ScheduleClass
 import model.ScheduleDay
 import model.ScheduleGap
 
 data class ScheduleScreenUiState(
-    val selectedDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
     val isRefreshing: Boolean = false,
     val schedule: List<ScheduleDay> = buildList {
         repeat(100) {
@@ -35,8 +31,8 @@ data class ScheduleScreenUiState(
                 )
             )
         }
-    }
+    },
+    val selectedDay: ScheduleDay = schedule.first(),
 ) {
-    val selectedDayIndex = schedule.indexOfFirst { it.date == selectedDate }
-    val selectedDay = schedule[selectedDayIndex]
+    val selectedDayIndex = schedule.indexOf(selectedDay)
 }

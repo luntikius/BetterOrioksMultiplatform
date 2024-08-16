@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -16,7 +17,8 @@ fun BetterOrioksTheme(isDarkTheme: Boolean = isSystemInDarkTheme(), content: @Co
 
     val typography = Typography(
         labelSmall = MaterialTheme.typography.labelSmall.copy(fontSize = 14.sp),
-        labelMedium = MaterialTheme.typography.labelMedium.copy(fontSize = 14.sp, color = colorScheme.onSurfaceVariant)
+        labelMedium = MaterialTheme.typography.labelMedium.copy(fontSize = 14.sp, color = colorScheme.onSurfaceVariant),
+        headlineMedium = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
     )
 
     val shapes = Shapes(

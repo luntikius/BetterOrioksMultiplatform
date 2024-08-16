@@ -25,6 +25,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -39,18 +40,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import betterorioks.composeapp.generated.resources.Res
+import betterorioks.composeapp.generated.resources.arrow_drop_down
 import betterorioks.composeapp.generated.resources.change_lesson_time
+import betterorioks.composeapp.generated.resources.drop_down_menu
 import betterorioks.composeapp.generated.resources.gap_minutes
 import betterorioks.composeapp.generated.resources.room_number
+import betterorioks.composeapp.generated.resources.schedule_scroll_to_today
 import betterorioks.composeapp.generated.resources.scheldule
 import betterorioks.composeapp.generated.resources.swap_vert
+import betterorioks.composeapp.generated.resources.today
 import betterorioks.composeapp.generated.resources.week_number
 import kotlinx.datetime.LocalDate
 import model.ScheduleClass
@@ -61,31 +67,84 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import ui.common.LargeSpacer
 import ui.common.MediumSpacer
 import ui.common.SmallSpacer
+import utils.getMonthStringRes
 import utils.getWeekStringRes
 
 private const val MIN_SCHEDULE_ITEM_HEIGHT = 72
 
 @Composable
+fun MonthInfoRow(
+    lazyListState: LazyListState,
+    viewModel: ScheduleScreenViewModel,
+    uiState: ScheduleScreenUiState,
+    modifier: Modifier = Modifier
+) {
+    var date by remember { mutableStateOf(uiState.selectedDay.date) }
+
+    LaunchedEffect(lazyListState.firstVisibleItemIndex) {
+        if (uiState.schedule[lazyListState.firstVisibleItemIndex].date.month != date.month) {
+            date = uiState.schedule[lazyListState.firstVisibleItemIndex].date
+        }
+    }
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(4.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .clickable {}
+        ) {
+            Text(
+                stringResource(date.getMonthStringRes()),
+                style = MaterialTheme.typography.headlineMedium
+            )
+            SmallSpacer()
+            Icon(
+                painterResource(Res.drawable.arrow_drop_down),
+                contentDescription = stringResource(Res.string.drop_down_menu)
+            )
+        }
+        Spacer(Modifier.weight(1f))
+        IconButton(
+            onClick = { viewModel.selectToday() }
+        ) {
+            Icon(
+                painterResource(Res.drawable.today),
+                contentDescription = stringResource(Res.string.schedule_scroll_to_today),
+                modifier = Modifier.size(28.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+@Composable
 fun WeekInfoRow(
-    scheduleDay: ScheduleDay
+    scheduleDay: ScheduleDay,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             stringResource(scheduleDay.weekType.stringRes),
-            fontSize = 14.sp,
             textAlign = TextAlign.End,
+            style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.weight(1f)
         )
         Text("", modifier = Modifier.padding(horizontal = 8.dp))
         Text(
             stringResource(Res.string.week_number, scheduleDay.weekNumber),
-            fontSize = 14.sp,
             textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.weight(1f)
         )
     }
@@ -102,15 +161,14 @@ fun DatePicker(
 
     LazyRow(
         modifier = modifier,
-        state = lazyRowState,
-        horizontalArrangement = Arrangement.Center
+        state = lazyRowState
     ) {
         items(schedule) { day ->
             DatePickerElement(
                 date = day.date,
-                isSelected = uiState.selectedDate == day.date,
+                isSelected = uiState.selectedDay.date == day.date,
                 modifier = Modifier.fillParentMaxWidth(1 / 7f),
-                onClick = { viewModel.selectDate(day.date) }
+                onClick = { viewModel.selectDay(day) }
             )
         }
     }
@@ -361,7 +419,7 @@ fun ScheduleItemsPreview() {
     }
 
     LaunchedEffect(selectedIndex) {
-        val day = uiState.value.selectedDate.dayOfWeek.ordinal
+        val day = uiState.value.selectedDay.date.dayOfWeek.ordinal
         val index = selectedIndex - day
         if (index in schedule.indices) {
             lazyRowState.animateScrollToItem(index)
@@ -372,8 +430,17 @@ fun ScheduleItemsPreview() {
     }
 
     Column {
+        MediumSpacer()
+        MonthInfoRow(
+            lazyRowState,
+            viewModel,
+            uiState.value,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        MediumSpacer()
         WeekInfoRow(
-            uiState.value.selectedDay
+            uiState.value.selectedDay,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
         DatePicker(
             viewModel,
@@ -387,6 +454,7 @@ fun ScheduleItemsPreview() {
             pagerState,
             { _, _ -> }
         )
+        LargeSpacer()
     }
 }
 

@@ -7,7 +7,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import model.ScheduleDay
 
 private const val REFRESH_DELAY = 5000L
 
@@ -16,13 +20,23 @@ class ScheduleScreenViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ScheduleScreenUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun selectDate(date: LocalDate) {
-        _uiState.update { uis -> uis.copy(selectedDate = date) }
+    fun selectDay(day: ScheduleDay) {
+        _uiState.update { uis -> uis.copy(selectedDay = day) }
     }
 
     fun selectIndex(index: Int) {
-        val date = _uiState.value.schedule[index].date
-        selectDate(date)
+        val day = _uiState.value.schedule[index]
+        selectDay(day)
+    }
+
+    private fun selectDate(date: LocalDate) {
+        val day = _uiState.value.schedule.find { it.date == date }
+        if (day != null) selectDay(day)
+    }
+
+    fun selectToday() {
+        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        selectDate(today.date)
     }
 
     fun refreshSchedule() {
