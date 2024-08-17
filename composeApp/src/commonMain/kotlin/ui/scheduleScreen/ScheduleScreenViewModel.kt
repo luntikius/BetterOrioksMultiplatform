@@ -12,25 +12,40 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import model.ScheduleDay
+import model.Temp
 
 private const val REFRESH_DELAY = 5000L
 
 class ScheduleScreenViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ScheduleScreenUiState())
+    private lateinit var _uiState: MutableStateFlow<ScheduleScreenUiState>
+    private val _isInitialized = MutableStateFlow(false)
+
+    init {
+        _uiState = MutableStateFlow(getUiState())
+        _isInitialized.update { true }
+    }
+
+    val isInitialized = _isInitialized.asStateFlow()
     val uiState = _uiState.asStateFlow()
 
+    private fun getUiState(): ScheduleScreenUiState {
+        return ScheduleScreenUiState(
+            schedule = Temp.schedule
+        )
+    }
+
     fun selectDay(day: ScheduleDay) {
-        _uiState.update { uis -> uis.copy(selectedDay = day) }
+        _uiState.update { uis -> uis.copy(selectedDay = day, selectedMonth = day.date) }
     }
 
     fun selectIndex(index: Int) {
-        val day = _uiState.value.schedule[index]
+        val day = _uiState.value.days[index]
         selectDay(day)
     }
 
-    private fun selectDate(date: LocalDate) {
-        val day = _uiState.value.schedule.find { it.date == date }
+    fun selectDate(date: LocalDate) {
+        val day = _uiState.value.days.find { it.date == date }
         if (day != null) selectDay(day)
     }
 
