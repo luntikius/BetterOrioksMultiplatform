@@ -36,22 +36,28 @@ class ScheduleScreenViewModel : ViewModel() {
     }
 
     fun selectDay(day: ScheduleDay) {
-        _uiState.update { uis -> uis.copy(selectedDay = day, selectedMonth = day.date) }
+        _uiState.update { uis -> uis.copy(selectedDay = day) }
     }
 
-    fun selectIndex(index: Int) {
+    fun selectDayByIndex(index: Int) {
         val day = _uiState.value.days[index]
         selectDay(day)
     }
 
-    fun selectDate(date: LocalDate) {
+    private fun selectDayByDate(date: LocalDate) {
         val day = _uiState.value.days.find { it.date == date }
         if (day != null) selectDay(day)
     }
 
     fun selectToday() {
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-        selectDate(today.date)
+        selectDayByDate(today.date)
+    }
+
+    fun getSelectedDayWeekIndex(): Int {
+        val weeks = uiState.value.weeks
+        val day = uiState.value.selectedDay
+        return weeks.indexOfFirst { it.number == day.weekNumber }
     }
 
     fun refreshSchedule() {

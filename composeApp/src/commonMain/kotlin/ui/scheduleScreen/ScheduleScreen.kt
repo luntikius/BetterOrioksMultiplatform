@@ -17,10 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -40,7 +37,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,6 +59,7 @@ import model.ScheduleClass
 import model.ScheduleDay
 import model.ScheduleElement
 import model.ScheduleGap
+import model.ScheduleWeek
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -77,19 +74,10 @@ private const val MIN_SCHEDULE_ITEM_HEIGHT = 72
 
 @Composable
 fun MonthInfoRow(
-    lazyListState: LazyListState,
     viewModel: ScheduleScreenViewModel,
     uiState: ScheduleScreenUiState,
     modifier: Modifier = Modifier
 ) {
-    var date by remember { mutableStateOf(uiState.selectedDay.date) }
-
-    LaunchedEffect(lazyListState.firstVisibleItemIndex) {
-        if (uiState.schedule[lazyListState.firstVisibleItemIndex].date.month != date.month) {
-            date = uiState.schedule[lazyListState.firstVisibleItemIndex].date
-        }
-    }
-
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -102,7 +90,7 @@ fun MonthInfoRow(
                 .clickable {}
         ) {
             Text(
-                stringResource(date.getMonthStringRes()),
+                stringResource(uiState.selectedDay.date.getMonthStringRes()),
                 style = MaterialTheme.typography.headlineSmall
             )
             SmallSpacer()
@@ -150,24 +138,46 @@ fun WeekInfoRow(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DatePicker(
     viewModel: ScheduleScreenViewModel,
     uiState: ScheduleScreenUiState,
-    lazyRowState: LazyListState,
+    pagerState: PagerState,
     modifier: Modifier = Modifier
 ) {
-    val schedule = uiState.schedule
+    val weeks = uiState.weeks
 
-    LazyRow(
-        modifier = modifier,
-        state = lazyRowState
+    HorizontalPager(
+        state = pagerState,
+        modifier = modifier
+    ) { weekIndex ->
+        DatePickerWeek(
+            week = weeks[weekIndex],
+            uiState = uiState,
+            viewModel = viewModel,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun DatePickerWeek(
+    week: ScheduleWeek,
+    uiState: ScheduleScreenUiState,
+    viewModel: ScheduleScreenViewModel,
+    modifier: Modifier = Modifier
+) {
+    val days = week.days
+    Row(
+        modifier = modifier
     ) {
-        items(schedule) { day ->
+        repeat(days.size) {
+            val day = days[it]
             DatePickerElement(
                 date = day.date,
                 isSelected = uiState.selectedDay.date == day.date,
-                modifier = Modifier.fillParentMaxWidth(1 / 7f),
+                modifier = Modifier.weight(1F),
                 onClick = { viewModel.selectDay(day) }
             )
         }
@@ -408,31 +418,38 @@ fun GapItem(
 fun ScheduleItemsPreview() {
     val viewModel by remember { mutableStateOf(ScheduleScreenViewModel()) }
     val uiState = viewModel.uiState.collectAsState()
-    val pagerState = rememberPagerState { uiState.value.schedule.size }
-    val lazyRowState = rememberLazyListState()
+    val pagerState = rememberPagerState { uiState.value.days.size }
+    val weekPagerState = rememberPagerState { uiState.value.weeks.size }
 
-    val schedule = uiState.value.schedule
+    val days = uiState.value.days
+    val weeks = uiState.value.weeks
     val selectedIndex = uiState.value.selectedDayIndex
 
-    LaunchedEffect(pagerState.settledPage) {
-        if (pagerState.settledPage != selectedIndex) viewModel.selectIndex(pagerState.settledPage)
+    LaunchedEffect(pagerState.currentPage) {
+        if (pagerState.currentPage != selectedIndex) viewModel.selectDayByIndex(pagerState.currentPage)
     }
 
+//    LaunchedEffect(weekPagerState.currentPage) {
+//        if (weekPagerState.currentPage != viewModel.getSelectedDayWeekIndex()) {
+//            viewModel.selectDay(uiState.value.weeks[weekPagerState.currentPage].days.first())
+//        }
+//    }
+
     LaunchedEffect(selectedIndex) {
-        val day = uiState.value.selectedDay.date.dayOfWeek.ordinal
-        val index = selectedIndex - day
-        if (index in schedule.indices) {
-            lazyRowState.animateScrollToItem(index)
+        val weekIndex = viewModel.getSelectedDayWeekIndex()
+        if (weekIndex in weeks.indices) {
+            weekPagerState.animateScrollToPage(weekIndex)
         } else {
-            lazyRowState.animateScrollToItem(0)
+            weekPagerState.animateScrollToPage(0)
         }
-        if (pagerState.settledPage != selectedIndex) pagerState.scrollToPage(selectedIndex)
+        if (pagerState.currentPage != selectedIndex) {
+            pagerState.animateScrollToPage(selectedIndex)
+        }
     }
 
     Column {
         MediumSpacer()
         MonthInfoRow(
-            lazyRowState,
             viewModel,
             uiState.value,
             modifier = Modifier.padding(horizontal = 16.dp)
@@ -445,12 +462,12 @@ fun ScheduleItemsPreview() {
         DatePicker(
             viewModel,
             uiState.value,
-            lazyRowState,
+            weekPagerState,
             modifier = Modifier.fillMaxWidth()
         )
         SmallSpacer()
         SchedulePager(
-            uiState.value.schedule,
+            days,
             pagerState,
             { _, _ -> }
         )

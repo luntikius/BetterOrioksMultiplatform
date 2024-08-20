@@ -6,25 +6,37 @@ import kotlinx.datetime.plus
 
 object Temp {
     val schedule = Schedule(
-        days = buildList {
-            repeat(100) {
+        weeks = buildList<ScheduleWeek> {
+            repeat(20) { weekNumbero ->
+                val weekNumber = weekNumbero + 1
                 add(
-                    ScheduleDay(
-                        date = LocalDate(2024, 8, 12).plus(it, DateTimeUnit.DAY),
-                        weekNumber = it / 7 + 1,
-                        scheduleList = listOf(
-                            ScheduleClass(number = 1),
-                            ScheduleClass(number = 2),
-                            ScheduleGap(gapDuration = 1),
-                            ScheduleClass(number = 3),
-                            ScheduleGap(gapDuration = 3),
-                            ScheduleClass(number = 4),
-                            ScheduleGap(gapDuration = 5),
-                            ScheduleClass(number = 5),
-                            ScheduleGap(gapDuration = 11),
-                            ScheduleClass(number = 6),
-                            ScheduleGap(gapDuration = 31)
-                        )
+                    ScheduleWeek(
+                        weekNumber,
+                        WeekType.entries[(weekNumber - 1) % 4],
+                        buildList {
+                            repeat(7) { dayNumber ->
+                                add(
+                                    ScheduleDay(
+                                        date = LocalDate(2024, 8, 12)
+                                            .plus(dayNumber + weekNumbero * 7, DateTimeUnit.DAY),
+                                        weekNumber = weekNumber,
+                                        scheduleList = listOf(
+                                            ScheduleClass(number = 1),
+                                            ScheduleClass(number = 2),
+                                            ScheduleGap(gapDuration = 1),
+                                            ScheduleClass(number = 3),
+                                            ScheduleGap(gapDuration = 3),
+                                            ScheduleClass(number = 4),
+                                            ScheduleGap(gapDuration = 5),
+                                            ScheduleClass(number = 5),
+                                            ScheduleGap(gapDuration = 11),
+                                            ScheduleClass(number = 6),
+                                            ScheduleGap(gapDuration = 31)
+                                        )
+                                    )
+                                )
+                            }
+                        }
                     )
                 )
             }
