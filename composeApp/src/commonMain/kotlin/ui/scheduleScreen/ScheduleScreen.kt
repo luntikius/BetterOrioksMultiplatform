@@ -68,6 +68,7 @@ import ui.common.LargeSpacer
 import ui.common.MediumSpacer
 import ui.common.SmallSpacer
 import utils.getMonthStringRes
+import utils.getShortMonthStringRes
 import utils.getWeekStringRes
 
 private const val MIN_SCHEDULE_ITEM_HEIGHT = 72
@@ -75,9 +76,18 @@ private const val MIN_SCHEDULE_ITEM_HEIGHT = 72
 @Composable
 fun MonthInfoRow(
     viewModel: ScheduleScreenViewModel,
-    uiState: ScheduleScreenUiState,
+    scheduleWeek: ScheduleWeek,
     modifier: Modifier = Modifier
 ) {
+    val firstDate = scheduleWeek.days.first().date
+    val lastDate = scheduleWeek.days.last().date
+    val isWeekInOneMonth = firstDate.month == lastDate.month
+    val monthString = if (isWeekInOneMonth) {
+        stringResource(firstDate.getMonthStringRes())
+    } else {
+        "${stringResource(firstDate.getShortMonthStringRes())} - ${stringResource(lastDate.getShortMonthStringRes())}"
+    }
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -90,7 +100,7 @@ fun MonthInfoRow(
                 .clickable {}
         ) {
             Text(
-                stringResource(uiState.selectedDay.date.getMonthStringRes()),
+                monthString,
                 style = MaterialTheme.typography.headlineSmall
             )
             SmallSpacer()
@@ -115,7 +125,7 @@ fun MonthInfoRow(
 
 @Composable
 fun WeekInfoRow(
-    scheduleDay: ScheduleDay,
+    scheduleWeek: ScheduleWeek,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -123,14 +133,14 @@ fun WeekInfoRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            stringResource(scheduleDay.weekType.stringRes),
+            stringResource(scheduleWeek.type.stringRes),
             textAlign = TextAlign.End,
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.weight(1f)
         )
         Text("", modifier = Modifier.padding(horizontal = 8.dp))
         Text(
-            stringResource(Res.string.week_number, scheduleDay.weekNumber),
+            stringResource(Res.string.week_number, scheduleWeek.number),
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.weight(1f)
@@ -422,28 +432,23 @@ fun ScheduleItemsPreview() {
     val weekPagerState = rememberPagerState { uiState.value.weeks.size }
 
     val days = uiState.value.days
-    val weeks = uiState.value.weeks
     val selectedIndex = uiState.value.selectedDayIndex
+    val selectedWeekIndex = uiState.value.selectedWeekIndex
 
     LaunchedEffect(pagerState.currentPage) {
         if (pagerState.currentPage != selectedIndex) viewModel.selectDayByIndex(pagerState.currentPage)
     }
 
-//    LaunchedEffect(weekPagerState.currentPage) {
-//        if (weekPagerState.currentPage != viewModel.getSelectedDayWeekIndex()) {
-//            viewModel.selectDay(uiState.value.weeks[weekPagerState.currentPage].days.first())
-//        }
-//    }
+    LaunchedEffect(weekPagerState.currentPage) {
+        if (weekPagerState.currentPage != selectedWeekIndex) viewModel.selectWeekByIndex(weekPagerState.currentPage)
+    }
 
     LaunchedEffect(selectedIndex) {
-        val weekIndex = viewModel.getSelectedDayWeekIndex()
-        if (weekIndex in weeks.indices) {
-            weekPagerState.animateScrollToPage(weekIndex)
-        } else {
-            weekPagerState.animateScrollToPage(0)
+        if (weekPagerState.currentPage != selectedWeekIndex) {
+            weekPagerState.animateScrollToPage(selectedWeekIndex)
         }
         if (pagerState.currentPage != selectedIndex) {
-            pagerState.animateScrollToPage(selectedIndex)
+            pagerState.scrollToPage(selectedIndex)
         }
     }
 
@@ -451,12 +456,12 @@ fun ScheduleItemsPreview() {
         MediumSpacer()
         MonthInfoRow(
             viewModel,
-            uiState.value,
+            uiState.value.selectedWeek,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         MediumSpacer()
         WeekInfoRow(
-            uiState.value.selectedDay,
+            uiState.value.selectedWeek,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         DatePicker(
