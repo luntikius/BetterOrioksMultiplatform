@@ -25,6 +25,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +39,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -74,13 +77,37 @@ import utils.getWeekStringRes
 private const val MIN_SCHEDULE_ITEM_HEIGHT = 72
 
 @Composable
-fun MonthInfoRow(
-    viewModel: ScheduleScreenViewModel,
-    scheduleWeek: ScheduleWeek,
+fun MonthSelectorDropDown(
+    isExpanded: Boolean,
+    firstOfTheMonths: List<LocalDate>,
+    onDateClick: (LocalDate) -> Unit,
+    onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val firstDate = scheduleWeek.days.first().date
-    val lastDate = scheduleWeek.days.last().date
+    DropdownMenu(
+        expanded = isExpanded,
+        onDismissRequest = onDismiss,
+        modifier = modifier
+    ) {
+        firstOfTheMonths.forEach {
+            DropdownMenuItem(
+                text = { Text(stringResource(it.getMonthStringRes()), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()) },
+                onClick = { onDateClick(it); onDismiss() }
+            )
+        }
+
+    }
+
+}
+
+@Composable
+fun MonthInfoRow(
+    viewModel: ScheduleScreenViewModel,
+    uiState: ScheduleScreenUiState,
+    modifier: Modifier = Modifier
+) {
+    val firstDate = uiState.selectedWeek.days.first().date
+    val lastDate = uiState.selectedWeek.days.last().date
     val isWeekInOneMonth = firstDate.month == lastDate.month
     val monthString = if (isWeekInOneMonth) {
         stringResource(firstDate.getMonthStringRes())
@@ -88,16 +115,24 @@ fun MonthInfoRow(
         "${stringResource(firstDate.getShortMonthStringRes())} - ${stringResource(lastDate.getShortMonthStringRes())}"
     }
 
+    var isMonthSelectorVisible by remember { mutableStateOf(false) }
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        MonthSelectorDropDown(
+            isExpanded = isMonthSelectorVisible,
+            firstOfTheMonths = uiState.schedule.firstOfTheMonths,
+            onDateClick = viewModel::selectDayByDate,
+            onDismiss = { isMonthSelectorVisible = false }
+        )
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(4.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .clickable {}
+                .clickable { isMonthSelectorVisible = true }
         ) {
             Text(
                 monthString,
@@ -456,7 +491,7 @@ fun ScheduleItemsPreview() {
         MediumSpacer()
         MonthInfoRow(
             viewModel,
-            uiState.value.selectedWeek,
+            uiState.value,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         MediumSpacer()

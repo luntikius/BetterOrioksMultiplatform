@@ -46,7 +46,7 @@ class ScheduleScreenViewModel : ViewModel() {
         selectDay(day)
     }
 
-    private fun selectDayByDate(date: LocalDate) {
+    fun selectDayByDate(date: LocalDate) {
         val day = _uiState.value.days.find { it.date == date }
         if (day != null) selectDay(day)
     }

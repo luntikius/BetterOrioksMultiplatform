@@ -24,8 +24,8 @@ fun BetterOrioksTheme(isDarkTheme: Boolean = isSystemInDarkTheme(), content: @Co
     )
 
     val shapes = Shapes(
-        extraSmall = RoundedCornerShape(3.0.dp),
-        small = RoundedCornerShape(6.0.dp),
+        extraSmall = RoundedCornerShape(16.dp),
+        small = RoundedCornerShape(16.dp),
         medium = RoundedCornerShape(16.dp),
         large = RoundedCornerShape(16.dp)
     )
