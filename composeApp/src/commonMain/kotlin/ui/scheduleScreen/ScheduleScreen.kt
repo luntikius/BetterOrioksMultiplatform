@@ -72,7 +72,6 @@ import model.ScheduleWeek
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
@@ -562,19 +561,14 @@ fun ScheduleBox(
     }
 }
 
-@Preview
 @Composable
-fun ScheduleItemsPreview() {
-    val viewModel by remember { mutableStateOf(ScheduleScreenViewModel()) }
+fun ScheduleScreen(
+    viewModel: ScheduleScreenViewModel = remember { mutableStateOf(ScheduleScreenViewModel()) }.value
+) {
     val uiState = viewModel.uiState.collectAsState()
     if (uiState.value.isRefreshing) {
         LoadingScreen(Modifier.fillMaxSize(), text = stringResource(Res.string.loading_schedule))
     } else {
         ScheduleBox(viewModel)
     }
-}
-
-@Composable
-fun ScheduleScreen() {
-    ScheduleItemsPreview()
 }
