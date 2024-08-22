@@ -6,9 +6,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.room)
-    id("com.google.devtools.ksp")
-    id("kotlin-kapt")
     kotlin("plugin.serialization") version "2.0.0"
 }
 
@@ -48,9 +45,6 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.sqlite.bundled)
-            implementation(libs.sqlite)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.json)
             implementation(libs.ktor.client.serialization)
@@ -77,7 +71,6 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-        multiDexEnabled = true
     }
     packaging {
         resources {
