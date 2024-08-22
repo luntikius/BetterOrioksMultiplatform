@@ -41,10 +41,15 @@ fun LoadingScreen(
             .padding(64.dp)
             .fillMaxSize()
     ) {
+        Spacer(modifier.weight(1f))
         LoadingAnimation()
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier.weight(1f))
         if (text.isNotBlank()) {
-            Text(text = text)
+            Text(
+                text = text,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }

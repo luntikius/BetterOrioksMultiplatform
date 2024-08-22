@@ -23,6 +23,10 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -35,6 +39,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +56,7 @@ import betterorioks.composeapp.generated.resources.arrow_drop_down
 import betterorioks.composeapp.generated.resources.change_lesson_time
 import betterorioks.composeapp.generated.resources.drop_down_menu
 import betterorioks.composeapp.generated.resources.gap_minutes
+import betterorioks.composeapp.generated.resources.loading_schedule
 import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.schedule_scroll_to_today
 import betterorioks.composeapp.generated.resources.scheldule
@@ -68,6 +74,7 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.common.LargeSpacer
+import ui.common.LoadingScreen
 import ui.common.MediumSpacer
 import ui.common.SmallSpacer
 import utils.getMonthStringRes
@@ -91,13 +98,20 @@ fun MonthSelectorDropDown(
     ) {
         firstOfTheMonths.forEach {
             DropdownMenuItem(
-                text = { Text(stringResource(it.getMonthStringRes()), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()) },
-                onClick = { onDateClick(it); onDismiss() }
+                text = {
+                    Text(
+                        stringResource(it.getMonthStringRes()),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                onClick = {
+                    onDateClick(it)
+                    onDismiss()
+                }
             )
         }
-
     }
-
 }
 
 @Composable
@@ -458,20 +472,18 @@ fun GapItem(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@Preview
 @Composable
-fun ScheduleItemsPreview() {
-    val viewModel by remember { mutableStateOf(ScheduleScreenViewModel()) }
-    val uiState = viewModel.uiState.collectAsState()
-    val pagerState = rememberPagerState { uiState.value.days.size }
-    val weekPagerState = rememberPagerState { uiState.value.weeks.size }
-
-    val days = uiState.value.days
+fun LaunchedTracker(
+    viewModel: ScheduleScreenViewModel,
+    uiState: State<ScheduleScreenUiState>,
+    dayPagerState: PagerState,
+    weekPagerState: PagerState
+) {
     val selectedIndex = uiState.value.selectedDayIndex
     val selectedWeekIndex = uiState.value.selectedWeekIndex
 
-    LaunchedEffect(pagerState.currentPage) {
-        if (pagerState.currentPage != selectedIndex) viewModel.selectDayByIndex(pagerState.currentPage)
+    LaunchedEffect(dayPagerState.currentPage) {
+        if (dayPagerState.currentPage != selectedIndex) viewModel.selectDayByIndex(dayPagerState.currentPage)
     }
 
     LaunchedEffect(weekPagerState.currentPage) {
@@ -482,36 +494,83 @@ fun ScheduleItemsPreview() {
         if (weekPagerState.currentPage != selectedWeekIndex) {
             weekPagerState.animateScrollToPage(selectedWeekIndex)
         }
-        if (pagerState.currentPage != selectedIndex) {
-            pagerState.scrollToPage(selectedIndex)
+        if (dayPagerState.currentPage != selectedIndex) {
+            dayPagerState.scrollToPage(selectedIndex)
         }
     }
+}
 
-    Column {
-        MediumSpacer()
-        MonthInfoRow(
-            viewModel,
-            uiState.value,
-            modifier = Modifier.padding(horizontal = 16.dp)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@Composable
+fun ScheduleBox(
+    viewModel: ScheduleScreenViewModel,
+    modifier: Modifier = Modifier
+) {
+    val uiState = viewModel.uiState.collectAsState()
+    val dayPagerState = rememberPagerState { uiState.value.days.size }
+    val weekPagerState = rememberPagerState { uiState.value.weeks.size }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = uiState.value.isRefreshing,
+        onRefresh = viewModel::refreshSchedule
+    )
+
+    LaunchedEffect(Unit) {
+        dayPagerState.scrollToPage(uiState.value.selectedDayIndex)
+        weekPagerState.scrollToPage(uiState.value.selectedWeekIndex)
+    }
+
+    LaunchedTracker(viewModel, uiState, dayPagerState, weekPagerState)
+
+    Box(
+        modifier = modifier.pullRefresh(
+            pullRefreshState
         )
-        MediumSpacer()
-        WeekInfoRow(
-            uiState.value.selectedWeek,
-            modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
+        Column {
+            MediumSpacer()
+            MonthInfoRow(
+                viewModel,
+                uiState.value,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            MediumSpacer()
+            WeekInfoRow(
+                uiState.value.selectedWeek,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            DatePicker(
+                viewModel,
+                uiState.value,
+                weekPagerState,
+                modifier = Modifier.fillMaxWidth()
+            )
+            SmallSpacer()
+            SchedulePager(
+                uiState.value.days,
+                dayPagerState,
+                { _, _ -> }
+            )
+            LargeSpacer()
+        }
+        PullRefreshIndicator(
+            refreshing = uiState.value.isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
+            backgroundColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.primary
         )
-        DatePicker(
-            viewModel,
-            uiState.value,
-            weekPagerState,
-            modifier = Modifier.fillMaxWidth()
-        )
-        SmallSpacer()
-        SchedulePager(
-            days,
-            pagerState,
-            { _, _ -> }
-        )
-        LargeSpacer()
+    }
+}
+
+@Preview
+@Composable
+fun ScheduleItemsPreview() {
+    val viewModel by remember { mutableStateOf(ScheduleScreenViewModel()) }
+    val uiState = viewModel.uiState.collectAsState()
+    if (uiState.value.isRefreshing) {
+        LoadingScreen(Modifier.fillMaxSize(), text = stringResource(Res.string.loading_schedule))
+    } else {
+        ScheduleBox(viewModel)
     }
 }
 
