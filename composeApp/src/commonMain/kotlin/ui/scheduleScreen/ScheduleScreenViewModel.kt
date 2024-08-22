@@ -2,6 +2,7 @@ package ui.scheduleScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import data.MietWebRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +21,13 @@ class ScheduleScreenViewModel : ViewModel() {
             _uiState.update { uis -> uis.copy(isRefreshing = true) }
             delay(REFRESH_DELAY)
             _uiState.update { uis -> uis.copy(isRefreshing = false) }
+        }
+    }
+
+    fun getSchedule(){
+        val repository = MietWebRepository()
+        viewModelScope.launch {
+            //repository.getSchedule("ПИН-36", {})
         }
     }
 }

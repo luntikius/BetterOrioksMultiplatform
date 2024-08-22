@@ -18,6 +18,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -71,7 +72,7 @@ fun SchedulePager(
 
 @Composable
 fun ScheduleColumn(
-    scheduleList: List<ScheduleElement>,
+    scheduleList: List< ScheduleElement>,
     recalculateWindows: (number: Int, day: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -234,11 +235,14 @@ fun ScheduleItemsPreview() {
     val viewModel = ScheduleScreenViewModel()
     val uiState = viewModel.uiState.collectAsState()
     val pagerState = rememberPagerState { uiState.value.schedule.size }
-    SchedulePager(
-        uiState.value.schedule,
-        pagerState,
-        { _, _ -> }
-    )
+//    SchedulePager(
+//        uiState.value.schedule,
+//        pagerState,
+//        { _, _ -> }
+//    )
+    Button(onClick = { viewModel.getSchedule() }) {
+        Text("Test")
+    }
 }
 
 @Composable

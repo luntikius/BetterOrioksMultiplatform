@@ -20,8 +20,8 @@ ktorClientJson = "2.3.12"
 navigationCompose = "2.7.0-alpha07"
 kotlinx-datetime = "0.6.0"
 material3Android = "1.2.1"
-androidxRoom = "2.7.0-alpha06"
-sqlite = "2.5.0-alpha06"
+androidxRoom = "2.7.0-alpha07"
+sqlite = "2.5.0-alpha07"
 ksp = "2.0.10-1.0.24"
 ktor = "2.3.12"
 coroutines = "2.0.0"
@@ -55,6 +55,7 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+multidex = { module = "android.support:multidex" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
