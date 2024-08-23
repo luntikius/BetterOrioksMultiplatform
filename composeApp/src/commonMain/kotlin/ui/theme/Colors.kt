@@ -29,9 +29,9 @@ val lightColorScheme = lightColorScheme(
 
 val darkColorScheme = darkColorScheme(
     primary = primary_dark_theme,
-    background = gray800,
-    surface = gray500,
-    surfaceTint = gray600,
+    background = black,
+    surface = gray600,
+    surfaceTint = gray800,
     onSurface = white,
     onSurfaceVariant = gray300,
     onBackground = white

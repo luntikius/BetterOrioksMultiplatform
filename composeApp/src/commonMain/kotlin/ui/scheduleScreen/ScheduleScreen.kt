@@ -57,6 +57,7 @@ import betterorioks.composeapp.generated.resources.change_lesson_time
 import betterorioks.composeapp.generated.resources.drop_down_menu
 import betterorioks.composeapp.generated.resources.gap_minutes
 import betterorioks.composeapp.generated.resources.loading_schedule
+import betterorioks.composeapp.generated.resources.refresh_alert_text
 import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.schedule_scroll_to_today
 import betterorioks.composeapp.generated.resources.scheldule
@@ -75,6 +76,7 @@ import org.jetbrains.compose.resources.stringResource
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
+import ui.common.RefreshAlert
 import ui.common.SmallSpacer
 import utils.getMonthStringRes
 import utils.getShortMonthStringRes
@@ -506,11 +508,12 @@ fun ScheduleBox(
     modifier: Modifier = Modifier
 ) {
     val uiState = viewModel.uiState.collectAsState()
+    var isRefreshAlertVisible by remember { mutableStateOf(false) }
     val dayPagerState = rememberPagerState { uiState.value.days.size }
     val weekPagerState = rememberPagerState { uiState.value.weeks.size }
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = uiState.value.isRefreshing,
-        onRefresh = viewModel::refreshSchedule
+        refreshing = false,
+        onRefresh = { isRefreshAlertVisible = true }
     )
 
     LaunchedEffect(Unit) {
@@ -551,12 +554,20 @@ fun ScheduleBox(
             )
             LargeSpacer()
         }
+
         PullRefreshIndicator(
-            refreshing = uiState.value.isRefreshing,
+            refreshing = false,
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter),
             backgroundColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.primary
+        )
+
+        RefreshAlert(
+            isVisible = isRefreshAlertVisible,
+            text = stringResource(Res.string.refresh_alert_text),
+            onRefresh = { viewModel.refreshSchedule() },
+            onDismiss = { isRefreshAlertVisible = false },
         )
     }
 }
