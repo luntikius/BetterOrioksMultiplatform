@@ -27,7 +27,7 @@ class ScheduleScreenViewModel : ViewModel() {
     fun getSchedule(){
         val repository = MietWebRepository()
         viewModelScope.launch {
-            //repository.getSchedule("ПИН-36", {})
+            repository.getSchedule("ПИН-36", {})
         }
     }
 }

@@ -12,15 +12,11 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.Parameters
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.serialization.json.Json
 import model.FullSchedule
-import model.FullScheduleElement
 import model.ScheduleClass
 import model.ScheduleElement
 import model.ScheduleGap
-import kotlin.math.abs
 import kotlin.time.Duration
 
 class MietWebRepository{
@@ -41,7 +37,7 @@ class MietWebRepository{
         }
     }
 
-    private suspend fun getSchedule(
+    suspend fun getSchedule(
         group: String,
         setSchedule: (ScheduleClass) -> Unit
     ) {
@@ -75,8 +71,9 @@ class MietWebRepository{
                 header(HttpHeaders.Accept, "*/*")
             }.body()
 
-            val schedule = Json.decodeFromString<FullSchedule>(fullSchedule)
-            println(parseFromFullSchedule(schedule))
+            //val schedule = Json.decodeFromString<FullSchedule>(fullSchedule)
+            println(fullSchedule)
+            //println(parseFromFullSchedule(schedule))
 
         } catch (e: Exception) {
             println("Error fetching schedule: ${e.stackTraceToString()}")
