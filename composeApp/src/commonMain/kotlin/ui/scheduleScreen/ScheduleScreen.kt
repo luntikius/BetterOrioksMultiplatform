@@ -23,20 +23,19 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -49,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Res
@@ -501,7 +501,7 @@ fun LaunchedTracker(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleBox(
     viewModel: ScheduleScreenViewModel,
@@ -511,22 +511,24 @@ fun ScheduleBox(
     var isRefreshAlertVisible by remember { mutableStateOf(false) }
     val dayPagerState = rememberPagerState { uiState.value.days.size }
     val weekPagerState = rememberPagerState { uiState.value.weeks.size }
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = false,
-        onRefresh = { isRefreshAlertVisible = true }
-    )
+    val pullToRefreshState = rememberPullToRefreshState()
 
     LaunchedEffect(Unit) {
         dayPagerState.scrollToPage(uiState.value.selectedDayIndex)
         weekPagerState.scrollToPage(uiState.value.selectedWeekIndex)
     }
 
+    LaunchedEffect(pullToRefreshState.isRefreshing) {
+        if(pullToRefreshState.isRefreshing) {
+            viewModel.refreshSchedule()
+            pullToRefreshState.endRefresh()
+        }
+    }
+
     LaunchedTracker(viewModel, uiState, dayPagerState, weekPagerState)
 
     Box(
-        modifier = modifier.pullRefresh(
-            pullRefreshState
-        )
+        modifier = modifier.nestedScroll(pullToRefreshState.nestedScrollConnection)
     ) {
         Column {
             MediumSpacer()
@@ -555,12 +557,11 @@ fun ScheduleBox(
             LargeSpacer()
         }
 
-        PullRefreshIndicator(
-            refreshing = false,
-            state = pullRefreshState,
+        PullToRefreshContainer(
             modifier = Modifier.align(Alignment.TopCenter),
-            backgroundColor = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.primary
+            state = pullToRefreshState,
+            contentColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.surfaceTint
         )
 
         RefreshAlert(
