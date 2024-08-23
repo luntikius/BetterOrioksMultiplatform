@@ -47,7 +47,7 @@ fun RefreshAlert(
                 elevation = CardDefaults.cardElevation(0.dp),
             ) {
                 Column(
-                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 32.dp)
+                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 24.dp)
                 ) {
                     Text(
                         stringResource(Res.string.attention),
@@ -63,7 +63,7 @@ fun RefreshAlert(
                     Row {
                         Spacer(Modifier.weight(1F))
                         TextButton(onClick = onRefreshButtonClick) {
-                            Text(stringResource(Res.string.Refresh))
+                            Text(stringResource(Res.string.Refresh), color = MaterialTheme.colorScheme.error)
                         }
                         TextButton(onClick = onDismiss) {
                             Text(stringResource(Res.string.cancel))
