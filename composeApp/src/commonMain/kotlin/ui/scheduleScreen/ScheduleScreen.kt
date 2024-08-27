@@ -43,6 +43,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,6 +65,7 @@ import betterorioks.composeapp.generated.resources.scheldule
 import betterorioks.composeapp.generated.resources.swap_vert
 import betterorioks.composeapp.generated.resources.today
 import betterorioks.composeapp.generated.resources.week_number
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import model.ScheduleClass
 import model.ScheduleDay
@@ -210,6 +212,7 @@ fun DatePicker(
 
     HorizontalPager(
         state = pagerState,
+        userScrollEnabled = !uiState.isWeekAutoScrollInProgress,
         modifier = modifier
     ) { weekIndex ->
         DatePickerWeek(
@@ -238,7 +241,8 @@ fun DatePickerWeek(
                 date = day.date,
                 isSelected = uiState.selectedDay.date == day.date,
                 modifier = Modifier.weight(1F),
-                onClick = { viewModel.selectDay(day) }
+                onClick = { viewModel.selectDay(day) },
+                isEnabled = !(uiState.isDayAutoScrollInProgress || uiState.isWeekAutoScrollInProgress)
             )
         }
     }
@@ -248,6 +252,7 @@ fun DatePickerWeek(
 fun DatePickerElement(
     date: LocalDate,
     isSelected: Boolean,
+    isEnabled: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
@@ -266,7 +271,7 @@ fun DatePickerElement(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick, enabled = isEnabled)
             .padding(start = 4.dp, end = 4.dp, bottom = 16.dp, top = 8.dp)
     ) {
         Text(text = dayOfWeekString)
@@ -300,12 +305,14 @@ fun DatePickerElement(
 @Composable
 fun SchedulePager(
     schedule: List<ScheduleDay>,
+    isUserScrollEnabled: Boolean,
     pagerState: PagerState,
     recalculateWindows: (number: Int, day: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     HorizontalPager(
         state = pagerState,
+        userScrollEnabled = isUserScrollEnabled,
         modifier = modifier
     ) { page ->
         ScheduleColumn(
@@ -482,21 +489,37 @@ fun LaunchedTracker(
 ) {
     val selectedIndex = uiState.value.selectedDayIndex
     val selectedWeekIndex = uiState.value.selectedWeekIndex
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(dayPagerState.currentPage) {
-        if (dayPagerState.currentPage != selectedIndex) viewModel.selectDayByIndex(dayPagerState.currentPage)
+        if (dayPagerState.currentPage != selectedIndex && !uiState.value.isDayAutoScrollInProgress) {
+            viewModel.selectDayByIndex(dayPagerState.currentPage)
+        }
     }
 
     LaunchedEffect(weekPagerState.currentPage) {
-        if (weekPagerState.currentPage != selectedWeekIndex) viewModel.selectWeekByIndex(weekPagerState.currentPage)
+        if (weekPagerState.currentPage != selectedWeekIndex && !uiState.value.isWeekAutoScrollInProgress) {
+            viewModel.selectWeekByIndex(weekPagerState.currentPage)
+        }
+    }
+
+    LaunchedEffect(selectedWeekIndex) {
+        if (weekPagerState.currentPage != selectedWeekIndex && !uiState.value.isWeekAutoScrollInProgress) {
+            coroutineScope.launch {
+                viewModel.setWeekAutoscroll(true)
+                weekPagerState.animateScrollToPage(selectedWeekIndex)
+                viewModel.setWeekAutoscroll(false)
+            }
+        }
     }
 
     LaunchedEffect(selectedIndex) {
-        if (weekPagerState.currentPage != selectedWeekIndex) {
-            weekPagerState.animateScrollToPage(selectedWeekIndex)
-        }
-        if (dayPagerState.currentPage != selectedIndex) {
-            dayPagerState.scrollToPage(selectedIndex)
+        if (dayPagerState.currentPage != selectedIndex && !uiState.value.isDayAutoScrollInProgress) {
+            coroutineScope.launch {
+                viewModel.setDayAutoscroll(true)
+                dayPagerState.animateScrollToPage(selectedIndex)
+                viewModel.setDayAutoscroll(false)
+            }
         }
     }
 }
@@ -551,6 +574,7 @@ fun ScheduleBox(
             SmallSpacer()
             SchedulePager(
                 uiState.value.days,
+                !uiState.value.isDayAutoScrollInProgress,
                 dayPagerState,
                 { _, _ -> }
             )

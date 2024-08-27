@@ -70,6 +70,14 @@ class ScheduleScreenViewModel : ViewModel() {
         selectWeek(week)
     }
 
+    fun setDayAutoscroll(value: Boolean) {
+        _uiState.update { uis -> uis.copy(isDayAutoScrollInProgress = value) }
+    }
+
+    fun setWeekAutoscroll(value: Boolean) {
+        _uiState.update { uis -> uis.copy(isWeekAutoScrollInProgress = value) }
+    }
+
     fun refreshSchedule() {
         viewModelScope.launch {
             _isInitialized.update { false }

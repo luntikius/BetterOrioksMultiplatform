@@ -9,7 +9,9 @@ data class ScheduleScreenUiState(
     val weeks: List<ScheduleWeek> = schedule.weeks,
     val days: List<ScheduleDay> = schedule.weeks.flatMap { it.days },
     val selectedDay: ScheduleDay = days.first(),
-    val selectedWeek: ScheduleWeek = weeks.first()
+    val selectedWeek: ScheduleWeek = weeks.first(),
+    val isDayAutoScrollInProgress: Boolean = false,
+    val isWeekAutoScrollInProgress: Boolean = false
 ) {
     val selectedDayIndex = days.indexOf(selectedDay)
     val selectedWeekIndex = weeks.indexOf(selectedWeek)
