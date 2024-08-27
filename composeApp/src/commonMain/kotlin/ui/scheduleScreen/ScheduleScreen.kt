@@ -581,12 +581,15 @@ fun ScheduleBox(
             LargeSpacer()
         }
 
-        PullToRefreshContainer(
-            modifier = Modifier.align(Alignment.TopCenter),
-            state = pullToRefreshState,
-            contentColor = MaterialTheme.colorScheme.primary,
-            containerColor = MaterialTheme.colorScheme.surfaceTint
-        )
+        // TODO fix this in newer version of Material3
+        if (pullToRefreshState.progress > 0.5F) {
+            PullToRefreshContainer(
+                modifier = Modifier.align(Alignment.TopCenter),
+                state = pullToRefreshState,
+                contentColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.surfaceTint
+            )
+        }
 
         RefreshAlert(
             isVisible = isRefreshAlertVisible,
