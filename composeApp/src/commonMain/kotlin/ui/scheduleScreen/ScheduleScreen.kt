@@ -519,8 +519,8 @@ fun ScheduleBox(
     }
 
     LaunchedEffect(pullToRefreshState.isRefreshing) {
-        if(pullToRefreshState.isRefreshing) {
-            viewModel.refreshSchedule()
+        if (pullToRefreshState.isRefreshing) {
+            isRefreshAlertVisible = true
             pullToRefreshState.endRefresh()
         }
     }
@@ -577,8 +577,8 @@ fun ScheduleBox(
 fun ScheduleScreen(
     viewModel: ScheduleScreenViewModel = remember { mutableStateOf(ScheduleScreenViewModel()) }.value
 ) {
-    val uiState = viewModel.uiState.collectAsState()
-    if (uiState.value.isRefreshing) {
+    val isInitialized by viewModel.isInitialized.collectAsState()
+    if (!isInitialized) {
         LoadingScreen(Modifier.fillMaxSize(), text = stringResource(Res.string.loading_schedule))
     } else {
         ScheduleBox(viewModel)

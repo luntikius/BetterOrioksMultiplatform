@@ -72,9 +72,10 @@ class ScheduleScreenViewModel : ViewModel() {
 
     fun refreshSchedule() {
         viewModelScope.launch {
-            _uiState.update { uis -> uis.copy(isRefreshing = true) }
+            _isInitialized.update { false }
+            _uiState.update { getUiState() }
             delay(REFRESH_DELAY)
-            _uiState.update { uis -> uis.copy(isRefreshing = false) }
+            _isInitialized.update { true }
         }
     }
 }
