@@ -1,6 +1,7 @@
 package ui.scheduleScreen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,7 +57,9 @@ import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_drop_down
 import betterorioks.composeapp.generated.resources.change_lesson_time
 import betterorioks.composeapp.generated.resources.drop_down_menu
+import betterorioks.composeapp.generated.resources.free_day
 import betterorioks.composeapp.generated.resources.gap_minutes
+import betterorioks.composeapp.generated.resources.happy_flame
 import betterorioks.composeapp.generated.resources.loading_schedule
 import betterorioks.composeapp.generated.resources.refresh_alert_text
 import betterorioks.composeapp.generated.resources.room_number
@@ -328,13 +331,37 @@ fun ScheduleColumn(
     recalculateWindows: (number: Int, day: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(scheduleList) {
-            ScheduleItem(
-                scheduleElement = it,
-                recalculateWindows = { recalculateWindows(it.number, it.day) }
-            )
+    if (scheduleList.isNotEmpty()) {
+        LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(scheduleList) {
+                ScheduleItem(
+                    scheduleElement = it,
+                    recalculateWindows = { recalculateWindows(it.number, it.day) }
+                )
+            }
         }
+    } else {
+        EmptyScheduleItem()
+    }
+}
+
+@Composable
+fun EmptyScheduleItem(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(16.dp)
+    ) {
+        Spacer(Modifier.weight(1F))
+        Image(painterResource(Res.drawable.happy_flame), contentDescription = null)
+        LargeSpacer()
+        Text(
+            stringResource(Res.string.free_day),
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.weight(2F))
     }
 }
 
@@ -504,7 +531,7 @@ fun LaunchedTracker(
     }
 
     LaunchedEffect(selectedWeekIndex) {
-        if (weekPagerState.currentPage != selectedWeekIndex && !uiState.value.isWeekAutoScrollInProgress) {
+        if (weekPagerState.currentPage != selectedWeekIndex) {
             coroutineScope.launch {
                 viewModel.setWeekAutoscroll(true)
                 weekPagerState.animateScrollToPage(selectedWeekIndex)
@@ -514,7 +541,7 @@ fun LaunchedTracker(
     }
 
     LaunchedEffect(selectedIndex) {
-        if (dayPagerState.currentPage != selectedIndex && !uiState.value.isDayAutoScrollInProgress) {
+        if (dayPagerState.currentPage != selectedIndex) {
             coroutineScope.launch {
                 viewModel.setDayAutoscroll(true)
                 dayPagerState.animateScrollToPage(selectedIndex)
@@ -576,7 +603,8 @@ fun ScheduleBox(
                 uiState.value.days,
                 !uiState.value.isDayAutoScrollInProgress,
                 dayPagerState,
-                { _, _ -> }
+                { _, _ -> },
+                modifier = Modifier.fillMaxSize()
             )
             LargeSpacer()
         }
