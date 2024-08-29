@@ -7,12 +7,12 @@ androidx-activityCompose = "1.9.1"
 androidx-appcompat = "1.7.0"
 androidx-core-ktx = "1.13.1"
 compose-plugin = "1.6.11"
-kotlin = "2.0.0"
+kotlin = "2.0.20"
 navigationCompose = "2.7.0-alpha07"
 kotlinx-datetime = "0.6.0"
 androidxRoom = "2.7.0-alpha07"
 sqlite = "2.5.0-alpha07"
-ksp = "2.0.0-1.0.23"
+ksp = "2.0.20-1.0.24"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
