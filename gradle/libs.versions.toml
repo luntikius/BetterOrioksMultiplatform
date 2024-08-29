@@ -12,6 +12,7 @@ navigationCompose = "2.7.0-alpha07"
 kotlinx-datetime = "0.6.0"
 androidxRoom = "2.7.0-alpha07"
 sqlite = "2.5.0-alpha07"
+ksp = "2.0.0-1.0.23"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
@@ -33,3 +34,4 @@ jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 room = { id = "androidx.room", version.ref = "androidxRoom" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
