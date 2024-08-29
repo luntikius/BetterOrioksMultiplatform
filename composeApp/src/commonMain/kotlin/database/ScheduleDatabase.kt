@@ -12,7 +12,6 @@ import model.database.ScheduleElementEntity
 abstract class ScheduleDatabase : RoomDatabase() {
 
     abstract fun getDao(): ScheduleDao
-
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
