@@ -1,9 +1,22 @@
 package model.database
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(
+    tableName = "elements",
+    indices = [Index(value = ["dayId"], unique = false)],
+    foreignKeys = [
+        ForeignKey(
+            entity = ScheduleDayEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["dayId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class ScheduleElementEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
