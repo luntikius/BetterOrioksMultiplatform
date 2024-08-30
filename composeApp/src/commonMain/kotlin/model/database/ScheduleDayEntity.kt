@@ -4,6 +4,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.datetime.LocalDate
+import model.ScheduleDay
+import model.ScheduleElement
 
 @Entity(
     tableName = "days",
@@ -22,6 +25,13 @@ data class ScheduleDayEntity(
     val id: Int = 0,
 
     val weekNumber: Int,
-    val date: String,
-    val weekType: String
-)
+    val date: String
+) {
+    fun ScheduleDayEntity.toScheduleDay(scheduleList: List<ScheduleElement>): ScheduleDay {
+        return ScheduleDay(
+            date = LocalDate.parse(date),
+            weekNumber = weekNumber,
+            scheduleList = scheduleList
+        )
+    }
+}
