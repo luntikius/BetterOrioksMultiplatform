@@ -126,8 +126,9 @@ fun MonthInfoRow(
     uiState: ScheduleScreenUiState,
     modifier: Modifier = Modifier
 ) {
-    val firstDate = uiState.selectedWeek.days.first().date
-    val lastDate = uiState.selectedWeek.days.last().date
+    val selectedWeek = uiState.weeks[uiState.selectedWeekIndex]
+    val firstDate = selectedWeek.days.first().date
+    val lastDate = selectedWeek.days.last().date
     val isWeekInOneMonth = firstDate.month == lastDate.month
     val monthString = if (isWeekInOneMonth) {
         stringResource(firstDate.getMonthStringRes())
@@ -242,9 +243,9 @@ fun DatePickerWeek(
             val day = days[it]
             DatePickerElement(
                 date = day.date,
-                isSelected = uiState.selectedDay.date == day.date,
+                isSelected = uiState.days[uiState.selectedDayIndex].date == day.date,
                 modifier = Modifier.weight(1F),
-                onClick = { viewModel.selectDay(day) },
+                onClick = { viewModel.selectDayByDate(day.date) },
                 isEnabled = !(uiState.isDayAutoScrollInProgress || uiState.isWeekAutoScrollInProgress)
             )
         }
@@ -589,7 +590,7 @@ fun ScheduleBox(
             )
             MediumSpacer()
             WeekInfoRow(
-                uiState.value.selectedWeek,
+                uiState.value.weeks[uiState.value.selectedWeekIndex],
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             DatePicker(
@@ -628,6 +629,12 @@ fun ScheduleBox(
     }
 }
 
+// TODO доделать
+@Composable
+fun EmptySchedule(modifier: Modifier = Modifier) {
+    Text("НЕТ РАСПИСАНИЯ!")
+}
+
 @Composable
 fun ScheduleScreen(
     viewModel: ScheduleScreenViewModel
@@ -636,6 +643,7 @@ fun ScheduleScreen(
     if (!isInitialized) {
         LoadingScreen(Modifier.fillMaxSize(), text = stringResource(Res.string.loading_schedule))
     } else {
-        ScheduleBox(viewModel)
+        val uiState = viewModel.uiState.collectAsState()
+        if (uiState.value.weeks.isNotEmpty()) ScheduleBox(viewModel) else EmptySchedule()
     }
 }

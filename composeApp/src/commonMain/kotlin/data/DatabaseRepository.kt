@@ -2,6 +2,7 @@ package data
 
 import database.ScheduleDao
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 import model.Schedule
@@ -38,7 +39,11 @@ class DatabaseRepository(
         }
     }
 
-    val scheduleFlow = weeksListFlow.combine(firstOfTheMonthFlow) { weeksList, firstOfTheMonths ->
+    private val scheduleFlow = weeksListFlow.combine(firstOfTheMonthFlow) { weeksList, firstOfTheMonths ->
         Schedule(weeksList, firstOfTheMonths)
+    }
+
+    suspend fun getSchedule(): Schedule {
+        return scheduleFlow.first()
     }
 }
