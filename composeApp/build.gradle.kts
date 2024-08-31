@@ -52,6 +52,11 @@ kotlin {
             implementation(libs.ktor.client.serialization)
             implementation(libs.ktor.client.logging)
             implementation(libs.kotlinx.serialization.json)
+
+            // Data Base
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
+            implementation(libs.sqlite)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.ios)
@@ -82,6 +87,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -94,4 +100,15 @@ android {
     dependencies {
         debugImplementation(compose.uiTooling)
     }
+}
+
+dependencies {
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
