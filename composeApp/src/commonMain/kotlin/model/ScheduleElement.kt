@@ -15,8 +15,7 @@ data class ScheduleClass(
     val type: String = "Пара",
     val subject: String = "Название предмета",
     val teacher: String = "Учитель",
-    val room: String = "",
-    val isSwitchable: Boolean = false
+    val room: String = ""
 ) : ScheduleElement
 
 data class ScheduleGap(
