@@ -39,7 +39,17 @@ class ScheduleScreenViewModel(
 
     fun selectToday() {
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-        selectDayByDate(today.date)
+        val first = uiState.value.days.first()
+        val last = uiState.value.days.last()
+        if (today.date in first.date..last.date) {
+            selectDayByDate(today.date)
+        } else {
+            if (today.date < first.date) {
+                selectDayByIndex(0)
+            } else {
+                selectDayByIndex(uiState.value.days.size - 1)
+            }
+        }
     }
 
     private fun selectWeekByDayIndex(index: Int) {

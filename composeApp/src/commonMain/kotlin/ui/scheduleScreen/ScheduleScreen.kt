@@ -61,6 +61,8 @@ import betterorioks.composeapp.generated.resources.free_day
 import betterorioks.composeapp.generated.resources.gap_minutes
 import betterorioks.composeapp.generated.resources.happy_flame
 import betterorioks.composeapp.generated.resources.loading_schedule
+import betterorioks.composeapp.generated.resources.no_schedule
+import betterorioks.composeapp.generated.resources.no_schedule_full
 import betterorioks.composeapp.generated.resources.refresh_alert_text
 import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.schedule_scroll_to_today
@@ -126,14 +128,21 @@ fun MonthInfoRow(
     uiState: ScheduleScreenUiState,
     modifier: Modifier = Modifier
 ) {
-    val selectedWeek = uiState.weeks[uiState.selectedWeekIndex]
-    val firstDate = selectedWeek.days.first().date
-    val lastDate = selectedWeek.days.last().date
-    val isWeekInOneMonth = firstDate.month == lastDate.month
-    val monthString = if (isWeekInOneMonth) {
-        stringResource(firstDate.getMonthStringRes())
+    val isEmptySchedule = uiState.weeks.isEmpty()
+    val monthString = if (!isEmptySchedule) {
+        val selectedWeek = uiState.weeks[uiState.selectedWeekIndex]
+        val firstDate = selectedWeek.days.first().date
+        val lastDate = selectedWeek.days.last().date
+        val isWeekInOneMonth = firstDate.month == lastDate.month
+        if (isWeekInOneMonth) {
+            stringResource(firstDate.getMonthStringRes())
+        } else {
+            stringResource(firstDate.getShortMonthStringRes()) +
+                " - " +
+                stringResource(lastDate.getShortMonthStringRes())
+        }
     } else {
-        "${stringResource(firstDate.getShortMonthStringRes())} - ${stringResource(lastDate.getShortMonthStringRes())}"
+        stringResource(Res.string.no_schedule)
     }
 
     var isMonthSelectorVisible by remember { mutableStateOf(false) }
@@ -153,7 +162,7 @@ fun MonthInfoRow(
             modifier = Modifier
                 .padding(4.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .clickable { isMonthSelectorVisible = true }
+                .clickable(!isEmptySchedule) { isMonthSelectorVisible = true }
         ) {
             Text(
                 monthString,
@@ -167,7 +176,8 @@ fun MonthInfoRow(
         }
         Spacer(Modifier.weight(1f))
         IconButton(
-            onClick = { viewModel.selectToday() }
+            onClick = { viewModel.selectToday() },
+            enabled = !isEmptySchedule
         ) {
             Icon(
                 painterResource(Res.drawable.today),
@@ -181,22 +191,31 @@ fun MonthInfoRow(
 
 @Composable
 fun WeekInfoRow(
-    scheduleWeek: ScheduleWeek,
+    uiState: ScheduleScreenUiState,
     modifier: Modifier = Modifier
 ) {
+    val (type, number) = if (uiState.weeks.isNotEmpty()) {
+        val week = uiState.weeks[uiState.selectedWeekIndex]
+        listOf(
+            stringResource(week.type.stringRes),
+            stringResource(Res.string.week_number, week.number)
+        )
+    } else {
+        listOf("...", "...")
+    }
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            stringResource(scheduleWeek.type.stringRes),
+            type,
             textAlign = TextAlign.End,
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.weight(1f)
         )
         Text("", modifier = Modifier.padding(horizontal = 8.dp))
         Text(
-            stringResource(Res.string.week_number, scheduleWeek.number),
+            number,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.weight(1f)
@@ -314,15 +333,19 @@ fun SchedulePager(
     recalculateWindows: (number: Int, day: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    HorizontalPager(
-        state = pagerState,
-        userScrollEnabled = isUserScrollEnabled,
-        modifier = modifier
-    ) { page ->
-        ScheduleColumn(
-            scheduleList = schedule[page].scheduleList,
-            recalculateWindows = recalculateWindows
-        )
+    if (schedule.isNotEmpty()) {
+        HorizontalPager(
+            state = pagerState,
+            userScrollEnabled = isUserScrollEnabled,
+            modifier = modifier
+        ) { page ->
+            ScheduleColumn(
+                scheduleList = schedule[page].scheduleList,
+                recalculateWindows = recalculateWindows
+            )
+        }
+    } else {
+        EmptySchedule(modifier.fillMaxSize())
     }
 }
 
@@ -590,7 +613,7 @@ fun ScheduleBox(
             )
             MediumSpacer()
             WeekInfoRow(
-                uiState.value.weeks[uiState.value.selectedWeekIndex],
+                uiState.value,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             DatePicker(
@@ -632,7 +655,19 @@ fun ScheduleBox(
 // TODO доделать
 @Composable
 fun EmptySchedule(modifier: Modifier = Modifier) {
-    Text("НЕТ РАСПИСАНИЯ!")
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        item {
+            Text(
+                stringResource(Res.string.no_schedule_full),
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
 
 @Composable
@@ -643,7 +678,6 @@ fun ScheduleScreen(
     if (!isInitialized) {
         LoadingScreen(Modifier.fillMaxSize(), text = stringResource(Res.string.loading_schedule))
     } else {
-        val uiState = viewModel.uiState.collectAsState()
-        if (uiState.value.weeks.isNotEmpty()) ScheduleBox(viewModel) else EmptySchedule()
+        ScheduleBox(viewModel)
     }
 }
