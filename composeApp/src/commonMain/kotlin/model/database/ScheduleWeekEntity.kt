@@ -7,15 +7,15 @@ import model.ScheduleDay
 import model.ScheduleWeek
 import model.WeekType
 
-@Entity(tableName = "weeks", indices = [Index(value = ["number"], unique = true)])
+@Entity(tableName = "weeks", indices = [Index(value = ["id"], unique = true)])
 data class ScheduleWeekEntity(
     @PrimaryKey
-    val number: Int,
+    val id: Int,
     val type: String
 ) {
-    fun ScheduleWeekEntity.toScheduleWeek(days: List<ScheduleDay>): ScheduleWeek {
+    fun toScheduleWeek(days: List<ScheduleDay>): ScheduleWeek {
         return ScheduleWeek(
-            number = number,
+            number = id,
             type = WeekType.valueOf(type),
             days = days
         )

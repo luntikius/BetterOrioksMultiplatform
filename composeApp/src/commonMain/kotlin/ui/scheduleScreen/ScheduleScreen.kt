@@ -630,7 +630,7 @@ fun ScheduleBox(
 
 @Composable
 fun ScheduleScreen(
-    viewModel: ScheduleScreenViewModel = remember { mutableStateOf(ScheduleScreenViewModel()) }.value
+    viewModel: ScheduleScreenViewModel
 ) {
     val isInitialized by viewModel.isInitialized.collectAsState()
     if (!isInitialized) {

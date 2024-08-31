@@ -2,6 +2,7 @@ package ui.scheduleScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import data.DatabaseRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +18,9 @@ import model.Temp
 
 private const val REFRESH_DELAY = 5000L
 
-class ScheduleScreenViewModel : ViewModel() {
+class ScheduleScreenViewModel(
+    val databaseRepository: DatabaseRepository
+) : ViewModel() {
 
     private var _uiState: MutableStateFlow<ScheduleScreenUiState>
     private val _isInitialized = MutableStateFlow(false)

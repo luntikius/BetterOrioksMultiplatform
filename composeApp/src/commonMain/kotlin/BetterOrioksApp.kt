@@ -18,6 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import data.DatabaseRepository
+import database.ScheduleDao
 import model.AppScreens
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
@@ -32,9 +34,11 @@ private val BOTTOM_NAV_SCREENS = listOf(
 
 @Composable
 fun BetterOrioksApp(
+    scheduleDao: ScheduleDao,
     navController: NavHostController = rememberNavController()
 ) {
-    val scheduleScreenViewModel by remember { mutableStateOf(ScheduleScreenViewModel()) }
+    val databaseRepository = DatabaseRepository(scheduleDao)
+    val scheduleScreenViewModel by remember { mutableStateOf(ScheduleScreenViewModel(databaseRepository)) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

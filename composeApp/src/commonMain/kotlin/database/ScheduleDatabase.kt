@@ -6,12 +6,18 @@ import androidx.room.RoomDatabaseConstructor
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import model.database.FirstOfTheMonthEntity
 import model.database.ScheduleDayEntity
 import model.database.ScheduleElementEntity
 import model.database.ScheduleWeekEntity
 
 @Database(
-    entities = [ScheduleElementEntity::class, ScheduleDayEntity::class, ScheduleWeekEntity::class],
+    entities = [
+        ScheduleElementEntity::class,
+        ScheduleDayEntity::class,
+        ScheduleWeekEntity::class,
+        FirstOfTheMonthEntity::class
+    ],
     version = 1,
     exportSchema = true
 )
@@ -37,7 +43,3 @@ abstract class ScheduleDatabase : RoomDatabase() {
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
 expect object AppDatabaseConstructor : RoomDatabaseConstructor<ScheduleDatabase>
-
-
-
-
