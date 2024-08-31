@@ -3,6 +3,7 @@ package ui.scheduleScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.DatabaseRepository
+import data.MietWebRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +15,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 class ScheduleScreenViewModel(
-    val databaseRepository: DatabaseRepository
+    val databaseRepository: DatabaseRepository,
+    val mietWebRepository: MietWebRepository
 ) : ViewModel() {
 
     private lateinit var _uiState: MutableStateFlow<ScheduleScreenUiState>
@@ -73,6 +75,8 @@ class ScheduleScreenViewModel(
     fun refreshSchedule() {
         viewModelScope.launch {
             _isInitialized.update { false }
+            val sched = mietWebRepository.getSchedule("ПИН-36").toScheduleDbEntities(LocalDate(2024, 9, 2))
+            databaseRepository.insertNewSchedule(sched)
             val schedule = databaseRepository.getSchedule()
             val uiStateValue = ScheduleScreenUiState(schedule = schedule)
             _uiState = MutableStateFlow(uiStateValue)

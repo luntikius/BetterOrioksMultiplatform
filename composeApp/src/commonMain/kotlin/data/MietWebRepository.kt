@@ -5,13 +5,11 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.forms.FormBuilder
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.Parameters
-import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.LocalTime
 import kotlinx.serialization.json.Json
 import model.ScheduleClass
@@ -22,13 +20,8 @@ import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-private const val BASE_URL = "https://www.miet.ru/"
+class MietWebRepository {
 
-private const val SCHEDULE_URL = "schedule/data"
-
-private const val TEN_MINUTE_GAP = 10
-
-class MietWebRepository{
     private val client: HttpClient by lazy {
         try {
             HttpClient {
@@ -45,56 +38,48 @@ class MietWebRepository{
         }
     }
 
+    private suspend fun sendScheduleRequest(group: String, cookie: String? = null): String {
+        return client.submitForm(
+            url = SCHEDULE_URL,
+            formParameters = Parameters.build {
+                append("group", group)
+            },
+            encodeInQuery = false
+        ) {
+            header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded)
+            header(HttpHeaders.Accept, "*/*")
+            if (cookie != null) header(HttpHeaders.Cookie, cookie)
+        }.body()
+    }
+
     suspend fun getSchedule(
         group: String
     ): FullSchedule {
-        val fullSchedule: String
-        var schedule = FullSchedule()
-        try {
-            val response: String = client.submitForm(
-                url = SCHEDULE_URL,
-                formParameters = Parameters.build {
-                    append("group", group)
-                },
-                encodeInQuery = false
-            ) {
-                header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded)
-                header(HttpHeaders.Accept, "*/*")
-            }.body()
+        return try {
+            val cookieResponse = sendScheduleRequest(group)
 
-            val start = response.indexOf('"')
-            val end = response.indexOf(";")
-            val cookie = response.slice(start + 1 until end)
+            val start = cookieResponse.indexOf('"')
+            val end = cookieResponse.indexOf(";")
+            val cookie = cookieResponse.slice(start + 1 until end)
 
-            fullSchedule = client.submitForm(
-                url = SCHEDULE_URL,
-                formParameters = Parameters.build {
-                    append("group", group)
-                },
-                encodeInQuery = false
-            ) {
-                header(HttpHeaders.Cookie, cookie)
-                header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded)
-                header(HttpHeaders.Accept, "*/*")
-            }.body()
+            val scheduleJsonResponse = sendScheduleRequest(group, cookie)
 
-            schedule = Json.decodeFromString<FullSchedule>(fullSchedule)
-
+            Json.decodeFromString<FullSchedule>(scheduleJsonResponse)
         } catch (e: Exception) {
             println("Error fetching schedule: ${e.stackTraceToString()}")
+            FullSchedule()
         } finally {
             client.close()
         }
-        return schedule
     }
 
-    fun parseFromFullSchedule(fullSchedule: FullSchedule): List<List<ScheduleElement>>{
+    fun parseFromFullSchedule(fullSchedule: FullSchedule): List<List<ScheduleElement>> {
         val data = fullSchedule.schedule
         val result = mutableListOf<List<ScheduleElement>>()
-        for (i in 1..28){
+        for (i in 1..28) {
             val resultElement = mutableListOf<ScheduleElement>()
-            val day = i%7
-            val week = i/7
+            val day = i % 7
+            val week = i / 7
             val tempData = data.filter { it.day == day && it.dayNumber == week }.sortedBy { it.time.dayOrder }
             for (element in tempData) {
                 val fromTime = LocalTime(
@@ -107,7 +92,7 @@ class MietWebRepository{
                 )
                 resultElement.add(
                     ScheduleClass(
-                        day = week*7 + day,
+                        day = week * 7 + day,
                         number = element.time.dayOrder,
                         fromTime = fromTime,
                         toTime = toTime,
@@ -118,16 +103,15 @@ class MietWebRepository{
                     )
                 )
             }
-            for(j in 0..tempData.size-2) {
-                val timeBetweenPairs: Duration =
-                    (LocalTime.parse(tempData[j+1].time.timeFrom).toSecondOfDay() -
-                            LocalTime.parse(tempData[j].time.timeTo)
-                                .toSecondOfDay())
-                                .toDuration(DurationUnit.SECONDS)
-                if(timeBetweenPairs.inWholeMinutes > TEN_MINUTE_GAP) {
+            for (j in 0..tempData.size - 2) {
+                val timeBetweenPairs: Duration = (
+                    LocalTime.parse(tempData[j + 1].time.timeFrom).toSecondOfDay() -
+                        LocalTime.parse(tempData[j].time.timeTo).toSecondOfDay()
+                    ).toDuration(DurationUnit.SECONDS)
+                if (timeBetweenPairs.inWholeMinutes > DEFAULT_GAP_DURATION) {
                     resultElement.add(
                         ScheduleGap(
-                            day = week*7 + day,
+                            day = week * 7 + day,
                             number = tempData[j].time.dayOrder,
                             gapDuration = timeBetweenPairs.inWholeMinutes.toInt()
                         )
@@ -137,5 +121,11 @@ class MietWebRepository{
             result.add(resultElement.sortedBy { it.number })
         }
         return result
+    }
+
+    companion object {
+        private const val BASE_URL = "https://www.miet.ru/"
+        private const val SCHEDULE_URL = "schedule/data"
+        private const val DEFAULT_GAP_DURATION = 10
     }
 }
