@@ -61,6 +61,7 @@ import betterorioks.composeapp.generated.resources.free_day
 import betterorioks.composeapp.generated.resources.gap_minutes
 import betterorioks.composeapp.generated.resources.happy_flame
 import betterorioks.composeapp.generated.resources.loading_schedule
+import betterorioks.composeapp.generated.resources.loading_schedule_from_web
 import betterorioks.composeapp.generated.resources.no_schedule
 import betterorioks.composeapp.generated.resources.no_schedule_full
 import betterorioks.composeapp.generated.resources.refresh_alert_text
@@ -76,10 +77,12 @@ import model.ScheduleClass
 import model.ScheduleDay
 import model.ScheduleElement
 import model.ScheduleGap
+import model.ScheduleState
 import model.ScheduleWeek
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import ui.common.ErrorScreen
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
@@ -675,10 +678,19 @@ fun EmptySchedule(modifier: Modifier = Modifier) {
 fun ScheduleScreen(
     viewModel: ScheduleScreenViewModel
 ) {
-    val isInitialized by viewModel.isInitialized.collectAsState()
-    if (!isInitialized) {
-        LoadingScreen(Modifier.fillMaxSize(), text = stringResource(Res.string.loading_schedule))
-    } else {
-        ScheduleBox(viewModel)
+    val scheduleState by viewModel.scheduleState.collectAsState()
+    when (scheduleState) {
+        is ScheduleState.Loading, ScheduleState.LoadingFromWeb -> {
+            val string = if (scheduleState is ScheduleState.Loading) {
+                stringResource(Res.string.loading_schedule)
+            } else {
+                stringResource(Res.string.loading_schedule_from_web)
+            }
+            LoadingScreen(Modifier.fillMaxSize(), text = string)
+        }
+        is ScheduleState.Error ->
+            ErrorScreen((scheduleState as ScheduleState.Error).errorText, modifier = Modifier.fillMaxSize())
+        is ScheduleState.Success ->
+            ScheduleBox(viewModel)
     }
 }

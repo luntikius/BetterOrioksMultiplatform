@@ -120,6 +120,7 @@
     <string name="schedule_scroll_to_today">выбрать сегодняшний день в расписании</string>
     <string name="drop_down_menu">открыть выпадающее меню</string>
     <string name="loading_schedule">загружаем расписание</string>
+    <string name="loading_schedule_from_web">загружаем расписание из сети</string>
     <string name="no_schedule">расписание отсутствует</string>
     <string name="no_schedule_full">Расписание, сохраненное в памяти устройства пустое, попробуйте перезагрузить его, потянув пальцем вниз</string>
 </resources>

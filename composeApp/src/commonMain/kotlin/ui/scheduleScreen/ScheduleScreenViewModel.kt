@@ -13,6 +13,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import model.ScheduleState
 
 class ScheduleScreenViewModel(
     val databaseRepository: DatabaseRepository,
@@ -20,13 +21,13 @@ class ScheduleScreenViewModel(
 ) : ViewModel() {
 
     private lateinit var _uiState: MutableStateFlow<ScheduleScreenUiState>
-    private val _isInitialized = MutableStateFlow(false)
+    private val _scheduleState: MutableStateFlow<ScheduleState> = MutableStateFlow(ScheduleState.Loading)
 
     init {
         loadSchedule()
     }
 
-    val isInitialized = _isInitialized.asStateFlow()
+    val scheduleState = _scheduleState.asStateFlow()
     lateinit var uiState: StateFlow<ScheduleScreenUiState>
 
     fun selectDayByIndex(index: Int) {
@@ -72,27 +73,31 @@ class ScheduleScreenViewModel(
         _uiState.update { uis -> uis.copy(isWeekAutoScrollInProgress = value) }
     }
 
-    private fun loadScheduleFromWeb(group: String, semesterStartDate: LocalDate) {
-        viewModelScope.launch {
-            val schedule = mietWebRepository.getSchedule(group).toScheduleDbEntities(semesterStartDate)
-            databaseRepository.insertNewSchedule(schedule)
-        }
+    private suspend fun loadScheduleFromWeb(group: String, semesterStartDate: LocalDate) {
+        val schedule = mietWebRepository.getSchedule(group).toScheduleDbEntities(semesterStartDate)
+        databaseRepository.insertNewSchedule(schedule)
     }
 
     fun loadSchedule(refresh: Boolean = false) {
         viewModelScope.launch {
-            _isInitialized.update { false }
+            try {
+                _scheduleState.update { ScheduleState.Loading }
 
-            if (refresh || !databaseRepository.isScheduleStored()) {
-                loadScheduleFromWeb("ПИН-45", LocalDate(2024, 9, 2))
+                if (refresh || !databaseRepository.isScheduleStored()) {
+                    _scheduleState.update { ScheduleState.LoadingFromWeb }
+                    loadScheduleFromWeb("ПИН-45", LocalDate(2024, 9, 2))
+                    _scheduleState.update { ScheduleState.Loading }
+                }
+
+                val schedule = databaseRepository.getSchedule()
+                val uiStateValue = ScheduleScreenUiState(schedule = schedule)
+                _uiState = MutableStateFlow(uiStateValue)
+                uiState = _uiState.asStateFlow()
+
+                _scheduleState.update { ScheduleState.Success }
+            } catch (e: Exception) {
+                _scheduleState.update { ScheduleState.Error(e.message.toString()) }
             }
-
-            val schedule = databaseRepository.getSchedule()
-            val uiStateValue = ScheduleScreenUiState(schedule = schedule)
-            _uiState = MutableStateFlow(uiStateValue)
-            uiState = _uiState.asStateFlow()
-
-            _isInitialized.update { true }
         }
     }
 }
