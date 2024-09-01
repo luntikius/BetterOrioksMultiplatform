@@ -1,5 +1,6 @@
 package data
 
+import data.DatabaseUtils.addGaps
 import database.ScheduleDao
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -21,7 +22,8 @@ class DatabaseRepository(
     private val scheduleDaysFlow = daysFlow.combine(elementsFlow) { days, elements ->
         buildMap<Int, List<ScheduleDay>> {
             days.forEach { day ->
-                val daysElements = elements[day.id]?.map { it.toScheduleElement() } ?: listOf()
+                val daysClasses = elements[day.id]?.map { it.toScheduleClass() } ?: listOf()
+                val daysElements = addGaps(daysClasses)
                 val scheduleDay = day.toScheduleDay(daysElements)
                 if (this[day.weekId] == null) {
                     put(day.weekId, listOf(scheduleDay))
@@ -44,7 +46,7 @@ class DatabaseRepository(
         Schedule(weeksList, firstOfTheMonths)
     }
 
-    suspend fun dumpAll() {
+    private suspend fun dumpAll() {
         scheduleDao.dumpSchedule()
         scheduleDao.dumpFirstOfTheMonths()
     }
@@ -59,5 +61,9 @@ class DatabaseRepository(
 
     suspend fun getSchedule(): Schedule {
         return scheduleFlow.first()
+    }
+
+    suspend fun isScheduleStored(): Boolean {
+        return scheduleDao.countEntities() > 0
     }
 }

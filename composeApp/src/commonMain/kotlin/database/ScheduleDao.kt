@@ -54,4 +54,7 @@ interface ScheduleDao {
 
     @Query("DELETE FROM firstOfTheMonths")
     suspend fun dumpFirstOfTheMonths()
+
+    @Query("SELECT COUNT(*) FROM elements")
+    suspend fun countEntities(): Int
 }

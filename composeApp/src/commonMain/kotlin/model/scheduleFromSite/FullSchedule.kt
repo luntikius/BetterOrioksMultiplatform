@@ -30,11 +30,12 @@ data class FullSchedule(
 
         val firstOfTheMonths = mutableListOf<FirstOfTheMonthEntity>()
         val daysCount = SCHEDULE_WEEKS_COUNT * DAYS_IN_WEEK
+        val daysOffset = getMondayOffset(semesterStartDate)
         val days = buildList {
             repeat(daysCount) { index ->
                 val id = index + 1
                 val weekId = index / DAYS_IN_WEEK + 1
-                val date = semesterStartDate.plus(index, DateTimeUnit.DAY)
+                val date = semesterStartDate.plus(index - daysOffset, DateTimeUnit.DAY)
                 if (date.dayOfMonth == 1) firstOfTheMonths.add(FirstOfTheMonthEntity(date = date.toString()))
                 add(
                     ScheduleDayEntity(
@@ -46,13 +47,25 @@ data class FullSchedule(
             }
         }
 
-        val daysOffset = getMondayOffset(semesterStartDate)
+        val elements = buildList {
+            repeat(daysCount) { index ->
+                if (index >= daysOffset) {
+                    val dayId = index + 1
+                    val dayOfTheWeek = dayId % DAYS_IN_WEEK
+                    val weekType = (dayId / DAYS_IN_WEEK) % 4
+                    val filteredSubjects =
+                        schedule.filter { it.day == dayOfTheWeek && it.dayNumber == weekType }
+                            .sortedBy { it.time.dayOrder }
+                    addAll(filteredSubjects.map { it.toScheduleElementEntity(dayId) })
+                }
+            }
+        }
 
         return ScheduleDbEntities(
             firstOfTheMonths,
             weeks,
             days,
-            listOf()
+            elements
         )
     }
 

@@ -23,7 +23,7 @@ class ScheduleScreenViewModel(
     private val _isInitialized = MutableStateFlow(false)
 
     init {
-        refreshSchedule()
+        loadSchedule()
     }
 
     val isInitialized = _isInitialized.asStateFlow()
@@ -72,15 +72,27 @@ class ScheduleScreenViewModel(
         _uiState.update { uis -> uis.copy(isWeekAutoScrollInProgress = value) }
     }
 
-    fun refreshSchedule() {
+    private fun loadScheduleFromWeb(group: String, semesterStartDate: LocalDate) {
+        viewModelScope.launch {
+            val schedule = mietWebRepository.getSchedule(group).toScheduleDbEntities(semesterStartDate)
+            databaseRepository.insertNewSchedule(schedule)
+        }
+    }
+
+    fun loadSchedule(refresh: Boolean = false) {
         viewModelScope.launch {
             _isInitialized.update { false }
-            val sched = mietWebRepository.getSchedule("ПИН-36").toScheduleDbEntities(LocalDate(2024, 9, 2))
-            databaseRepository.insertNewSchedule(sched)
+
+            if (refresh || !databaseRepository.isScheduleStored()) loadScheduleFromWeb(
+                "ПИН-45",
+                LocalDate(2024,9,2)
+            )
+
             val schedule = databaseRepository.getSchedule()
             val uiStateValue = ScheduleScreenUiState(schedule = schedule)
             _uiState = MutableStateFlow(uiStateValue)
             uiState = _uiState.asStateFlow()
+
             _isInitialized.update { true }
         }
     }

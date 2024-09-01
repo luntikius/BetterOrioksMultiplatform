@@ -6,8 +6,6 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.datetime.LocalTime
 import model.ScheduleClass
-import model.ScheduleElement
-import model.ScheduleGap
 
 @Entity(
     tableName = "elements",
@@ -23,11 +21,8 @@ import model.ScheduleGap
 )
 data class ScheduleElementEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val dayId: Int,
-    val isGap: Boolean,
-
-    // ScheduleClass
+    val id: Int = 0,
+    val dayId: Int = 0,
     val number: Int,
     val fromTime: String,
     val toTime: String,
@@ -36,29 +31,18 @@ data class ScheduleElementEntity(
     val teacher: String,
     val room: String,
     val isSwitchable: Boolean,
-
-    // ScheduleGap
-    val gapDuration: Int
 ) {
-    fun toScheduleElement(): ScheduleElement {
-        return if (isGap) {
-            ScheduleGap(
-                day = dayId,
-                number = number,
-                gapDuration = gapDuration
-            )
-        } else {
-            ScheduleClass(
-                day = dayId,
-                number = number,
-                fromTime = LocalTime.parse(fromTime),
-                toTime = LocalTime.parse(toTime),
-                type = type,
-                subject = subject,
-                teacher = teacher,
-                room = room,
-                isSwitchable = isSwitchable
-            )
-        }
+    fun toScheduleClass(): ScheduleClass {
+        return ScheduleClass(
+            day = dayId,
+            number = number,
+            fromTime = LocalTime.parse(fromTime),
+            toTime = LocalTime.parse(toTime),
+            type = type,
+            subject = subject,
+            teacher = teacher,
+            room = room,
+            isSwitchable = isSwitchable
+        )
     }
 }

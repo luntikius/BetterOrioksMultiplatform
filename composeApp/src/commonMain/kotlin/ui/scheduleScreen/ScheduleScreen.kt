@@ -341,7 +341,8 @@ fun SchedulePager(
         ) { page ->
             ScheduleColumn(
                 scheduleList = schedule[page].scheduleList,
-                recalculateWindows = recalculateWindows
+                recalculateWindows = recalculateWindows,
+                modifier = Modifier.fillMaxSize()
             )
         }
     } else {
@@ -355,17 +356,17 @@ fun ScheduleColumn(
     recalculateWindows: (number: Int, day: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (scheduleList.isNotEmpty()) {
-        LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.Top)) {
+        if (scheduleList.isNotEmpty()) {
             items(scheduleList) {
                 ScheduleItem(
                     scheduleElement = it,
                     recalculateWindows = { recalculateWindows(it.number, it.day) }
                 )
             }
+        } else {
+            item { EmptyScheduleItem(modifier = Modifier.fillParentMaxHeight()) }
         }
-    } else {
-        EmptyScheduleItem()
     }
 }
 
@@ -646,7 +647,7 @@ fun ScheduleBox(
         RefreshAlert(
             isVisible = isRefreshAlertVisible,
             text = stringResource(Res.string.refresh_alert_text),
-            onRefresh = { viewModel.refreshSchedule() },
+            onRefresh = { viewModel.loadSchedule(refresh = true) },
             onDismiss = { isRefreshAlertVisible = false },
         )
     }
