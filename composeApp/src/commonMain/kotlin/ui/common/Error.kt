@@ -39,6 +39,5 @@ fun ErrorScreen(text: String, modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.labelMedium,
             textAlign = TextAlign.Center
         )
-
     }
 }
