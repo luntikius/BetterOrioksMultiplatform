@@ -83,10 +83,9 @@ class ScheduleScreenViewModel(
         viewModelScope.launch {
             _isInitialized.update { false }
 
-            if (refresh || !databaseRepository.isScheduleStored()) loadScheduleFromWeb(
-                "ПИН-45",
-                LocalDate(2024,9,2)
-            )
+            if (refresh || !databaseRepository.isScheduleStored()) {
+                loadScheduleFromWeb("ПИН-45", LocalDate(2024, 9, 2))
+            }
 
             val schedule = databaseRepository.getSchedule()
             val uiStateValue = ScheduleScreenUiState(schedule = schedule)

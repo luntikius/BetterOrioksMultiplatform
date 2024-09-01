@@ -1,6 +1,5 @@
 package data
 
-import data.DatabaseUtils.addGaps
 import database.ScheduleDao
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -9,6 +8,7 @@ import kotlinx.datetime.LocalDate
 import model.Schedule
 import model.ScheduleDay
 import model.database.ScheduleDbEntities
+import utils.ScheduleUtils.addGaps
 
 class DatabaseRepository(
     private val scheduleDao: ScheduleDao

@@ -1,4 +1,4 @@
-package data
+package utils
 
 import model.ScheduleClass
 import model.ScheduleElement
@@ -7,7 +7,7 @@ import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-object DatabaseUtils {
+object ScheduleUtils {
 
     private const val DEFAULT_GAP_DURATION = 10
 
