@@ -19,7 +19,6 @@ class ScheduleScreenViewModel(
     val databaseRepository: DatabaseRepository,
     val mietWebRepository: MietWebRepository
 ) : ViewModel() {
-
     private lateinit var _uiState: MutableStateFlow<ScheduleScreenUiState>
     private val _scheduleState: MutableStateFlow<ScheduleState> = MutableStateFlow(ScheduleState.Loading)
 
@@ -96,7 +95,12 @@ class ScheduleScreenViewModel(
 
                 _scheduleState.update { ScheduleState.Success }
             } catch (e: Exception) {
-                _scheduleState.update { ScheduleState.Error(e.message.toString()) }
+                if (!databaseRepository.isScheduleStored()) {
+                    _scheduleState.update { ScheduleState.Error(e.message.toString()) }
+                } else {
+                    //TODO добавить TOAST с текстом о том, что не удалось подключиться к интернету!
+                    _scheduleState.update { ScheduleState.Success }
+                }
             }
         }
     }

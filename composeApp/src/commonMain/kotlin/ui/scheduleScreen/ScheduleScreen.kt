@@ -82,7 +82,7 @@ import model.ScheduleWeek
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
-import ui.common.ErrorScreen
+import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
@@ -592,8 +592,7 @@ fun ScheduleBox(
     val pullToRefreshState = rememberPullToRefreshState()
 
     LaunchedEffect(Unit) {
-        dayPagerState.scrollToPage(uiState.value.selectedDayIndex)
-        weekPagerState.scrollToPage(uiState.value.selectedWeekIndex)
+        viewModel.selectToday()
     }
 
     LaunchedEffect(pullToRefreshState.isRefreshing) {
@@ -689,7 +688,11 @@ fun ScheduleScreen(
             LoadingScreen(Modifier.fillMaxSize(), text = string)
         }
         is ScheduleState.Error ->
-            ErrorScreen((scheduleState as ScheduleState.Error).errorText, modifier = Modifier.fillMaxSize())
+            ErrorScreenWithReloadButton(
+                text = (scheduleState as ScheduleState.Error).errorText,
+                onClick = { viewModel.loadSchedule(refresh = true) },
+                modifier = Modifier.fillMaxSize()
+            )
         is ScheduleState.Success ->
             ScheduleBox(viewModel)
     }

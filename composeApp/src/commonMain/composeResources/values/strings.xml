@@ -123,4 +123,5 @@
     <string name="loading_schedule_from_web">загружаем расписание из сети</string>
     <string name="no_schedule">расписание отсутствует</string>
     <string name="no_schedule_full">Расписание, сохраненное в памяти устройства пустое, попробуйте перезагрузить его, потянув пальцем вниз</string>
+    <string name="reload">перезагрузить</string>
 </resources>
