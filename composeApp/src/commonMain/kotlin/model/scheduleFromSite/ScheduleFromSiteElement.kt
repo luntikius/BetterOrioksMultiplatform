@@ -27,8 +27,7 @@ data class ScheduleFromSiteElement(
             type = subject.formFromString,
             subject = subject.name,
             teacher = subject.teacherFull,
-            room = room.name,
-            isSwitchable = false
+            room = room.name
         )
     }
 }

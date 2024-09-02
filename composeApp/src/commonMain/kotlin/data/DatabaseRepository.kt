@@ -6,8 +6,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 import model.Schedule
+import model.ScheduleClass
 import model.ScheduleDay
 import model.database.ScheduleDbEntities
+import utils.ScheduleUtils
 import utils.ScheduleUtils.addGaps
 
 class DatabaseRepository(
@@ -65,5 +67,15 @@ class DatabaseRepository(
 
     suspend fun isScheduleStored(): Boolean {
         return scheduleDao.countEntities() > 0
+    }
+
+    suspend fun recalculateWindows(element: ScheduleClass) {
+        val (fromTime, toTime) = ScheduleUtils.getSwitchedTime(element.fromTime.toString(), element.toTime.toString())
+        scheduleDao.updateWindows(
+            number = element.number,
+            subject = element.subject,
+            fromTime = fromTime,
+            toTime = toTime
+        )
     }
 }

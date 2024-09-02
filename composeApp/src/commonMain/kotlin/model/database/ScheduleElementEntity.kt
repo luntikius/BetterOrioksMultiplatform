@@ -30,7 +30,6 @@ data class ScheduleElementEntity(
     val subject: String,
     val teacher: String,
     val room: String,
-    val isSwitchable: Boolean,
 ) {
     fun toScheduleClass(): ScheduleClass {
         return ScheduleClass(
@@ -42,7 +41,11 @@ data class ScheduleElementEntity(
             subject = subject,
             teacher = teacher,
             room = room,
-            isSwitchable = isSwitchable
+            isSwitchable = number in SWITCHABLE_NUMBERS
         )
+    }
+
+    companion object {
+        private val SWITCHABLE_NUMBERS = listOf(3)
     }
 }

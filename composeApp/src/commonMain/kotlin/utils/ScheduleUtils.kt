@@ -10,6 +10,10 @@ import kotlin.time.toDuration
 object ScheduleUtils {
 
     private const val DEFAULT_GAP_DURATION = 10
+    private val TIME_MAP = mapOf(
+        Pair("12:00", "13:20") to Pair("12:30", "13:50"),
+        Pair("12:30", "13:50") to Pair("12:00", "13:20")
+    )
 
     fun addGaps(elements: List<ScheduleClass>): List<ScheduleElement> {
         return buildList {
@@ -29,10 +33,14 @@ object ScheduleUtils {
                         )
                     )
                 }
-                if(j == elements.size - 2) {
+                if (j == elements.size - 2) {
                     add(right)
                 }
             }
         }
+    }
+
+    fun getSwitchedTime(fromTime: String, toTime: String): Pair<String, String> {
+        return TIME_MAP[Pair(fromTime, toTime)]!!
     }
 }

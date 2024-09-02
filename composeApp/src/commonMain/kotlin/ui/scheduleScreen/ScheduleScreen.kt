@@ -333,7 +333,7 @@ fun SchedulePager(
     schedule: List<ScheduleDay>,
     isUserScrollEnabled: Boolean,
     pagerState: PagerState,
-    recalculateWindows: (number: Int, day: Int) -> Unit,
+    recalculateWindows: (element: ScheduleClass) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (schedule.isNotEmpty()) {
@@ -356,7 +356,7 @@ fun SchedulePager(
 @Composable
 fun ScheduleColumn(
     scheduleList: List<ScheduleElement>,
-    recalculateWindows: (number: Int, day: Int) -> Unit,
+    recalculateWindows: (element: ScheduleClass) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.Top)) {
@@ -364,7 +364,7 @@ fun ScheduleColumn(
             items(scheduleList) {
                 ScheduleItem(
                     scheduleElement = it,
-                    recalculateWindows = { recalculateWindows(it.number, it.day) }
+                    recalculateWindows = recalculateWindows
                 )
             }
         } else {
@@ -394,7 +394,7 @@ fun EmptyScheduleItem(
 }
 
 @Composable
-fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: () -> Unit) {
+fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: (element: ScheduleClass) -> Unit) {
     when (scheduleElement) {
         is ScheduleClass -> ClassItem(scheduleElement, recalculateWindows)
         is ScheduleGap -> GapItem(scheduleElement)
@@ -405,7 +405,7 @@ fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: () -> Uni
 @Composable
 fun ClassItem(
     scheduleClass: ScheduleClass,
-    recalculateWindows: () -> Unit,
+    recalculateWindows: (element: ScheduleClass) -> Unit,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(
@@ -420,7 +420,7 @@ fun ClassItem(
             ClassItemContent(scheduleClass)
             if (scheduleClass.isSwitchable) {
                 SwitchButton(
-                    recalculateWindows,
+                    { recalculateWindows(scheduleClass) },
                     modifier = Modifier.align(Alignment.BottomEnd)
                 )
             }
@@ -592,8 +592,11 @@ fun ScheduleBox(
     val pullToRefreshState = rememberPullToRefreshState()
 
     LaunchedEffect(Unit) {
-        viewModel.selectToday()
+        weekPagerState.scrollToPage(uiState.value.selectedWeekIndex)
+        dayPagerState.scrollToPage(uiState.value.selectedDayIndex)
     }
+
+    LaunchedTracker(viewModel, uiState, dayPagerState, weekPagerState)
 
     LaunchedEffect(pullToRefreshState.isRefreshing) {
         if (pullToRefreshState.isRefreshing) {
@@ -601,8 +604,6 @@ fun ScheduleBox(
             pullToRefreshState.endRefresh()
         }
     }
-
-    LaunchedTracker(viewModel, uiState, dayPagerState, weekPagerState)
 
     Box(
         modifier = modifier.nestedScroll(pullToRefreshState.nestedScrollConnection)
@@ -630,7 +631,7 @@ fun ScheduleBox(
                 uiState.value.days,
                 !uiState.value.isDayAutoScrollInProgress,
                 dayPagerState,
-                { _, _ -> },
+                { element -> viewModel.recalculateWindows(element) },
                 modifier = Modifier.fillMaxSize()
             )
             LargeSpacer()

@@ -57,4 +57,7 @@ interface ScheduleDao {
 
     @Query("SELECT COUNT(*) FROM elements")
     suspend fun countEntities(): Int
+
+    @Query("UPDATE elements SET fromTime = :fromTime, toTime = :toTime WHERE number = :number AND subject = :subject")
+    suspend fun updateWindows(number: Int, subject: String, fromTime: String, toTime: String)
 }

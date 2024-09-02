@@ -13,6 +13,8 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import model.Schedule
+import model.ScheduleClass
 import model.ScheduleState
 
 class ScheduleScreenViewModel(
@@ -72,6 +74,16 @@ class ScheduleScreenViewModel(
         _uiState.update { uis -> uis.copy(isWeekAutoScrollInProgress = value) }
     }
 
+    private fun updateSchedule(schedule: Schedule) {
+        _uiState.update { uis ->
+            uis.copy(
+                schedule = schedule,
+                weeks = schedule.weeks,
+                days = schedule.weeks.flatMap { it.days }
+            )
+        }
+    }
+
     private suspend fun loadScheduleFromWeb(group: String, semesterStartDate: LocalDate) {
         val schedule = mietWebRepository.getSchedule(group).toScheduleDbEntities(semesterStartDate)
         databaseRepository.insertNewSchedule(schedule)
@@ -94,14 +106,24 @@ class ScheduleScreenViewModel(
                 uiState = _uiState.asStateFlow()
 
                 _scheduleState.update { ScheduleState.Success }
+                selectToday()
             } catch (e: Exception) {
                 if (!databaseRepository.isScheduleStored()) {
                     _scheduleState.update { ScheduleState.Error(e.message.toString()) }
                 } else {
-                    //TODO добавить TOAST с текстом о том, что не удалось подключиться к интернету!
+                    // TODO добавить TOAST с текстом о том, что не удалось подключиться к интернету!
                     _scheduleState.update { ScheduleState.Success }
+                    selectToday()
                 }
             }
+        }
+    }
+
+    fun recalculateWindows(element: ScheduleClass) {
+        viewModelScope.launch {
+            databaseRepository.recalculateWindows(element)
+            val schedule = databaseRepository.getSchedule()
+            updateSchedule(schedule)
         }
     }
 }
