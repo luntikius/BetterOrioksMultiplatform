@@ -8,6 +8,7 @@ import kotlinx.datetime.LocalDate
 import model.Schedule
 import model.ScheduleClass
 import model.ScheduleDay
+import model.SwitchOptions
 import model.database.ScheduleDbEntities
 import utils.ScheduleUtils
 import utils.ScheduleUtils.addGaps
@@ -69,13 +70,15 @@ class DatabaseRepository(
         return scheduleDao.countEntities() > 0
     }
 
-    suspend fun recalculateWindows(element: ScheduleClass) {
+    suspend fun recalculateWindows(element: ScheduleClass, switchOptions: SwitchOptions) {
         val (fromTime, toTime) = ScheduleUtils.getSwitchedTime(element.fromTime.toString(), element.toTime.toString())
         scheduleDao.updateWindows(
+            day = element.day,
             number = element.number,
             subject = element.subject,
             fromTime = fromTime,
-            toTime = toTime
+            toTime = toTime,
+            dayCount = switchOptions.dayCount
         )
     }
 }

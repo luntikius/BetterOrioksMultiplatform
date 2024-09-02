@@ -124,4 +124,10 @@
     <string name="no_schedule">расписание отсутствует</string>
     <string name="no_schedule_full">Расписание, сохраненное в памяти устройства пустое, попробуйте перезагрузить его, потянув пальцем вниз</string>
     <string name="reload">перезагрузить</string>
+    <string name="switch_options_every_week">на каждой неделе</string>
+    <string name="switch_options_every_two_weeks">только в %1$s</string>
+    <string name="switch_options_every_four_weeks">только в %1$s</string>
+    <string name="switch_options_title">Изменить время для этой пары</string>
+    <string name="higher">Числитель</string>
+    <string name="lower">Знаменатель</string>
 </resources>

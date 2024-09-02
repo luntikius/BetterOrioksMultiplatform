@@ -38,7 +38,14 @@ interface ScheduleDao {
     suspend fun insertAllFirstOfTheMonths(item: List<FirstOfTheMonthEntity>)
 
     @Query("SELECT * FROM elements")
-    fun getScheduleElementsByDaysFlow(): Flow<Map<@MapColumn("dayId")Int, @MapColumn("*")List<ScheduleElementEntity>>>
+    fun getScheduleElementsByDaysFlow(): Flow<
+        Map<
+            @MapColumn("dayId")
+            Int,
+            @MapColumn("*")
+            List<ScheduleElementEntity>
+            >
+        >
 
     @Query("SELECT * FROM days")
     fun getScheduleDaysByWeeksFlow(): Flow<List<ScheduleDayEntity>>
@@ -58,6 +65,10 @@ interface ScheduleDao {
     @Query("SELECT COUNT(*) FROM elements")
     suspend fun countEntities(): Int
 
-    @Query("UPDATE elements SET fromTime = :fromTime, toTime = :toTime WHERE number = :number AND subject = :subject")
-    suspend fun updateWindows(number: Int, subject: String, fromTime: String, toTime: String)
+    @Query(
+        "UPDATE elements " +
+            "SET fromTime = :fromTime, toTime = :toTime " +
+            "WHERE number = :number AND subject = :subject AND (dayId % :dayCount) = (:day % :dayCount)"
+    )
+    suspend fun updateWindows(day: Int, number: Int, subject: String, fromTime: String, toTime: String, dayCount: Int)
 }

@@ -16,6 +16,7 @@ import kotlinx.datetime.toLocalDateTime
 import model.Schedule
 import model.ScheduleClass
 import model.ScheduleState
+import model.SwitchOptions
 
 class ScheduleScreenViewModel(
     val databaseRepository: DatabaseRepository,
@@ -119,9 +120,15 @@ class ScheduleScreenViewModel(
         }
     }
 
-    fun recalculateWindows(element: ScheduleClass) {
+    fun setSwitchElement(element: ScheduleClass) {
+        _uiState.update { uis -> uis.copy(switchElement = element) }
+    }
+
+    fun recalculateWindows(
+        switchOptions: SwitchOptions = SwitchOptions.SWITCH_EVERY_TWO_WEEKS
+    ) {
         viewModelScope.launch {
-            databaseRepository.recalculateWindows(element)
+            databaseRepository.recalculateWindows(uiState.value.switchElement, switchOptions)
             val schedule = databaseRepository.getSchedule()
             updateSchedule(schedule)
         }

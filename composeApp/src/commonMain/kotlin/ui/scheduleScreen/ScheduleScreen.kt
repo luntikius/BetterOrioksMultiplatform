@@ -88,6 +88,7 @@ import ui.common.LoadingScreen
 import ui.common.MediumSpacer
 import ui.common.RefreshAlert
 import ui.common.SmallSpacer
+import ui.common.SwitchAlert
 import utils.getMonthStringRes
 import utils.getShortMonthStringRes
 import utils.getWeekStringRes
@@ -587,6 +588,7 @@ fun ScheduleBox(
 ) {
     val uiState = viewModel.uiState.collectAsState()
     var isRefreshAlertVisible by remember { mutableStateOf(false) }
+    var isSwitchOptionsAlertVisible by remember { mutableStateOf(false) }
     val dayPagerState = rememberPagerState { uiState.value.days.size }
     val weekPagerState = rememberPagerState { uiState.value.weeks.size }
     val pullToRefreshState = rememberPullToRefreshState()
@@ -631,7 +633,10 @@ fun ScheduleBox(
                 uiState.value.days,
                 !uiState.value.isDayAutoScrollInProgress,
                 dayPagerState,
-                { element -> viewModel.recalculateWindows(element) },
+                { element ->
+                    viewModel.setSwitchElement(element)
+                    isSwitchOptionsAlertVisible = true
+                },
                 modifier = Modifier.fillMaxSize()
             )
             LargeSpacer()
@@ -652,6 +657,13 @@ fun ScheduleBox(
             text = stringResource(Res.string.refresh_alert_text),
             onRefresh = { viewModel.loadSchedule(refresh = true) },
             onDismiss = { isRefreshAlertVisible = false },
+        )
+
+        SwitchAlert(
+            isVisible = isSwitchOptionsAlertVisible,
+            scheduleScreenUiState = uiState.value,
+            onSelectOption = { switchOptions -> viewModel.recalculateWindows(switchOptions) },
+            onDismiss = { isSwitchOptionsAlertVisible = false }
         )
     }
 }
