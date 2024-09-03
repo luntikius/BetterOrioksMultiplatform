@@ -589,14 +589,9 @@ fun ScheduleBox(
     val uiState = viewModel.uiState.collectAsState()
     var isRefreshAlertVisible by remember { mutableStateOf(false) }
     var isSwitchOptionsAlertVisible by remember { mutableStateOf(false) }
-    val dayPagerState = rememberPagerState { uiState.value.days.size }
-    val weekPagerState = rememberPagerState { uiState.value.weeks.size }
+    val dayPagerState = rememberPagerState(initialPage = uiState.value.selectedDayIndex) { uiState.value.days.size }
+    val weekPagerState = rememberPagerState(initialPage = uiState.value.selectedWeekIndex) { uiState.value.weeks.size }
     val pullToRefreshState = rememberPullToRefreshState()
-
-    LaunchedEffect(Unit) {
-        weekPagerState.scrollToPage(uiState.value.selectedWeekIndex)
-        dayPagerState.scrollToPage(uiState.value.selectedDayIndex)
-    }
 
     LaunchedTracker(viewModel, uiState, dayPagerState, weekPagerState)
 
