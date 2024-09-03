@@ -1,6 +1,7 @@
 package ui.scheduleScreen
 
 import model.Schedule
+import model.ScheduleClass
 import model.ScheduleDay
 import model.ScheduleWeek
 
@@ -11,5 +12,6 @@ data class ScheduleScreenUiState(
     val selectedDayIndex: Int = 0,
     val selectedWeekIndex: Int = 0,
     val isDayAutoScrollInProgress: Boolean = false,
-    val isWeekAutoScrollInProgress: Boolean = false
+    val isWeekAutoScrollInProgress: Boolean = false,
+    val switchElement: ScheduleClass = ScheduleClass()
 )

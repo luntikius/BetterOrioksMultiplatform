@@ -3,6 +3,7 @@ package ui.scheduleScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.DatabaseRepository
+import data.MietWebRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,19 +13,23 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import model.Schedule
+import model.ScheduleClass
+import model.ScheduleState
+import model.SwitchOptions
 
 class ScheduleScreenViewModel(
-    val databaseRepository: DatabaseRepository
+    val databaseRepository: DatabaseRepository,
+    val mietWebRepository: MietWebRepository
 ) : ViewModel() {
-
     private lateinit var _uiState: MutableStateFlow<ScheduleScreenUiState>
-    private val _isInitialized = MutableStateFlow(false)
+    private val _scheduleState: MutableStateFlow<ScheduleState> = MutableStateFlow(ScheduleState.Loading)
 
     init {
-        refreshSchedule()
+        loadSchedule()
     }
 
-    val isInitialized = _isInitialized.asStateFlow()
+    val scheduleState = _scheduleState.asStateFlow()
     lateinit var uiState: StateFlow<ScheduleScreenUiState>
 
     fun selectDayByIndex(index: Int) {
@@ -70,14 +75,62 @@ class ScheduleScreenViewModel(
         _uiState.update { uis -> uis.copy(isWeekAutoScrollInProgress = value) }
     }
 
-    fun refreshSchedule() {
+    private fun updateSchedule(schedule: Schedule) {
+        _uiState.update { uis ->
+            uis.copy(
+                schedule = schedule,
+                weeks = schedule.weeks,
+                days = schedule.weeks.flatMap { it.days }
+            )
+        }
+    }
+
+    private suspend fun loadScheduleFromWeb(group: String, semesterStartDate: LocalDate) {
+        val schedule = mietWebRepository.getSchedule(group).toScheduleDbEntities(semesterStartDate)
+        databaseRepository.insertNewSchedule(schedule)
+    }
+
+    fun loadSchedule(refresh: Boolean = false) {
         viewModelScope.launch {
-            _isInitialized.update { false }
+            try {
+                _scheduleState.update { ScheduleState.Loading }
+
+                if (refresh || !databaseRepository.isScheduleStored()) {
+                    _scheduleState.update { ScheduleState.LoadingFromWeb }
+                    loadScheduleFromWeb("ПИН-45", LocalDate(2024, 9, 2))
+                    _scheduleState.update { ScheduleState.Loading }
+                }
+
+                val schedule = databaseRepository.getSchedule()
+                val uiStateValue = ScheduleScreenUiState(schedule = schedule)
+                _uiState = MutableStateFlow(uiStateValue)
+                uiState = _uiState.asStateFlow()
+
+                _scheduleState.update { ScheduleState.Success }
+                selectToday()
+            } catch (e: Exception) {
+                if (!databaseRepository.isScheduleStored()) {
+                    _scheduleState.update { ScheduleState.Error(e.message.toString()) }
+                } else {
+                    // TODO добавить TOAST с текстом о том, что не удалось подключиться к интернету!
+                    _scheduleState.update { ScheduleState.Success }
+                    selectToday()
+                }
+            }
+        }
+    }
+
+    fun setSwitchElement(element: ScheduleClass) {
+        _uiState.update { uis -> uis.copy(switchElement = element) }
+    }
+
+    fun recalculateWindows(
+        switchOptions: SwitchOptions = SwitchOptions.SWITCH_EVERY_TWO_WEEKS
+    ) {
+        viewModelScope.launch {
+            databaseRepository.recalculateWindows(uiState.value.switchElement, switchOptions)
             val schedule = databaseRepository.getSchedule()
-            val uiStateValue = ScheduleScreenUiState(schedule = schedule)
-            _uiState = MutableStateFlow(uiStateValue)
-            uiState = _uiState.asStateFlow()
-            _isInitialized.update { true }
+            updateSchedule(schedule)
         }
     }
 }

@@ -14,19 +14,38 @@ import model.database.ScheduleWeekEntity
 interface ScheduleDao {
 
     @Insert
-    suspend fun insert(item: ScheduleElementEntity)
+    suspend fun insertElement(item: ScheduleElementEntity)
 
     @Insert
-    suspend fun insert(item: ScheduleDayEntity)
+    suspend fun insertDay(item: ScheduleDayEntity)
 
     @Insert
-    suspend fun insert(item: ScheduleWeekEntity)
+    suspend fun insertWeek(item: ScheduleWeekEntity)
 
     @Insert
-    suspend fun insert(item: FirstOfTheMonthEntity)
+    suspend fun insertFirstOfTheMonth(item: FirstOfTheMonthEntity)
+
+    @Insert
+    suspend fun insertAllElements(item: List<ScheduleElementEntity>)
+
+    @Insert
+    suspend fun insertAllDays(item: List<ScheduleDayEntity>)
+
+    @Insert
+    suspend fun insertAllWeeks(item: List<ScheduleWeekEntity>)
+
+    @Insert
+    suspend fun insertAllFirstOfTheMonths(item: List<FirstOfTheMonthEntity>)
 
     @Query("SELECT * FROM elements")
-    fun getScheduleElementsByDaysFlow(): Flow<Map<@MapColumn("dayId")Int, @MapColumn("*")List<ScheduleElementEntity>>>
+    fun getScheduleElementsByDaysFlow(): Flow<
+        Map<
+            @MapColumn("dayId")
+            Int,
+            @MapColumn("*")
+            List<ScheduleElementEntity>
+            >
+        >
 
     @Query("SELECT * FROM days")
     fun getScheduleDaysByWeeksFlow(): Flow<List<ScheduleDayEntity>>
@@ -36,4 +55,20 @@ interface ScheduleDao {
 
     @Query("SELECT * FROM firstOfTheMonths")
     fun getFirstOfTheMonthsFlow(): Flow<List<FirstOfTheMonthEntity>>
+
+    @Query("DELETE FROM weeks")
+    suspend fun dumpSchedule()
+
+    @Query("DELETE FROM firstOfTheMonths")
+    suspend fun dumpFirstOfTheMonths()
+
+    @Query("SELECT COUNT(*) FROM elements")
+    suspend fun countEntities(): Int
+
+    @Query(
+        "UPDATE elements " +
+            "SET fromTime = :fromTime, toTime = :toTime " +
+            "WHERE number = :number AND subject = :subject AND (dayId % :dayCount) = (:day % :dayCount)"
+    )
+    suspend fun updateWindows(day: Int, number: Int, subject: String, fromTime: String, toTime: String, dayCount: Int)
 }

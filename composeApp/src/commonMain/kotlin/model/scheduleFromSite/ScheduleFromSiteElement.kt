@@ -1,13 +1,14 @@
 package model.scheduleFromSite
 
 import kotlinx.serialization.SerialName
+import model.database.ScheduleElementEntity
 
 @kotlinx.serialization.Serializable
 data class ScheduleFromSiteElement(
     @SerialName("Day")
     val day: Int,
     @SerialName("DayNumber")
-    val dayNumber:Int,
+    val dayNumber: Int,
     @SerialName("Time")
     val time: TimeTableFromSiteElement,
     @SerialName("Class")
@@ -16,4 +17,17 @@ data class ScheduleFromSiteElement(
     val group: Group,
     @SerialName("Room")
     val room: Room
-)
+) {
+    fun toScheduleElementEntity(dayId: Int): ScheduleElementEntity {
+        return ScheduleElementEntity(
+            dayId = dayId,
+            number = time.dayOrder,
+            fromTime = time.start,
+            toTime = time.end,
+            type = subject.formFromString,
+            subject = subject.name,
+            teacher = subject.teacherFull,
+            room = room.name
+        )
+    }
+}

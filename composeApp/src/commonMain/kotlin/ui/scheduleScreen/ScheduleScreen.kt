@@ -61,6 +61,7 @@ import betterorioks.composeapp.generated.resources.free_day
 import betterorioks.composeapp.generated.resources.gap_minutes
 import betterorioks.composeapp.generated.resources.happy_flame
 import betterorioks.composeapp.generated.resources.loading_schedule
+import betterorioks.composeapp.generated.resources.loading_schedule_from_web
 import betterorioks.composeapp.generated.resources.no_schedule
 import betterorioks.composeapp.generated.resources.no_schedule_full
 import betterorioks.composeapp.generated.resources.refresh_alert_text
@@ -76,15 +77,18 @@ import model.ScheduleClass
 import model.ScheduleDay
 import model.ScheduleElement
 import model.ScheduleGap
+import model.ScheduleState
 import model.ScheduleWeek
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
 import ui.common.RefreshAlert
 import ui.common.SmallSpacer
+import ui.common.SwitchAlert
 import utils.getMonthStringRes
 import utils.getShortMonthStringRes
 import utils.getWeekStringRes
@@ -330,7 +334,7 @@ fun SchedulePager(
     schedule: List<ScheduleDay>,
     isUserScrollEnabled: Boolean,
     pagerState: PagerState,
-    recalculateWindows: (number: Int, day: Int) -> Unit,
+    recalculateWindows: (element: ScheduleClass) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (schedule.isNotEmpty()) {
@@ -341,7 +345,8 @@ fun SchedulePager(
         ) { page ->
             ScheduleColumn(
                 scheduleList = schedule[page].scheduleList,
-                recalculateWindows = recalculateWindows
+                recalculateWindows = recalculateWindows,
+                modifier = Modifier.fillMaxSize()
             )
         }
     } else {
@@ -352,20 +357,20 @@ fun SchedulePager(
 @Composable
 fun ScheduleColumn(
     scheduleList: List<ScheduleElement>,
-    recalculateWindows: (number: Int, day: Int) -> Unit,
+    recalculateWindows: (element: ScheduleClass) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (scheduleList.isNotEmpty()) {
-        LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.Top)) {
+        if (scheduleList.isNotEmpty()) {
             items(scheduleList) {
                 ScheduleItem(
                     scheduleElement = it,
-                    recalculateWindows = { recalculateWindows(it.number, it.day) }
+                    recalculateWindows = recalculateWindows
                 )
             }
+        } else {
+            item { EmptyScheduleItem(modifier = Modifier.fillParentMaxHeight()) }
         }
-    } else {
-        EmptyScheduleItem()
     }
 }
 
@@ -390,7 +395,7 @@ fun EmptyScheduleItem(
 }
 
 @Composable
-fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: () -> Unit) {
+fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: (element: ScheduleClass) -> Unit) {
     when (scheduleElement) {
         is ScheduleClass -> ClassItem(scheduleElement, recalculateWindows)
         is ScheduleGap -> GapItem(scheduleElement)
@@ -401,7 +406,7 @@ fun ScheduleItem(scheduleElement: ScheduleElement, recalculateWindows: () -> Uni
 @Composable
 fun ClassItem(
     scheduleClass: ScheduleClass,
-    recalculateWindows: () -> Unit,
+    recalculateWindows: (element: ScheduleClass) -> Unit,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(
@@ -416,7 +421,7 @@ fun ClassItem(
             ClassItemContent(scheduleClass)
             if (scheduleClass.isSwitchable) {
                 SwitchButton(
-                    recalculateWindows,
+                    { recalculateWindows(scheduleClass) },
                     modifier = Modifier.align(Alignment.BottomEnd)
                 )
             }
@@ -583,14 +588,12 @@ fun ScheduleBox(
 ) {
     val uiState = viewModel.uiState.collectAsState()
     var isRefreshAlertVisible by remember { mutableStateOf(false) }
-    val dayPagerState = rememberPagerState { uiState.value.days.size }
-    val weekPagerState = rememberPagerState { uiState.value.weeks.size }
+    var isSwitchOptionsAlertVisible by remember { mutableStateOf(false) }
+    val dayPagerState = rememberPagerState(initialPage = uiState.value.selectedDayIndex) { uiState.value.days.size }
+    val weekPagerState = rememberPagerState(initialPage = uiState.value.selectedWeekIndex) { uiState.value.weeks.size }
     val pullToRefreshState = rememberPullToRefreshState()
 
-    LaunchedEffect(Unit) {
-        dayPagerState.scrollToPage(uiState.value.selectedDayIndex)
-        weekPagerState.scrollToPage(uiState.value.selectedWeekIndex)
-    }
+    LaunchedTracker(viewModel, uiState, dayPagerState, weekPagerState)
 
     LaunchedEffect(pullToRefreshState.isRefreshing) {
         if (pullToRefreshState.isRefreshing) {
@@ -598,8 +601,6 @@ fun ScheduleBox(
             pullToRefreshState.endRefresh()
         }
     }
-
-    LaunchedTracker(viewModel, uiState, dayPagerState, weekPagerState)
 
     Box(
         modifier = modifier.nestedScroll(pullToRefreshState.nestedScrollConnection)
@@ -627,7 +628,10 @@ fun ScheduleBox(
                 uiState.value.days,
                 !uiState.value.isDayAutoScrollInProgress,
                 dayPagerState,
-                { _, _ -> },
+                { element ->
+                    viewModel.setSwitchElement(element)
+                    isSwitchOptionsAlertVisible = true
+                },
                 modifier = Modifier.fillMaxSize()
             )
             LargeSpacer()
@@ -646,8 +650,15 @@ fun ScheduleBox(
         RefreshAlert(
             isVisible = isRefreshAlertVisible,
             text = stringResource(Res.string.refresh_alert_text),
-            onRefresh = { viewModel.refreshSchedule() },
+            onRefresh = { viewModel.loadSchedule(refresh = true) },
             onDismiss = { isRefreshAlertVisible = false },
+        )
+
+        SwitchAlert(
+            isVisible = isSwitchOptionsAlertVisible,
+            scheduleScreenUiState = uiState.value,
+            onSelectOption = { switchOptions -> viewModel.recalculateWindows(switchOptions) },
+            onDismiss = { isSwitchOptionsAlertVisible = false }
         )
     }
 }
@@ -674,10 +685,23 @@ fun EmptySchedule(modifier: Modifier = Modifier) {
 fun ScheduleScreen(
     viewModel: ScheduleScreenViewModel
 ) {
-    val isInitialized by viewModel.isInitialized.collectAsState()
-    if (!isInitialized) {
-        LoadingScreen(Modifier.fillMaxSize(), text = stringResource(Res.string.loading_schedule))
-    } else {
-        ScheduleBox(viewModel)
+    val scheduleState by viewModel.scheduleState.collectAsState()
+    when (scheduleState) {
+        is ScheduleState.Loading, ScheduleState.LoadingFromWeb -> {
+            val string = if (scheduleState is ScheduleState.Loading) {
+                stringResource(Res.string.loading_schedule)
+            } else {
+                stringResource(Res.string.loading_schedule_from_web)
+            }
+            LoadingScreen(Modifier.fillMaxSize(), text = string)
+        }
+        is ScheduleState.Error ->
+            ErrorScreenWithReloadButton(
+                text = (scheduleState as ScheduleState.Error).errorText,
+                onClick = { viewModel.loadSchedule(refresh = true) },
+                modifier = Modifier.fillMaxSize()
+            )
+        is ScheduleState.Success ->
+            ScheduleBox(viewModel)
     }
 }
