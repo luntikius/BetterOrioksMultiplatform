@@ -13,7 +13,7 @@ import model.database.ScheduleDbEntities
 import utils.ScheduleUtils
 import utils.ScheduleUtils.addGaps
 
-class DatabaseRepository(
+class ScheduleDatabaseRepository(
     private val scheduleDao: ScheduleDao
 ) {
     private val weeksFlow = scheduleDao.getWeeksFlow()

@@ -18,8 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import data.DatabaseRepository
 import data.MietWebRepository
+import data.ScheduleDatabaseRepository
 import database.ScheduleDao
 import model.AppScreens
 import model.BottomNavItem
@@ -38,10 +38,10 @@ fun BetterOrioksApp(
     scheduleDao: ScheduleDao,
     navController: NavHostController = rememberNavController()
 ) {
-    val databaseRepository = DatabaseRepository(scheduleDao)
+    val scheduleDatabaseRepository = ScheduleDatabaseRepository(scheduleDao)
     val mietWebRepository = MietWebRepository()
     val scheduleScreenViewModel by remember {
-        mutableStateOf(ScheduleScreenViewModel(databaseRepository, mietWebRepository))
+        mutableStateOf(ScheduleScreenViewModel(scheduleDatabaseRepository, mietWebRepository))
     }
 
     Scaffold(
