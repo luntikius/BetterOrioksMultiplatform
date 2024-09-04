@@ -36,6 +36,7 @@ sqlite = { module = "androidx.sqlite:sqlite", version.ref = "sqlite" }
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core" }
 koin-compose = { group = "io.insert-koin", name = "koin-compose" }
+koin-android = { group = "io.insert-koin", name = "koin-android" }
 
 
 [plugins]
