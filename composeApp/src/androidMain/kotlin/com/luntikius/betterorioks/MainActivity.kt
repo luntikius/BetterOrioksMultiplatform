@@ -5,17 +5,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import database.ScheduleDatabase
-import database.getDatabaseBuilder
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import platformModule
+import sharedModule
 
 class MainActivity : ComponentActivity() {
+    private fun startKoin() {
+        startKoin {
+            androidContext(this@MainActivity)
+            modules(platformModule(), sharedModule())
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val databaseBuilder = getDatabaseBuilder(this)
-        val database = ScheduleDatabase.getRoomDatabase(databaseBuilder)
+        startKoin()
         enableEdgeToEdge()
         setContent {
-            App(database.getDao())
+            App()
         }
     }
 }

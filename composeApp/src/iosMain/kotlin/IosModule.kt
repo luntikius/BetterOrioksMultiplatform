@@ -1,6 +1,6 @@
 import database.getDatabaseBuilder
 import org.koin.dsl.module
 
-val iosModule = module(createdAtStart = true) {
+fun platformModule() = module(createdAtStart = true) {
     single { getDatabaseBuilder() }
 }
