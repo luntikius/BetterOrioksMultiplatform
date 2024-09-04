@@ -22,8 +22,8 @@ import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.attention
 import betterorioks.composeapp.generated.resources.cancel
 import betterorioks.composeapp.generated.resources.switch_options_title
-import model.SwitchOptions
-import model.WeekType
+import model.schedule.SwitchOptions
+import model.schedule.WeekType
 import org.jetbrains.compose.resources.stringResource
 import ui.scheduleScreen.ScheduleScreenUiState
 

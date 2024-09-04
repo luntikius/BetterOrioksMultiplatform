@@ -1,8 +1,8 @@
 package utils
 
-import model.ScheduleClass
-import model.ScheduleElement
-import model.ScheduleGap
+import model.schedule.ScheduleClass
+import model.schedule.ScheduleElement
+import model.schedule.ScheduleGap
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration

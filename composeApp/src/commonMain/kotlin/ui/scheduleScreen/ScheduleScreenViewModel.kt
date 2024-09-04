@@ -13,10 +13,10 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import model.Schedule
-import model.ScheduleClass
-import model.ScheduleState
-import model.SwitchOptions
+import model.schedule.Schedule
+import model.schedule.ScheduleClass
+import model.schedule.ScheduleState
+import model.schedule.SwitchOptions
 
 class ScheduleScreenViewModel(
     val scheduleDatabaseRepository: ScheduleDatabaseRepository,

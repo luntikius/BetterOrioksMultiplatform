@@ -1,4 +1,4 @@
-package model
+package model.schedule
 
 data class ScheduleWeek(
     val number: Int,

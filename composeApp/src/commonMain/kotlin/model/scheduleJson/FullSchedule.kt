@@ -1,14 +1,14 @@
-package model.scheduleFromSite
+package model.scheduleJson
 
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
 import kotlinx.serialization.SerialName
-import model.WeekType
 import model.database.FirstOfTheMonthEntity
 import model.database.ScheduleDayEntity
 import model.database.ScheduleDbEntities
 import model.database.ScheduleWeekEntity
+import model.schedule.WeekType
 
 @kotlinx.serialization.Serializable
 data class FullSchedule(

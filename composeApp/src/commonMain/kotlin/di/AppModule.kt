@@ -1,7 +1,9 @@
+package di
+
 import androidx.room.RoomDatabase
 import data.MietWebRepository
 import data.ScheduleDatabaseRepository
-import database.ScheduleDatabase
+import data.database.ScheduleDatabase
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import ui.scheduleScreen.ScheduleScreenViewModel

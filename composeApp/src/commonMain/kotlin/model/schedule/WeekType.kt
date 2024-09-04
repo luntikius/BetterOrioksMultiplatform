@@ -1,4 +1,4 @@
-package model
+package model.schedule
 
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.first_higher

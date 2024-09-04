@@ -1,15 +1,15 @@
 package data
 
-import database.ScheduleDao
+import data.database.ScheduleDao
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
-import model.Schedule
-import model.ScheduleClass
-import model.ScheduleDay
-import model.SwitchOptions
 import model.database.ScheduleDbEntities
+import model.schedule.Schedule
+import model.schedule.ScheduleClass
+import model.schedule.ScheduleDay
+import model.schedule.SwitchOptions
 import utils.ScheduleUtils
 import utils.ScheduleUtils.addGaps
 
