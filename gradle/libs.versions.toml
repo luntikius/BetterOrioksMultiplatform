@@ -4,7 +4,7 @@ android-minSdk = "24"
 android-targetSdk = "34"
 
 agp = "8.3.2"
-androidx-activityCompose = "1.9.1"
+androidx-activityCompose = "1.9.2"
 compose-plugin = "1.6.11"
 kotlin = "2.0.20"
 navigationCompose = "2.7.0-alpha07"
