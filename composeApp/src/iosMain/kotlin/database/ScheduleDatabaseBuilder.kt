@@ -2,6 +2,7 @@ package database
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import data.database.ScheduleDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager

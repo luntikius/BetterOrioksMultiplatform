@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.datetime.LocalTime
-import model.ScheduleClass
+import model.schedule.ScheduleClass
 
 @Entity(
     tableName = "elements",

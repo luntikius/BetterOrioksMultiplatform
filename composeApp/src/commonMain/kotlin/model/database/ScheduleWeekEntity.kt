@@ -3,9 +3,9 @@ package model.database
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import model.ScheduleDay
-import model.ScheduleWeek
-import model.WeekType
+import model.schedule.ScheduleDay
+import model.schedule.ScheduleWeek
+import model.schedule.WeekType
 
 @Entity(tableName = "weeks", indices = [Index(value = ["id"], unique = true)])
 data class ScheduleWeekEntity(

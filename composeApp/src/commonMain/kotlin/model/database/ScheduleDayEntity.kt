@@ -5,8 +5,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.datetime.LocalDate
-import model.ScheduleDay
-import model.ScheduleElement
+import model.schedule.ScheduleDay
+import model.schedule.ScheduleElement
 
 @Entity(
     tableName = "days",

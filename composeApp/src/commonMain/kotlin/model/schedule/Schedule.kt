@@ -1,4 +1,4 @@
-package model
+package model.schedule
 
 import kotlinx.datetime.LocalDate
 

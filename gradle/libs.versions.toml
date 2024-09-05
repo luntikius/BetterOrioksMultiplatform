@@ -1,44 +1,44 @@
 [versions]
-agp = "8.3.0"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
-androidx-activityCompose = "1.9.1"
-androidx-appcompat = "1.7.0"
-androidx-core-ktx = "1.13.1"
+
+agp = "8.3.2"
+androidx-activityCompose = "1.9.2"
 compose-plugin = "1.6.11"
 kotlin = "2.0.20"
 navigationCompose = "2.7.0-alpha07"
 kotlinx-datetime = "0.6.0"
 kotlinxSerializationJson = "1.6.3"
-ktorClientIos = "1.6.7"
-ktorClientJson = "2.3.12"
 ktor = "2.3.12"
 androidxRoom = "2.7.0-alpha07"
 sqlite = "2.5.0-alpha07"
-ksp = "2.0.10-1.0.24"
+ksp = "2.0.20-1.0.24"
+koin = "4.0.0-RC2"
 
 [libraries]
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime"}
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
-ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
-ktor-client-ios = { module = "io.ktor:ktor-client-ios", version.ref = "ktor" }
-ktor-client-json = { module = "io.ktor:ktor-client-json", version.ref = "ktorClientJson" }
-ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktorClientJson" }
-ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktorClientJson" }
+
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }
 
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 sqlite = { module = "androidx.sqlite:sqlite", version.ref = "sqlite" }
+
+koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
+koin-core = { group = "io.insert-koin", name = "koin-core" }
+koin-compose = { group = "io.insert-koin", name = "koin-compose" }
+koin-compose-viewModel = { group = "io.insert-koin", name = "koin-compose-viewmodel" }
+koin-android = { group = "io.insert-koin", name = "koin-android" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

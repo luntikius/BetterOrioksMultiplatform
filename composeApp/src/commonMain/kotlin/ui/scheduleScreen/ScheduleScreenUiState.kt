@@ -1,9 +1,9 @@
 package ui.scheduleScreen
 
-import model.Schedule
-import model.ScheduleClass
-import model.ScheduleDay
-import model.ScheduleWeek
+import model.schedule.Schedule
+import model.schedule.ScheduleClass
+import model.schedule.ScheduleDay
+import model.schedule.ScheduleWeek
 
 data class ScheduleScreenUiState(
     val schedule: Schedule,

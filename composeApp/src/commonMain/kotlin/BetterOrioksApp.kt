@@ -9,8 +9,6 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -18,12 +16,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import data.DatabaseRepository
-import data.MietWebRepository
-import database.ScheduleDao
 import model.AppScreens
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import ui.common.LoadingScreen
 import ui.scheduleScreen.ScheduleScreen
 import ui.scheduleScreen.ScheduleScreenViewModel
@@ -35,15 +31,9 @@ private val BOTTOM_NAV_SCREENS = listOf(
 
 @Composable
 fun BetterOrioksApp(
-    scheduleDao: ScheduleDao,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    scheduleScreenViewModel: ScheduleScreenViewModel = koinInject()
 ) {
-    val databaseRepository = DatabaseRepository(scheduleDao)
-    val mietWebRepository = MietWebRepository()
-    val scheduleScreenViewModel by remember {
-        mutableStateOf(ScheduleScreenViewModel(databaseRepository, mietWebRepository))
-    }
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = { BottomNavigationBar(navController) }
