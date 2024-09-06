@@ -21,8 +21,8 @@ import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import ui.common.LoadingScreen
+import ui.loginScreen.LoginScreen
 import ui.scheduleScreen.ScheduleScreen
-import ui.scheduleScreen.ScheduleScreenViewModel
 
 private val BOTTOM_NAV_SCREENS = listOf(
     BottomNavItem.Schedule,
@@ -31,8 +31,7 @@ private val BOTTOM_NAV_SCREENS = listOf(
 
 @Composable
 fun BetterOrioksApp(
-    navController: NavHostController = rememberNavController(),
-    scheduleScreenViewModel: ScheduleScreenViewModel = koinInject()
+    navController: NavHostController = rememberNavController()
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -52,13 +51,20 @@ fun BetterOrioksApp(
             composable(
                 route = AppScreens.Schedule.name
             ) {
-                ScheduleScreen(scheduleScreenViewModel)
+                ScheduleScreen(koinInject())
             }
 
             composable(
                 route = AppScreens.Menu.name
             ) {
-                LoadingScreen()
+                LoginScreen(
+                    {
+                        navController.navigate(AppScreens.Schedule.name){
+                            popUpTo(AppScreens.Schedule.name)
+                        }
+                    },
+                    koinInject()
+                )
             }
         }
     }
