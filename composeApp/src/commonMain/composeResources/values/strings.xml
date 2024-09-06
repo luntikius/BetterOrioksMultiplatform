@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Better Orioks</string>
+    <string name="app_name">BetterOrioks</string>
     <string name="of">"из %1$s"</string>
     <string name="blank">blank</string>
     <string name="move_next">кнопка: узнать информацию о контрольных мероприятиях дисциплины</string>
@@ -130,4 +130,5 @@
     <string name="switch_options_title">Изменить время для этой пары</string>
     <string name="higher">Числитель</string>
     <string name="lower">Знаменатель</string>
+    <string name="login_title">Вход</string>
 </resources>
