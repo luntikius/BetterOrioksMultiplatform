@@ -25,7 +25,7 @@ data class ScheduleFromSiteElement(
             fromTime = time.start,
             toTime = time.end,
             type = subject.formFromString,
-            subject = subject.name,
+            subject = subject.nameFromString,
             teacher = subject.teacherFull,
             room = room.name
         )
