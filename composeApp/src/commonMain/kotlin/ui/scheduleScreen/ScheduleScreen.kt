@@ -458,12 +458,13 @@ fun ClassItemContent(
             text = scheduleClass.subject,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
+        MediumSpacer()
         Text(
             text = scheduleClass.teacher,
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
-        MediumSpacer()
+        SmallSpacer()
         Text(
             text = stringResource(Res.string.room_number, scheduleClass.room),
             style = MaterialTheme.typography.labelMedium,
