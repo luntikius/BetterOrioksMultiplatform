@@ -3,8 +3,6 @@ package data
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
@@ -18,9 +16,6 @@ class MietWebRepository {
     private val client: HttpClient get() {
         try {
             return HttpClient {
-                install(Logging) {
-                    level = LogLevel.BODY
-                }
                 defaultRequest {
                     url(BASE_URL)
                 }
