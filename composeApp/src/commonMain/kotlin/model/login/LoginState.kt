@@ -3,7 +3,9 @@ package model.login
 enum class LoginRequiredReason {
     WAS_NOT_LOGGED_IN,
     SESSION_EXPIRED,
-    ERROR_LOGGING_IN
+    NO_INTERNET_LOGGING_IN,
+    BAD_LOGIN_OR_PASSWORD_LOGGING_IN,
+    UNEXPECTED_ERROR_LOGGING_IN
 }
 
 sealed interface LoginState {

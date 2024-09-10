@@ -1,5 +1,6 @@
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -59,7 +60,7 @@ fun BetterOrioksApp(
             ) {
                 LoginScreen(
                     {
-                        navController.navigate(AppScreens.Schedule.name){
+                        navController.navigate(AppScreens.Schedule.name) {
                             popUpTo(AppScreens.Schedule.name)
                         }
                     },
@@ -80,12 +81,16 @@ fun BottomNavigationBar(
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.background,
         tonalElevation = 0.dp,
-        modifier = Modifier.fillMaxHeight(0.09F)
+        modifier = Modifier.height(80.dp)
     ) {
         BOTTOM_NAV_SCREENS.forEach { item ->
             NavigationBarItem(
                 icon = {
-                    Icon(painterResource(item.icon), contentDescription = null, modifier = Modifier.fillMaxHeight(0.5F))
+                    Icon(
+                        painterResource(item.icon),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxHeight(0.5F)
+                    )
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
