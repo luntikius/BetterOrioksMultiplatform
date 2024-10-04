@@ -2,6 +2,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -21,7 +23,6 @@ import model.AppScreens
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
-import ui.common.LoadingScreen
 import ui.loginScreen.LoginScreen
 import ui.scheduleScreen.ScheduleScreen
 
@@ -34,39 +35,61 @@ private val BOTTOM_NAV_SCREENS = listOf(
 fun BetterOrioksApp(
     navController: NavHostController = rememberNavController()
 ) {
+    val isAuthorized = false
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        bottomBar = { BottomNavigationBar(navController) }
+        bottomBar = { if (isAuthorized) BottomNavigationBar(navController) }
     ) { paddingValues ->
-        NavHost(
-            navController = navController,
-            startDestination = AppScreens.Schedule.name,
-            modifier = Modifier.padding(paddingValues)
+        if (isAuthorized) {
+            AppNavigation(
+                navController = navController,
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+            )
+        } else {
+            LoginScreen(
+                {
+                    navController.navigate(AppScreens.Schedule.name) {
+                        popUpTo(AppScreens.Schedule.name)
+                    }
+                },
+                koinInject(),
+                modifier = Modifier.safeDrawingPadding()
+            )
+        }
+    }
+
+}
+
+@Composable
+fun AppNavigation(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+    NavHost(
+        navController = navController,
+        startDestination = AppScreens.Schedule.name,
+        modifier = modifier
+    ) {
+        composable(
+            route = AppScreens.Schedule.name
         ) {
-            composable(
-                route = AppScreens.Loading.name
-            ) {
-                LoadingScreen()
-            }
+            ScheduleScreen(koinInject())
+        }
 
-            composable(
-                route = AppScreens.Schedule.name
-            ) {
-                ScheduleScreen(koinInject())
-            }
-
-            composable(
-                route = AppScreens.Menu.name
-            ) {
-                LoginScreen(
-                    {
-                        navController.navigate(AppScreens.Schedule.name) {
-                            popUpTo(AppScreens.Schedule.name)
-                        }
-                    },
-                    koinInject()
-                )
-            }
+        composable(
+            route = AppScreens.Menu.name
+        ) {
+            LoginScreen(
+                {
+                    navController.navigate(AppScreens.Schedule.name) {
+                        popUpTo(AppScreens.Schedule.name)
+                    }
+                },
+                koinInject()
+            )
         }
     }
 }

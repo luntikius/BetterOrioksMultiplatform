@@ -131,4 +131,9 @@
     <string name="higher">Числитель</string>
     <string name="lower">Знаменатель</string>
     <string name="login_title">Вход</string>
+
+    <string name="login_required_reason_was_not_logged_in">Войдите в свой аккаунт Orioks</string>
+    <string name="login_required_reason_session_expired">Ваша сессия истекла, пожалуйста войдите заново</string>
+    <string name="login_required_reason_bad_login_or_password">Неверный логин или пароль</string>
+    <string name="login_required_reason_unexpected_exception">Непредвиденная ошибка при входе, проверьте подключение к интернету или зайдите позже</string>
 </resources>

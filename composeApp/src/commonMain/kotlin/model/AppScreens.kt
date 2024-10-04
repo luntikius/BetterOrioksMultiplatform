@@ -1,7 +1,7 @@
 package model
 
 enum class AppScreens {
-    Loading,
+    LoginScreen,
 
     Schedule,
 
