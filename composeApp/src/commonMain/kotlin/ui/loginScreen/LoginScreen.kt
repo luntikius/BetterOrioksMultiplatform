@@ -62,32 +62,36 @@ fun LoginInfoInput(
 ) {
     val uiState by loginScreenViewModel.uiState.collectAsState()
 
-    OutlinedTextField(
-        value = uiState.login,
-        onValueChange = loginScreenViewModel::setLogin,
-        shape = CircleShape,
-        label = { Text(text = stringResource(Res.string.login)) },
-        modifier = Modifier.fillMaxWidth(),
-        isError = uiState.isError,
-        singleLine = true
-    )
-    MediumSpacer()
-    OutlinedTextField(
-        value = uiState.password,
-        onValueChange = loginScreenViewModel::setPassword,
-        label = { Text(text = stringResource(Res.string.password)) },
-        shape = CircleShape,
-        modifier = Modifier.fillMaxWidth(),
-        isError = uiState.isError,
-        singleLine = true
-    )
-    XLargeSpacer()
-    GradientButton(
-        text = stringResource(Res.string.LogIn),
-        onClick = loginScreenViewModel::tryLogin,
-        enabled = uiState.isButtonEnabled,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)
-    )
+    Column(
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = uiState.login,
+            onValueChange = loginScreenViewModel::setLogin,
+            shape = CircleShape,
+            label = { Text(text = stringResource(Res.string.login)) },
+            modifier = Modifier.fillMaxWidth(),
+            isError = uiState.isError,
+            singleLine = true
+        )
+        MediumSpacer()
+        OutlinedTextField(
+            value = uiState.password,
+            onValueChange = loginScreenViewModel::setPassword,
+            label = { Text(text = stringResource(Res.string.password)) },
+            shape = CircleShape,
+            modifier = Modifier.fillMaxWidth(),
+            isError = uiState.isError,
+            singleLine = true
+        )
+        XLargeSpacer()
+        GradientButton(
+            text = stringResource(Res.string.LogIn),
+            onClick = loginScreenViewModel::tryLogin,
+            enabled = uiState.isButtonEnabled,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)
+        )
+    }
 }
 
 @Composable
