@@ -1,20 +1,15 @@
 package ui.loginScreen
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,20 +18,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.LogIn
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.app_name
+import betterorioks.composeapp.generated.resources.login
 import betterorioks.composeapp.generated.resources.logo
+import betterorioks.composeapp.generated.resources.password
 import betterorioks.composeapp.generated.resources.telegram
 import model.login.LoginState
 import org.jetbrains.compose.resources.painterResource
@@ -46,10 +37,6 @@ import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
 import ui.common.XLargeSpacer
-import ui.theme.gradientColor1
-import ui.theme.gradientColor2
-import ui.theme.gradientColor3
-import kotlin.math.log
 
 @Composable
 fun StaticLogo(
@@ -73,28 +60,32 @@ fun LoginInfoInput(
     loginScreenViewModel: LoginScreenViewModel,
     modifier: Modifier = Modifier
 ) {
-    var login by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val uiState by loginScreenViewModel.uiState.collectAsState()
 
     OutlinedTextField(
-        value = login,
-        onValueChange = { login = it },
+        value = uiState.login,
+        onValueChange = loginScreenViewModel::setLogin,
         shape = CircleShape,
-        label = { Text(text = "Номер студенческого билета") },
-        modifier = Modifier.fillMaxWidth()
+        label = { Text(text = stringResource(Res.string.login)) },
+        modifier = Modifier.fillMaxWidth(),
+        isError = uiState.isError,
+        singleLine = true
     )
     MediumSpacer()
     OutlinedTextField(
-        value = password,
-        onValueChange = { password = it },
-        label = { Text(text = "Пароль") },
+        value = uiState.password,
+        onValueChange = loginScreenViewModel::setPassword,
+        label = { Text(text = stringResource(Res.string.password)) },
         shape = CircleShape,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        isError = uiState.isError,
+        singleLine = true
     )
     XLargeSpacer()
     GradientButton(
-        onClick = {  },
-        enabled = login.isNotEmpty() && password.isNotEmpty(),
+        text = stringResource(Res.string.LogIn),
+        onClick = loginScreenViewModel::tryLogin,
+        enabled = uiState.isButtonEnabled,
         modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)
     )
 }
@@ -122,21 +113,28 @@ fun LoginScreenContent(
 
 @Composable
 fun ErrorTextField(
-    loginState: LoginState
+    loginState: LoginState,
+    modifier: Modifier = Modifier
 ){
-    val error = loginState is LoginState.LoginRequired
-    if (error) {
-        val errorReason =  (loginState as LoginState.LoginRequired).reason
-        val textColor = if (errorReason.isUserError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
-        val text = stringResource(errorReason.stringRes)
-        Text(
-            text = text,
-            color = textColor,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-    } else {
-        LargeSpacer()
+    Box(
+        modifier = modifier.animateContentSize()
+    ) {
+        val loginRequired = loginState is LoginState.LoginRequired
+        if (loginRequired) {
+            val errorReason = (loginState as LoginState.LoginRequired).reason
+            val textColor = if (errorReason.isUserError) MaterialTheme.colorScheme.error
+                else MaterialTheme.colorScheme.onBackground
+            val text = stringResource(errorReason.stringRes)
+            Text(
+                text = text,
+                color = textColor,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        else {
+            LargeSpacer()
+        }
     }
 }
 

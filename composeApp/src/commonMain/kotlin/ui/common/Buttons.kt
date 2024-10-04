@@ -16,15 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import betterorioks.composeapp.generated.resources.LogIn
-import betterorioks.composeapp.generated.resources.Res
-import org.jetbrains.compose.resources.stringResource
 import ui.theme.gradientColor1
 import ui.theme.gradientColor2
 import ui.theme.gradientColor3
 
 @Composable
 fun GradientButton(
+    text: String,
     onClick: () -> Unit,
     enabled: Boolean = true,
     modifier: Modifier = Modifier
@@ -53,9 +51,9 @@ fun GradientButton(
             contentAlignment = Alignment.Center,
         ){
             Text(
-                stringResource(Res.string.LogIn),
+                text = text,
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color.White,
+                color = Color.White.copy(alpha = alpha),
                 modifier = Modifier.padding(10.dp)
             )
         }

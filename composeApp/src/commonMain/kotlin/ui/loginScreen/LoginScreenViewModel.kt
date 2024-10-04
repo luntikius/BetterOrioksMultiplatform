@@ -18,6 +18,18 @@ class LoginScreenViewModel : ViewModel() {
         getLoginData()
     }
 
+    fun setLogin(login: String) {
+        _uiState.update { uis -> uis.copy(login = login, isError = false) }
+    }
+
+    fun setPassword(password: String) {
+        _uiState.update{ uis -> uis.copy(password = password, isError = false) }
+    }
+
+    fun tryLogin() {
+        _uiState.update { uis -> uis.copy(password = "") }
+    }
+
     private fun getLoginData() {
         viewModelScope.launch {
             _uiState.update { uis -> uis.copy(loginState = LoginState.LoginRequired(reason = LoginRequiredReason.WAS_NOT_LOGGED_IN)) }
