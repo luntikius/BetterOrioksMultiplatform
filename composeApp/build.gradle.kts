@@ -66,6 +66,7 @@ kotlin {
             implementation(libs.sqlite.bundled)
             implementation(libs.sqlite)
 
+            // DI
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.koin.compose)

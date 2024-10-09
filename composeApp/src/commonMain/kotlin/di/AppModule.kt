@@ -1,8 +1,10 @@
 package di
 
+import AppViewModel
 import androidx.room.RoomDatabase
 import data.MietWebRepository
 import data.ScheduleDatabaseRepository
+import data.UserPreferencesRepository
 import data.database.ScheduleDatabase
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -17,8 +19,10 @@ fun sharedModule() = module {
     single { ScheduleDatabase.getRoomDatabase(get<RoomDatabase.Builder<ScheduleDatabase>>()) }
     single { get<ScheduleDatabase>().getDao() }
     single { ScheduleDatabaseRepository(get()) }
+    single { UserPreferencesRepository(get()) }
 
     // view models
     single { ScheduleScreenViewModel(get(), get()) }
+    single { AppViewModel(get()) }
     viewModel { LoginScreenViewModel() }
 }
