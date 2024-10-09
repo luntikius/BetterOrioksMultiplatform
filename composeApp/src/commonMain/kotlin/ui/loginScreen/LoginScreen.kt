@@ -2,7 +2,6 @@ package ui.loginScreen
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -18,8 +18,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.LogIn
@@ -29,6 +36,9 @@ import betterorioks.composeapp.generated.resources.login
 import betterorioks.composeapp.generated.resources.logo
 import betterorioks.composeapp.generated.resources.password
 import betterorioks.composeapp.generated.resources.telegram
+import betterorioks.composeapp.generated.resources.visibility
+import betterorioks.composeapp.generated.resources.visibility_off
+import betterorioks.composeapp.generated.resources.visibility_on
 import model.login.LoginState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -61,6 +71,7 @@ fun LoginInfoInput(
     modifier: Modifier = Modifier
 ) {
     val uiState by loginScreenViewModel.uiState.collectAsState()
+    var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -72,7 +83,11 @@ fun LoginInfoInput(
             label = { Text(text = stringResource(Res.string.login)) },
             modifier = Modifier.fillMaxWidth(),
             isError = uiState.isError,
-            singleLine = true
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.NumberPassword,
+                imeAction = ImeAction.Next
+            )
         )
         MediumSpacer()
         OutlinedTextField(
@@ -82,7 +97,24 @@ fun LoginInfoInput(
             shape = CircleShape,
             modifier = Modifier.fillMaxWidth(),
             isError = uiState.isError,
-            singleLine = true
+            singleLine = true,
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password
+            ),
+            trailingIcon = {
+                val icon = if(passwordVisible) Res.drawable.visibility_on else Res.drawable.visibility_off
+                IconButton(onClick = { passwordVisible = !passwordVisible}) {
+                    Icon(
+                        painter = painterResource(icon),
+                        contentDescription = stringResource(Res.string.visibility),
+                        tint = if (uiState.isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .size(24.dp)
+                    )
+                }
+            }
         )
         XLargeSpacer()
         GradientButton(
@@ -107,8 +139,7 @@ fun LoginScreenContent(
     ) {
         Spacer(Modifier.weight(1f))
         StaticLogo()
-        LargeSpacer()
-        ErrorTextField(uiState.loginState)
+        ErrorText(uiState.loginState)
         LoginInfoInput(loginScreenViewModel)
         Spacer(Modifier.weight(1f))
         TelegramIconButton(onClick = {})
@@ -116,11 +147,11 @@ fun LoginScreenContent(
 }
 
 @Composable
-fun ErrorTextField(
+fun ErrorText(
     loginState: LoginState,
     modifier: Modifier = Modifier
 ){
-    Box(
+    Column(
         modifier = modifier.animateContentSize()
     ) {
         val loginRequired = loginState is LoginState.LoginRequired
@@ -129,15 +160,17 @@ fun ErrorTextField(
             val textColor = if (errorReason.isUserError) MaterialTheme.colorScheme.error
                 else MaterialTheme.colorScheme.onBackground
             val text = stringResource(errorReason.stringRes)
+            LargeSpacer()
             Text(
                 text = text,
                 color = textColor,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
+            MediumSpacer()
         }
         else {
-            LargeSpacer()
+            XLargeSpacer()
         }
     }
 }

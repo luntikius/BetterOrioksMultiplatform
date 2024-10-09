@@ -27,7 +27,7 @@ class LoginScreenViewModel : ViewModel() {
     }
 
     fun tryLogin() {
-        _uiState.update { uis -> uis.copy(password = "") }
+        _uiState.update { uis -> uis.copy(password = "", loginState = LoginState.LoginRequired(LoginRequiredReason.BAD_LOGIN_OR_PASSWORD)) }
     }
 
     private fun getLoginData() {
