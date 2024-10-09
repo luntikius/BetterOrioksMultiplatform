@@ -25,7 +25,7 @@ class LoginScreenViewModel(
 
     private fun checkInvalidation() {
         viewModelScope.launch {
-            if(userPreferencesRepository.isSessionInvalidated()) {
+            if (userPreferencesRepository.isSessionInvalidated()) {
                 _uiState.update { uis ->
                     uis.copy(loginState = LoginState.LoginRequired(LoginRequiredReason.SESSION_EXPIRED))
                 }
@@ -34,7 +34,6 @@ class LoginScreenViewModel(
                     uis.copy(loginState = LoginState.LoginRequired(LoginRequiredReason.WAS_NOT_LOGGED_IN))
                 }
             }
-
         }
     }
 
@@ -43,7 +42,7 @@ class LoginScreenViewModel(
     }
 
     fun setPassword(password: String) {
-        _uiState.update{ uis -> uis.copy(password = password, isError = false) }
+        _uiState.update { uis -> uis.copy(password = password, isError = false) }
     }
 
     fun tryLogin() {
@@ -53,7 +52,7 @@ class LoginScreenViewModel(
                     uis.copy(loginState = LoginState.Loading)
                 }
                 val authData =
-                    orioksWebRepository.getAuthData(uiState.value.login,uiState.value.password)
+                    orioksWebRepository.getAuthData(uiState.value.login, uiState.value.password)
                 userPreferencesRepository.setAuthData(authData)
                 _uiState.update { uis ->
                     uis.copy(loginState = LoginState.Success)
@@ -74,5 +73,4 @@ class LoginScreenViewModel(
             }
         }
     }
-
 }

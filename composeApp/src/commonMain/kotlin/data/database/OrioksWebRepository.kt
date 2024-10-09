@@ -22,17 +22,13 @@ class OrioksWebRepository(
 ) {
 
     private val client: HttpClient by lazy {
-        try {
-            HttpClient {
-                defaultRequest {
-                    url(BASE_URL)
-                    header(HttpHeaders.Accept, ACCEPT_HEADER_VALUE)
-                    header(HttpHeaders.UserAgent, USER_AGENT_HEADER_VALUE)
-                }
-                followRedirects = false
+        HttpClient {
+            defaultRequest {
+                url(BASE_URL)
+                header(HttpHeaders.Accept, ACCEPT_HEADER_VALUE)
+                header(HttpHeaders.UserAgent, USER_AGENT_HEADER_VALUE)
             }
-        } catch (e: Exception) {
-            throw e
+            followRedirects = false
         }
     }
 
@@ -44,7 +40,7 @@ class OrioksWebRepository(
         return AuthData(csrf, orioksIdentity, orioksSession)
     }
 
-    suspend fun getAuthData(login: String,password: String): AuthData {
+    suspend fun getAuthData(login: String, password: String): AuthData {
         val cookiesResponse = client.get(AUTH_URL)
 
         val cookies = cookiesResponse

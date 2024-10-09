@@ -20,11 +20,11 @@ class UserPreferencesRepository(
             preferences[ORIOKS_SESSION]?.isNotEmpty() ?: false
     }
 
-     suspend fun isSessionInvalidated(): Boolean {
-         return dataStore.data.map { preferences ->
-             preferences[IS_SESSION_INVALIDATED] ?: false
-         }.first()
-     }
+    suspend fun isSessionInvalidated(): Boolean {
+        return dataStore.data.map { preferences ->
+            preferences[IS_SESSION_INVALIDATED] ?: false
+        }.first()
+    }
 
     suspend fun setAuthData(authData: AuthData) {
         dataStore.edit { preferences ->
