@@ -2,6 +2,8 @@ package ui.loginScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import data.UserPreferencesRepository
+import data.database.OrioksWebRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -9,13 +11,31 @@ import kotlinx.coroutines.launch
 import model.login.LoginRequiredReason
 import model.login.LoginState
 
-class LoginScreenViewModel : ViewModel() {
+class LoginScreenViewModel(
+    private val orioksWebRepository: OrioksWebRepository,
+    private val userPreferencesRepository: UserPreferencesRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginScreenUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
-        getLoginData()
+        checkInvalidation()
+    }
+
+    private fun checkInvalidation() {
+        viewModelScope.launch {
+            if(userPreferencesRepository.isSessionInvalidated()) {
+                _uiState.update { uis ->
+                    uis.copy(loginState = LoginState.LoginRequired(LoginRequiredReason.SESSION_EXPIRED))
+                }
+            } else {
+                _uiState.update { uis ->
+                    uis.copy(loginState = LoginState.LoginRequired(LoginRequiredReason.WAS_NOT_LOGGED_IN))
+                }
+            }
+
+        }
     }
 
     fun setLogin(login: String) {
@@ -27,12 +47,31 @@ class LoginScreenViewModel : ViewModel() {
     }
 
     fun tryLogin() {
-        _uiState.update { uis -> uis.copy(password = "", loginState = LoginState.LoginRequired(LoginRequiredReason.BAD_LOGIN_OR_PASSWORD)) }
-    }
-
-    private fun getLoginData() {
         viewModelScope.launch {
-            _uiState.update { uis -> uis.copy(loginState = LoginState.LoginRequired(reason = LoginRequiredReason.WAS_NOT_LOGGED_IN)) }
+            try {
+                _uiState.update { uis ->
+                    uis.copy(loginState = LoginState.Loading)
+                }
+                val authData =
+                    orioksWebRepository.getAuthData(uiState.value.login,uiState.value.password)
+                userPreferencesRepository.setAuthData(authData)
+                _uiState.update { uis ->
+                    uis.copy(loginState = LoginState.Success)
+                }
+            } catch (e: NoSuchElementException) {
+                _uiState.update { uis ->
+                    uis.copy(
+                        loginState = LoginState.LoginRequired(reason = LoginRequiredReason.BAD_LOGIN_OR_PASSWORD),
+                        password = ""
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update { uis ->
+                    uis.copy(
+                        loginState = LoginState.LoginRequired(reason = LoginRequiredReason.UNEXPECTED_ERROR)
+                    )
+                }
+            }
         }
     }
 

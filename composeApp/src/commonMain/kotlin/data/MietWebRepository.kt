@@ -2,6 +2,8 @@ package data
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
+import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.header
@@ -18,43 +20,39 @@ class MietWebRepository {
             return HttpClient {
                 defaultRequest {
                     url(BASE_URL)
+                    header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded)
+                    header(HttpHeaders.Accept, "*/*")
                 }
+
+                install(HttpCookies) {
+                    storage = AcceptAllCookiesStorage()
+                }
+
+                expectSuccess = true
             }
         } catch (e: Exception) {
-            println("Error initializing HttpClient: ${e.message}")
             throw e
         }
     }
 
-    private suspend fun sendScheduleRequest(group: String, cookie: String? = null): String {
+    private suspend fun sendScheduleRequest(group: String): String {
         return client.submitForm(
             url = SCHEDULE_URL,
             formParameters = Parameters.build {
                 append("group", group)
             },
             encodeInQuery = false
-        ) {
-            header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded)
-            header(HttpHeaders.Accept, "*/*")
-            if (cookie != null) header(HttpHeaders.Cookie, cookie)
-        }.body()
+        ).body()
     }
 
     suspend fun getSchedule(
         group: String
     ): FullSchedule {
         return try {
-            val cookieResponse = sendScheduleRequest(group)
-
-            val start = cookieResponse.indexOf('"')
-            val end = cookieResponse.indexOf(";")
-            val cookie = cookieResponse.slice(start + 1 until end)
-
-            val scheduleJsonResponse = sendScheduleRequest(group, cookie)
-
+            sendScheduleRequest(group)
+            val scheduleJsonResponse = sendScheduleRequest(group)
             Json.decodeFromString<FullSchedule>(scheduleJsonResponse)
         } catch (e: Exception) {
-            println("Error fetching schedule: ${e.stackTraceToString()}")
             throw e
         } finally {
             client.close()

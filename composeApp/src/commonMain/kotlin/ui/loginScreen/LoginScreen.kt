@@ -190,7 +190,6 @@ fun LoginScreen(
     val uiState by loginScreenViewModel.uiState.collectAsState()
 
     when (uiState.loginState) {
-        is LoginState.ReLoading,
         is LoginState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is LoginState.Success -> navigate()
         is LoginState.LoginRequired ->
