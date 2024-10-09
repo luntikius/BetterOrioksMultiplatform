@@ -103,12 +103,16 @@ fun LoginInfoInput(
                 keyboardType = KeyboardType.Password
             ),
             trailingIcon = {
-                val icon = if(passwordVisible) Res.drawable.visibility_on else Res.drawable.visibility_off
-                IconButton(onClick = { passwordVisible = !passwordVisible}) {
+                val icon = if (passwordVisible) Res.drawable.visibility_on else Res.drawable.visibility_off
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
                         painter = painterResource(icon),
                         contentDescription = stringResource(Res.string.visibility),
-                        tint = if (uiState.isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = if (uiState.isError) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
                         modifier = Modifier
                             .padding(4.dp)
                             .size(24.dp)
@@ -150,15 +154,18 @@ fun LoginScreenContent(
 fun ErrorText(
     loginState: LoginState,
     modifier: Modifier = Modifier
-){
+) {
     Column(
         modifier = modifier.animateContentSize()
     ) {
         val loginRequired = loginState is LoginState.LoginRequired
         if (loginRequired) {
             val errorReason = (loginState as LoginState.LoginRequired).reason
-            val textColor = if (errorReason.isUserError) MaterialTheme.colorScheme.error
-                else MaterialTheme.colorScheme.onBackground
+            val textColor = if (errorReason.isUserError) {
+                MaterialTheme.colorScheme.error
+            } else {
+                MaterialTheme.colorScheme.onBackground
+            }
             val text = stringResource(errorReason.stringRes)
             LargeSpacer()
             Text(
@@ -168,8 +175,7 @@ fun ErrorText(
                 modifier = Modifier.fillMaxWidth()
             )
             MediumSpacer()
-        }
-        else {
+        } else {
             XLargeSpacer()
         }
     }
@@ -199,7 +205,7 @@ fun LoginScreen(
 fun TelegramIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     IconButton(
         onClick = onClick,
         modifier = modifier
