@@ -7,5 +7,4 @@ class OrioksHtmlParser {
             .substringAfter("name=\"_csrf\" value=\"")
             .substringBefore("\">")
     }
-
 }

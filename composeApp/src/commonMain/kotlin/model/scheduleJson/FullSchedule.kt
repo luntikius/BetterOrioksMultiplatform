@@ -2,6 +2,7 @@ package model.scheduleJson
 
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import kotlinx.datetime.plus
 import kotlinx.serialization.SerialName
 import model.database.FirstOfTheMonthEntity
@@ -28,6 +29,7 @@ data class FullSchedule(
             }
         }
 
+        val visitedMonths = mutableSetOf<Month>()
         val firstOfTheMonths = mutableListOf<FirstOfTheMonthEntity>()
         val daysCount = SCHEDULE_WEEKS_COUNT * DAYS_IN_WEEK
         val daysOffset = getMondayOffset(semesterStartDate)
@@ -36,7 +38,10 @@ data class FullSchedule(
                 val id = index + 1
                 val weekId = index / DAYS_IN_WEEK + 1
                 val date = semesterStartDate.plus(index - daysOffset, DateTimeUnit.DAY)
-                if (date.dayOfMonth == 1) firstOfTheMonths.add(FirstOfTheMonthEntity(date = date.toString()))
+                if (date.month !in visitedMonths) {
+                    firstOfTheMonths.add(FirstOfTheMonthEntity(date = date.toString()))
+                    visitedMonths.add(date.month)
+                }
                 add(
                     ScheduleDayEntity(
                         id = id,

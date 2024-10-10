@@ -1,12 +1,13 @@
 package data
 
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.get
 import io.ktor.client.request.header
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.Parameters
@@ -16,41 +17,37 @@ import model.scheduleJson.FullSchedule
 class MietWebRepository {
 
     private val client: HttpClient get() {
-        try {
-            return HttpClient {
-                defaultRequest {
-                    url(BASE_URL)
-                    header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded)
-                    header(HttpHeaders.Accept, "*/*")
-                }
-
-                install(HttpCookies) {
-                    storage = AcceptAllCookiesStorage()
-                }
-
-                expectSuccess = true
+        return HttpClient {
+            defaultRequest {
+                url(BASE_URL)
+                header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded)
+                header(HttpHeaders.Accept, "*/*")
             }
-        } catch (e: Exception) {
-            throw e
-        }
-    }
 
-    private suspend fun sendScheduleRequest(group: String): String {
-        return client.submitForm(
-            url = SCHEDULE_URL,
-            formParameters = Parameters.build {
-                append("group", group)
-            },
-            encodeInQuery = false
-        ).body()
+            install(HttpCookies) {
+                storage = AcceptAllCookiesStorage()
+            }
+
+            expectSuccess = true
+        }
     }
 
     suspend fun getSchedule(
         group: String
     ): FullSchedule {
         return try {
-            sendScheduleRequest(group)
-            val scheduleJsonResponse = sendScheduleRequest(group)
+            val client = client
+            val cookieRequest = client.get(SCHEDULE_URL).bodyAsText()
+            val cookie = cookieRequest.substringAfter("\"").substringBefore(";")
+            val scheduleJsonResponse = client.submitForm(
+                url = SCHEDULE_URL,
+                formParameters = Parameters.build {
+                    append(GROUP_PARAMETER_NAME, group)
+                },
+                encodeInQuery = false
+            ) {
+                header(HttpHeaders.Cookie, cookie)
+            }.bodyAsText()
             Json.decodeFromString<FullSchedule>(scheduleJsonResponse)
         } catch (e: Exception) {
             throw e
@@ -62,5 +59,6 @@ class MietWebRepository {
     companion object {
         private const val BASE_URL = "https://www.miet.ru/"
         private const val SCHEDULE_URL = "schedule/data"
+        private const val GROUP_PARAMETER_NAME = "group"
     }
 }

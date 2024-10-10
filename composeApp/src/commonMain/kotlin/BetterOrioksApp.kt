@@ -24,6 +24,7 @@ import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import ui.loginScreen.LoginScreen
+import ui.menuScreen.MenuScreen
 import ui.scheduleScreen.ScheduleScreen
 
 private val BOTTOM_NAV_SCREENS = listOf(
@@ -51,11 +52,6 @@ fun BetterOrioksApp(
             )
         } else {
             LoginScreen(
-                {
-                    navController.navigate(AppScreens.Schedule.name) {
-                        popUpTo(AppScreens.Schedule.name)
-                    }
-                },
                 koinInject(),
                 modifier = Modifier.safeDrawingPadding()
             )
@@ -83,14 +79,7 @@ fun AppNavigation(
         composable(
             route = AppScreens.Menu.name
         ) {
-            LoginScreen(
-                {
-                    navController.navigate(AppScreens.Schedule.name) {
-                        popUpTo(AppScreens.Schedule.name)
-                    }
-                },
-                koinInject()
-            )
+            MenuScreen(koinInject())
         }
     }
 }

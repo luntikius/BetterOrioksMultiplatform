@@ -34,6 +34,14 @@ class UserPreferencesRepository(
         }
     }
 
+    suspend fun logout() {
+        dataStore.edit { preferences ->
+            preferences[CSRF] = ""
+            preferences[ORIOKS_IDENTITY] = ""
+            preferences[ORIOKS_SESSION] = ""
+        }
+    }
+
     private companion object {
         private val CSRF = stringPreferencesKey("csrf")
         private val ORIOKS_IDENTITY = stringPreferencesKey("ORIOKS_IDENTITY")

@@ -183,15 +183,14 @@ fun ErrorText(
 
 @Composable
 fun LoginScreen(
-    navigate: () -> Unit,
     loginScreenViewModel: LoginScreenViewModel,
     modifier: Modifier = Modifier
 ) {
     val uiState by loginScreenViewModel.uiState.collectAsState()
 
     when (uiState.loginState) {
+        is LoginState.Success -> {}
         is LoginState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is LoginState.Success -> navigate()
         is LoginState.LoginRequired ->
             LoginScreenContent(
                 loginScreenViewModel = loginScreenViewModel,

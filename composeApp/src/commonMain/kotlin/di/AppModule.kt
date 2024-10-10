@@ -10,6 +10,7 @@ import data.database.ScheduleDatabase
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import ui.loginScreen.LoginScreenViewModel
+import ui.menuScreen.MenuScreenViewModel
 import ui.scheduleScreen.ScheduleScreenViewModel
 
 fun sharedModule() = module {
@@ -26,5 +27,6 @@ fun sharedModule() = module {
     // view models
     single { ScheduleScreenViewModel(get(), get()) }
     single { AppViewModel(get()) }
+    viewModel { MenuScreenViewModel(get()) }
     viewModel { LoginScreenViewModel(get(), get()) }
 }

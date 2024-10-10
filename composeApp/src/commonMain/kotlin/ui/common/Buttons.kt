@@ -21,6 +21,32 @@ import ui.theme.gradientColor2
 import ui.theme.gradientColor3
 
 @Composable
+fun CardButton(
+    text: String,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    textColor: Color = MaterialTheme.colorScheme.onBackground,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceDim,
+            contentColor = textColor,
+            disabledContentColor = textColor.copy(alpha = 0.5f)
+        )
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.headlineSmall
+        )
+    }
+}
+
+@Composable
 fun GradientButton(
     text: String,
     onClick: () -> Unit,
