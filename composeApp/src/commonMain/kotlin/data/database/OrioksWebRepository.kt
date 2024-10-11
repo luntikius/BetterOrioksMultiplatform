@@ -15,6 +15,7 @@ import model.login.AuthData
 import model.login.AuthData.Companion.AUTH_COOKIE_CSRF
 import model.login.AuthData.Companion.AUTH_COOKIE_ORIOKS_IDENTITY
 import model.login.AuthData.Companion.AUTH_COOKIE_ORIOKS_SESSION
+import model.user.UserInfo
 import utils.OrioksHtmlParser
 
 class OrioksWebRepository(
@@ -65,6 +66,15 @@ class OrioksWebRepository(
         return authData
     }
 
+    suspend fun getUserInfo(
+        authData: AuthData
+    ): UserInfo {
+        val userInfoResponse = client.get(USER_URL) {
+            header(HttpHeaders.Cookie, authData.cookieString)
+        }.bodyAsText()
+        return htmlParser.getUserInfo(userInfoResponse)
+    }
+
     private companion object {
         private const val ACCEPT_HEADER_VALUE =
             "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
@@ -77,5 +87,6 @@ class OrioksWebRepository(
 
         private const val BASE_URL = "https://orioks.miet.ru"
         private const val AUTH_URL = "user/login"
+        private const val USER_URL = "user/profile"
     }
 }
