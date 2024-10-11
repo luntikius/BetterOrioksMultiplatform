@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -74,7 +75,7 @@ fun LoginInfoInput(
     var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier
+        modifier = modifier.safeDrawingPadding()
     ) {
         OutlinedTextField(
             value = uiState.login,

@@ -27,4 +27,11 @@ class OrioksHtmlParser {
             group
         )
     }
+
+    fun getSubjectsJson(html: String): String {
+        val parsed = Ksoup.parse(html)
+        val subjectsJson = parsed.getElementsByAttributeValue("style", "display:none;")
+            .first()!!.ownText()
+        return subjectsJson
+    }
 }

@@ -49,7 +49,7 @@ class ScheduleDatabaseRepository(
         Schedule(weeksList, firstOfTheMonths)
     }
 
-    private suspend fun dumpAll() {
+    suspend fun dumpAll() {
         scheduleDao.dumpSchedule()
         scheduleDao.dumpFirstOfTheMonths()
     }

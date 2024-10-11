@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import model.login.AuthData
+import model.schedule.SemesterDates
 import model.user.UserInfo
 
 class UserPreferencesRepository(
@@ -37,6 +38,14 @@ class UserPreferencesRepository(
         )
     }
 
+    val semesterDates: Flow<SemesterDates> = dataStore.data.map { preferences ->
+        SemesterDates(
+            startDate = preferences[SEMESTER_START_DATE] ?: "",
+            sessionStartDate = preferences[SESSION_START_DATE] ?: "",
+            sessionEndDate = preferences[SESSION_END_DATE] ?: ""
+        )
+    }
+
     suspend fun isSessionInvalidated(): Boolean {
         return dataStore.data.map { preferences ->
             preferences[IS_SESSION_INVALIDATED] ?: false
@@ -59,11 +68,19 @@ class UserPreferencesRepository(
         }
     }
 
+    suspend fun setSemesterDates(semesterDates: SemesterDates) {
+        dataStore.edit { preferences ->
+            semesterDates.run {
+                preferences[SEMESTER_START_DATE] = startDate
+                preferences[SESSION_START_DATE] = sessionStartDate ?: ""
+                preferences[SESSION_END_DATE] = sessionEndDate ?: ""
+            }
+        }
+    }
+
     suspend fun logout() {
         dataStore.edit { preferences ->
-            preferences[CSRF] = ""
-            preferences[ORIOKS_IDENTITY] = ""
-            preferences[ORIOKS_SESSION] = ""
+            preferences.clear()
         }
     }
 
@@ -75,5 +92,8 @@ class UserPreferencesRepository(
         private val USER_NAME = stringPreferencesKey("USER_NAME")
         private val USER_LOGIN = stringPreferencesKey("USER_LOGIN")
         private val USER_GROUP = stringPreferencesKey("USER_GROUP")
+        private val SEMESTER_START_DATE = stringPreferencesKey("SEMESTER_START_DATE")
+        private val SESSION_START_DATE = stringPreferencesKey("SESSION_START_DATE")
+        private val SESSION_END_DATE = stringPreferencesKey("SESSION_END_DATE")
     }
 }

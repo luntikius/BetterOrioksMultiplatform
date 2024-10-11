@@ -19,6 +19,7 @@ import kotlinx.datetime.toLocalDateTime
 import model.schedule.Schedule
 import model.schedule.ScheduleClass
 import model.schedule.ScheduleState
+import model.schedule.SemesterDates
 import model.schedule.SwitchOptions
 import model.user.UserInfo
 
@@ -100,6 +101,15 @@ class ScheduleScreenViewModel(
         return userPreferencesRepository.userInfo.first()
     }
 
+    private suspend fun getSemesterDates(refresh: Boolean): SemesterDates {
+        if (userPreferencesRepository.semesterDates.first().startDate.isBlank() || refresh) {
+            val authData = userPreferencesRepository.authData.first()
+            val semesterDates = orioksWebRepository.getSemesterDates(authData)
+            userPreferencesRepository.setSemesterDates(semesterDates)
+        }
+        return userPreferencesRepository.semesterDates.first()
+    }
+
     private suspend fun loadScheduleFromWeb(group: String, semesterStartDate: LocalDate) {
         val schedule = mietWebRepository.getSchedule(group).toScheduleDbEntities(semesterStartDate)
         scheduleDatabaseRepository.insertNewSchedule(schedule)
@@ -113,7 +123,9 @@ class ScheduleScreenViewModel(
                 if (refresh || !scheduleDatabaseRepository.isScheduleStored()) {
                     _scheduleState.update { ScheduleState.LoadingFromWeb }
                     val userInfo = getUserInfo(refresh)
-                    loadScheduleFromWeb(userInfo.group, LocalDate(2024, 9, 2))
+                    val semesterDates = getSemesterDates(refresh)
+                    val startDate = SemesterDates.DATE_FORMAT.parse(semesterDates.startDate)
+                    loadScheduleFromWeb(userInfo.group, startDate)
                     _scheduleState.update { ScheduleState.Loading }
                 }
 
@@ -125,6 +137,7 @@ class ScheduleScreenViewModel(
                 _scheduleState.update { ScheduleState.Success }
                 selectToday()
             } catch (e: Exception) {
+                println(e.stackTraceToString())
                 if (!scheduleDatabaseRepository.isScheduleStored()) {
                     _scheduleState.update { ScheduleState.Error(e.message.toString()) }
                 } else {

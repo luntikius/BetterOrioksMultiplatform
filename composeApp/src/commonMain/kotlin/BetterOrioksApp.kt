@@ -2,7 +2,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -34,30 +33,33 @@ private val BOTTOM_NAV_SCREENS = listOf(
 
 @Composable
 fun BetterOrioksApp(
-    appViewModel: AppViewModel,
-    navController: NavHostController = rememberNavController()
+    appViewModel: AppViewModel
 ) {
     val isAuthorized by appViewModel.isAuthorized.collectAsState(false)
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        bottomBar = { if (isAuthorized) BottomNavigationBar(navController) }
-    ) { paddingValues ->
-        if (isAuthorized) {
+    if (isAuthorized) {
+        val navController = rememberNavController()
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = { if (isAuthorized) BottomNavigationBar(navController) }
+        ) { paddingValues ->
             AppNavigation(
                 navController = navController,
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxSize()
             )
-        } else {
+        }
+    } else {
+        Scaffold(
+            modifier = Modifier.fillMaxSize()
+        ) { paddingValues ->
             LoginScreen(
                 koinInject(),
-                modifier = Modifier.safeDrawingPadding()
+                modifier = Modifier.fillMaxSize().padding(paddingValues)
             )
         }
     }
-
 }
 
 @Composable

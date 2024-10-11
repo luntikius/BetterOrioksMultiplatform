@@ -351,9 +351,6 @@ style:
   active: true
   ClassOrdering:
     active: true
-  DataClassContainsFunctions:
-    active: true
-    conversionFunctionPrefix: 'to'
   DataClassShouldBeImmutable:
     active: true
   EqualsNullCall:
