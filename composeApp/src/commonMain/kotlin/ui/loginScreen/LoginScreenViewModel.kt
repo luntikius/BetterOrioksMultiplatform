@@ -61,13 +61,15 @@ class LoginScreenViewModel(
                 _uiState.update { uis ->
                     uis.copy(
                         loginState = LoginState.LoginRequired(reason = LoginRequiredReason.BAD_LOGIN_OR_PASSWORD),
+                        isError = true,
                         password = ""
                     )
                 }
             } catch (e: Exception) {
                 _uiState.update { uis ->
                     uis.copy(
-                        loginState = LoginState.LoginRequired(reason = LoginRequiredReason.UNEXPECTED_ERROR)
+                        loginState = LoginState.LoginRequired(reason = LoginRequiredReason.UNEXPECTED_ERROR),
+                        isError = true
                     )
                 }
             }
