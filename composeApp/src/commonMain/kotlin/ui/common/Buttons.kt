@@ -41,7 +41,8 @@ fun CardButton(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(vertical = 4.dp)
         )
     }
 }
@@ -75,7 +76,7 @@ fun GradientButton(
                 .background(horizontalGradientBrush, shape = CircleShape, alpha = alpha)
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center,
-        ){
+        ) {
             Text(
                 text = text,
                 style = MaterialTheme.typography.headlineSmall,

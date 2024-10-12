@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,20 +17,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.exit
+import betterorioks.composeapp.generated.resources.profile
 import model.user.UserInfo
 import model.user.UserInfoState
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ui.common.CardButton
 import ui.common.ErrorScreenWithReloadButton
+import ui.common.GradientIcon
 import ui.common.LoadingScreen
+import ui.common.SmallSpacer
+import ui.common.XLargeSpacer
 
 @Composable
 fun UserInfoContent(
     userInfo: UserInfo
 ) {
+    GradientIcon(
+        painter = painterResource(Res.drawable.profile),
+        modifier = Modifier.size(80.dp)
+    )
+    SmallSpacer()
     Text(
         text = userInfo.name,
         style = MaterialTheme.typography.titleLarge
+    )
+    SmallSpacer()
+    Text(
+        text = "${userInfo.login} · ${userInfo.group}",
+        style = MaterialTheme.typography.labelLarge
     )
 }
 
@@ -70,7 +86,8 @@ fun MenuScreen(
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
         item {
-            UserInfoBlock(viewModel)
+            UserInfoBlock(viewModel, Modifier.fillParentMaxWidth().padding(16.dp))
+            XLargeSpacer()
         }
         item {
             CardButton(
