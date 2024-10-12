@@ -1,5 +1,6 @@
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -8,6 +9,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -20,9 +22,9 @@ import model.AppScreens
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
-import ui.common.LoadingScreen
+import ui.loginScreen.LoginScreen
+import ui.menuScreen.MenuScreen
 import ui.scheduleScreen.ScheduleScreen
-import ui.scheduleScreen.ScheduleScreenViewModel
 
 private val BOTTOM_NAV_SCREENS = listOf(
     BottomNavItem.Schedule,
@@ -31,35 +33,55 @@ private val BOTTOM_NAV_SCREENS = listOf(
 
 @Composable
 fun BetterOrioksApp(
-    navController: NavHostController = rememberNavController(),
-    scheduleScreenViewModel: ScheduleScreenViewModel = koinInject()
+    appViewModel: AppViewModel
 ) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        bottomBar = { BottomNavigationBar(navController) }
-    ) { paddingValues ->
-        NavHost(
-            navController = navController,
-            startDestination = AppScreens.Schedule.name,
-            modifier = Modifier.padding(paddingValues)
+    val isAuthorized by appViewModel.isAuthorized.collectAsState(false)
+
+    if (isAuthorized) {
+        val navController = rememberNavController()
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = { if (isAuthorized) BottomNavigationBar(navController) }
+        ) { paddingValues ->
+            AppNavigation(
+                navController = navController,
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+            )
+        }
+    } else {
+        Scaffold(
+            modifier = Modifier.fillMaxSize()
+        ) { paddingValues ->
+            LoginScreen(
+                koinInject(),
+                modifier = Modifier.fillMaxSize().padding(paddingValues)
+            )
+        }
+    }
+}
+
+@Composable
+fun AppNavigation(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+    NavHost(
+        navController = navController,
+        startDestination = AppScreens.Schedule.name,
+        modifier = modifier
+    ) {
+        composable(
+            route = AppScreens.Schedule.name
         ) {
-            composable(
-                route = AppScreens.Loading.name
-            ) {
-                LoadingScreen()
-            }
+            ScheduleScreen(koinInject())
+        }
 
-            composable(
-                route = AppScreens.Schedule.name
-            ) {
-                ScheduleScreen(scheduleScreenViewModel)
-            }
-
-            composable(
-                route = AppScreens.Menu.name
-            ) {
-                LoadingScreen()
-            }
+        composable(
+            route = AppScreens.Menu.name
+        ) {
+            MenuScreen(koinInject())
         }
     }
 }
@@ -74,12 +96,16 @@ fun BottomNavigationBar(
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.background,
         tonalElevation = 0.dp,
-        modifier = Modifier.fillMaxHeight(0.09F)
+        modifier = Modifier.height(80.dp)
     ) {
         BOTTOM_NAV_SCREENS.forEach { item ->
             NavigationBarItem(
                 icon = {
-                    Icon(painterResource(item.icon), contentDescription = null, modifier = Modifier.fillMaxHeight(0.5F))
+                    Icon(
+                        painterResource(item.icon),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxHeight(0.5F)
+                    )
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,

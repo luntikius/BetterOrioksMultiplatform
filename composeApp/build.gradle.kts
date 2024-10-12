@@ -61,13 +61,18 @@ kotlin {
 
             // Data Base
             implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.datastore)
+            implementation(libs.androidx.datastore.preferences)
             implementation(libs.sqlite.bundled)
             implementation(libs.sqlite)
 
+            // DI
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewModel)
+
+            implementation(libs.ksoup)
         }
     }
 }

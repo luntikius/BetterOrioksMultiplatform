@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.MietWebRepository
 import data.ScheduleDatabaseRepository
+import data.UserPreferencesRepository
+import data.database.OrioksWebRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -16,11 +19,15 @@ import kotlinx.datetime.toLocalDateTime
 import model.schedule.Schedule
 import model.schedule.ScheduleClass
 import model.schedule.ScheduleState
+import model.schedule.SemesterDates
 import model.schedule.SwitchOptions
+import model.user.UserInfo
 
 class ScheduleScreenViewModel(
-    val scheduleDatabaseRepository: ScheduleDatabaseRepository,
-    val mietWebRepository: MietWebRepository
+    private val scheduleDatabaseRepository: ScheduleDatabaseRepository,
+    private val mietWebRepository: MietWebRepository,
+    private val orioksWebRepository: OrioksWebRepository,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
     private lateinit var _uiState: MutableStateFlow<ScheduleScreenUiState>
     private val _scheduleState: MutableStateFlow<ScheduleState> = MutableStateFlow(ScheduleState.Loading)
@@ -85,6 +92,24 @@ class ScheduleScreenViewModel(
         }
     }
 
+    private suspend fun getUserInfo(refresh: Boolean): UserInfo {
+        if (userPreferencesRepository.userInfo.first().group.isBlank() || refresh) {
+            val authData = userPreferencesRepository.authData.first()
+            val userInfo = orioksWebRepository.getUserInfo(authData)
+            userPreferencesRepository.setUserInfo(userInfo)
+        }
+        return userPreferencesRepository.userInfo.first()
+    }
+
+    private suspend fun getSemesterDates(refresh: Boolean): SemesterDates {
+        if (userPreferencesRepository.semesterDates.first().startDate.isBlank() || refresh) {
+            val authData = userPreferencesRepository.authData.first()
+            val semesterDates = orioksWebRepository.getSemesterDates(authData)
+            userPreferencesRepository.setSemesterDates(semesterDates)
+        }
+        return userPreferencesRepository.semesterDates.first()
+    }
+
     private suspend fun loadScheduleFromWeb(group: String, semesterStartDate: LocalDate) {
         val schedule = mietWebRepository.getSchedule(group).toScheduleDbEntities(semesterStartDate)
         scheduleDatabaseRepository.insertNewSchedule(schedule)
@@ -97,7 +122,10 @@ class ScheduleScreenViewModel(
 
                 if (refresh || !scheduleDatabaseRepository.isScheduleStored()) {
                     _scheduleState.update { ScheduleState.LoadingFromWeb }
-                    loadScheduleFromWeb("ПИН-45", LocalDate(2024, 9, 2))
+                    val userInfo = getUserInfo(refresh)
+                    val semesterDates = getSemesterDates(refresh)
+                    val startDate = SemesterDates.DATE_FORMAT.parse(semesterDates.startDate)
+                    loadScheduleFromWeb(userInfo.group, startDate)
                     _scheduleState.update { ScheduleState.Loading }
                 }
 
@@ -109,6 +137,7 @@ class ScheduleScreenViewModel(
                 _scheduleState.update { ScheduleState.Success }
                 selectToday()
             } catch (e: Exception) {
+                println(e.stackTraceToString())
                 if (!scheduleDatabaseRepository.isScheduleStored()) {
                     _scheduleState.update { ScheduleState.Error(e.message.toString()) }
                 } else {

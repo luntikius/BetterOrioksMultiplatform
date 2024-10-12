@@ -11,14 +11,17 @@ navigationCompose = "2.7.0-alpha07"
 kotlinx-datetime = "0.6.0"
 kotlinxSerializationJson = "1.6.3"
 ktor = "2.3.12"
-androidxRoom = "2.7.0-alpha07"
-sqlite = "2.5.0-alpha07"
+androidxRoom = "2.7.0-alpha09"
+sqlite = "2.5.0-alpha09"
 ksp = "2.0.20-1.0.24"
 koin = "4.0.0-RC2"
+preferencesDataStore = "1.1.1"
+kSoup = "0.1.9"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime"}
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
@@ -29,7 +32,8 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }
-
+androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "preferencesDataStore"}
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "preferencesDataStore" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 sqlite = { module = "androidx.sqlite:sqlite", version.ref = "sqlite" }
 
@@ -39,6 +43,7 @@ koin-compose = { group = "io.insert-koin", name = "koin-compose" }
 koin-compose-viewModel = { group = "io.insert-koin", name = "koin-compose-viewmodel" }
 koin-android = { group = "io.insert-koin", name = "koin-android" }
 
+ksoup = { group = "com.fleeksoft.ksoup", name = "ksoup-lite", version.ref = "kSoup" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

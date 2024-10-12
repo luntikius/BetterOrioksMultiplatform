@@ -53,9 +53,18 @@ fun BetterOrioksTypography(colorScheme: ColorScheme): Typography {
     )
 
     return Typography(
-        displayLarge = MaterialTheme.typography.displayLarge.copy(fontFamily = betterOrioksFontFamily),
-        displayMedium = MaterialTheme.typography.displayMedium.copy(fontFamily = betterOrioksFontFamily),
-        displaySmall = MaterialTheme.typography.displaySmall.copy(fontFamily = betterOrioksFontFamily),
+        displayLarge = MaterialTheme.typography.displayLarge.copy(
+            fontFamily = betterOrioksFontFamily,
+            fontWeight = FontWeight.Bold
+        ),
+        displayMedium = MaterialTheme.typography.displayMedium.copy(
+            fontFamily = betterOrioksFontFamily,
+            fontWeight = FontWeight.Bold
+        ),
+        displaySmall = MaterialTheme.typography.displaySmall.copy(
+            fontFamily = betterOrioksFontFamily,
+            fontWeight = FontWeight.Bold
+        ),
 
         headlineLarge = MaterialTheme.typography.headlineLarge.copy(
             fontWeight = FontWeight.Bold,
