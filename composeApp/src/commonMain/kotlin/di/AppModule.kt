@@ -27,6 +27,6 @@ fun sharedModule() = module {
     // view models
     single { ScheduleScreenViewModel(get(), get(), get(), get()) }
     single { AppViewModel(get()) }
-    viewModel { MenuScreenViewModel(get(), get()) }
+    single { MenuScreenViewModel(get(), get(), get()) }
     viewModel { LoginScreenViewModel(get(), get()) }
 }
