@@ -1,6 +1,8 @@
 package ui.menuScreen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,7 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.exit
+import betterorioks.composeapp.generated.resources.news
+import betterorioks.composeapp.generated.resources.notifications
 import betterorioks.composeapp.generated.resources.profile
+import betterorioks.composeapp.generated.resources.settings
 import model.user.UserInfo
 import model.user.UserInfoState
 import org.jetbrains.compose.resources.painterResource
@@ -25,7 +30,9 @@ import org.jetbrains.compose.resources.stringResource
 import ui.common.CardButton
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.GradientIcon
+import ui.common.LargeSpacer
 import ui.common.LoadingScreen
+import ui.common.SimpleIconButton
 import ui.common.SmallSpacer
 import ui.common.XLargeSpacer
 
@@ -75,6 +82,35 @@ fun UserInfoBlock(
 }
 
 @Composable
+fun NavigationItemsRow(
+    modifier: Modifier = Modifier
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+    ) {
+        SimpleIconButton(
+            icon = painterResource(Res.drawable.notifications),
+            text = stringResource(Res.string.notifications),
+            onClick = {},
+            modifier = Modifier.weight(1f)
+        )
+        SimpleIconButton(
+            icon = painterResource(Res.drawable.news),
+            text = stringResource(Res.string.news),
+            onClick = {},
+            modifier = Modifier.weight(1f)
+        )
+        SimpleIconButton(
+            icon = painterResource(Res.drawable.settings),
+            text = stringResource(Res.string.settings),
+            onClick = {},
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
 fun MenuScreen(
     viewModel: MenuScreenViewModel
 ) {
@@ -87,8 +123,12 @@ fun MenuScreen(
     ) {
         item {
             UserInfoBlock(viewModel, Modifier.fillParentMaxWidth().padding(16.dp))
-            XLargeSpacer()
+            LargeSpacer()
         }
+        item {
+            NavigationItemsRow()
+        }
+        item { repeat(10) { XLargeSpacer() } }
         item {
             CardButton(
                 text = stringResource(Res.string.exit),

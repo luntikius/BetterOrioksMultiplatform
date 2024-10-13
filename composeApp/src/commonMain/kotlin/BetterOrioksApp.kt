@@ -21,10 +21,12 @@ import androidx.navigation.compose.rememberNavController
 import model.AppScreens
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
+import ui.menuScreen.MenuScreenViewModel
 import ui.scheduleScreen.ScheduleScreen
+import ui.scheduleScreen.ScheduleScreenViewModel
 
 private val BOTTOM_NAV_SCREENS = listOf(
     BottomNavItem.Schedule,
@@ -55,7 +57,7 @@ fun BetterOrioksApp(
             modifier = Modifier.fillMaxSize()
         ) { paddingValues ->
             LoginScreen(
-                koinInject(),
+                koinViewModel(),
                 modifier = Modifier.fillMaxSize().padding(paddingValues)
             )
         }
@@ -67,6 +69,9 @@ fun AppNavigation(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    val scheduleScreenViewModel = koinViewModel<ScheduleScreenViewModel>()
+    val menuScreenViewModel = koinViewModel<MenuScreenViewModel>()
+
     NavHost(
         navController = navController,
         startDestination = AppScreens.Schedule.name,
@@ -75,13 +80,13 @@ fun AppNavigation(
         composable(
             route = AppScreens.Schedule.name
         ) {
-            ScheduleScreen(koinInject())
+            ScheduleScreen(scheduleScreenViewModel)
         }
 
         composable(
             route = AppScreens.Menu.name
         ) {
-            MenuScreen(koinInject())
+            MenuScreen(menuScreenViewModel)
         }
     }
 }

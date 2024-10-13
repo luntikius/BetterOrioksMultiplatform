@@ -1,7 +1,7 @@
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 import ui.theme.BetterOrioksTheme
 
 @Composable
@@ -9,7 +9,7 @@ import ui.theme.BetterOrioksTheme
 fun App() {
     KoinContext {
         BetterOrioksTheme {
-            BetterOrioksApp(koinInject())
+            BetterOrioksApp(koinViewModel())
         }
     }
 }

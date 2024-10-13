@@ -25,8 +25,8 @@ fun sharedModule() = module {
     single { OrioksWebRepository() }
 
     // view models
-    single { ScheduleScreenViewModel(get(), get(), get(), get()) }
-    single { AppViewModel(get()) }
-    single { MenuScreenViewModel(get(), get(), get()) }
+    viewModel { ScheduleScreenViewModel(get(), get(), get(), get()) }
+    viewModel { AppViewModel(get()) }
+    viewModel { MenuScreenViewModel(get(), get(), get()) }
     viewModel { LoginScreenViewModel(get(), get()) }
 }
