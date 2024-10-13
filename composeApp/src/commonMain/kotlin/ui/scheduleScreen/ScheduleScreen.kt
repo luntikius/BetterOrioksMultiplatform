@@ -214,14 +214,14 @@ fun WeekInfoRow(
         Text(
             type,
             textAlign = TextAlign.End,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
         Text("", modifier = Modifier.padding(horizontal = 8.dp))
         Text(
             number,
             textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
     }
@@ -319,7 +319,7 @@ fun DatePickerElement(
                 Text(
                     text = date.dayOfMonth.toString(),
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
                         .padding(8.dp)
                 )
@@ -461,13 +461,13 @@ fun ClassItemContent(
         MediumSpacer()
         Text(
             text = scheduleClass.teacher,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
         SmallSpacer()
         Text(
             text = stringResource(Res.string.room_number, scheduleClass.room),
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
         MediumSpacer()
@@ -502,7 +502,7 @@ fun CircleText(text: String, modifier: Modifier = Modifier, color: Color = Mater
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .wrapContentSize(Alignment.Center)
                 .padding(horizontal = 8.dp)

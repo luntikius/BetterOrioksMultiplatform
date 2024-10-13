@@ -97,17 +97,16 @@ fun BetterOrioksTypography(colorScheme: ColorScheme): Typography {
         bodySmall = MaterialTheme.typography.bodySmall.copy(fontFamily = betterOrioksFontFamily),
 
         labelLarge = MaterialTheme.typography.labelLarge.copy(
-            fontSize = 16.sp,
-            color = colorScheme.onSurfaceVariant,
             fontFamily = betterOrioksFontFamily
         ),
         labelMedium = MaterialTheme.typography.labelMedium.copy(
-            fontSize = 14.sp,
+            fontSize = 16.sp,
             color = colorScheme.onSurfaceVariant,
             fontFamily = betterOrioksFontFamily
         ),
         labelSmall = MaterialTheme.typography.labelSmall.copy(
             fontSize = 14.sp,
+            color = colorScheme.onSurfaceVariant,
             fontFamily = betterOrioksFontFamily
         )
     )

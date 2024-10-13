@@ -16,7 +16,7 @@ val gray800 = Color(0xFF141419)
 val error_light_theme = Color(0xFFBB0A1E)
 val error_dark_theme = Color(0xFFC83A4A)
 
-val gradientColor1 = Color(155, 179, 245, 255)
+val gradientColor1 = Color(160, 159, 255, 255)
 val gradientColor2 = Color(77, 178, 253, 255)
 val gradientColor3 = Color(136, 216, 222, 255)
 

@@ -45,7 +45,7 @@ fun UserInfoContent(
     SmallSpacer()
     Text(
         text = "${userInfo.login} · ${userInfo.group}",
-        style = MaterialTheme.typography.labelLarge
+        style = MaterialTheme.typography.labelSmall
     )
 }
 
