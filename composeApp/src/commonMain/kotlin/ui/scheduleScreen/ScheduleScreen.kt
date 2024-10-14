@@ -35,7 +35,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -65,6 +64,7 @@ import betterorioks.composeapp.generated.resources.loading_schedule_from_web
 import betterorioks.composeapp.generated.resources.no_schedule
 import betterorioks.composeapp.generated.resources.no_schedule_full
 import betterorioks.composeapp.generated.resources.refresh_alert_text
+import betterorioks.composeapp.generated.resources.reload
 import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.schedule_scroll_to_today
 import betterorioks.composeapp.generated.resources.scheldule
@@ -82,11 +82,12 @@ import model.schedule.ScheduleWeek
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import ui.common.AttentionAlert
+import ui.common.DefaultPullToRefresh
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
-import ui.common.RefreshAlert
 import ui.common.SmallSpacer
 import ui.common.SwitchAlert
 import utils.getMonthStringRes
@@ -638,20 +639,13 @@ fun ScheduleBox(
             LargeSpacer()
         }
 
-        // TODO fix this in newer version of Material3
-        if (pullToRefreshState.progress > 0.5F) {
-            PullToRefreshContainer(
-                modifier = Modifier.align(Alignment.TopCenter),
-                state = pullToRefreshState,
-                contentColor = MaterialTheme.colorScheme.primary,
-                containerColor = MaterialTheme.colorScheme.surfaceTint
-            )
-        }
+        DefaultPullToRefresh(pullToRefreshState)
 
-        RefreshAlert(
+        AttentionAlert(
             isVisible = isRefreshAlertVisible,
             text = stringResource(Res.string.refresh_alert_text),
-            onRefresh = { viewModel.loadSchedule(refresh = true) },
+            actionButtonText = stringResource(Res.string.reload),
+            onAction = { viewModel.loadSchedule(refresh = true) },
             onDismiss = { isRefreshAlertVisible = false },
         )
 

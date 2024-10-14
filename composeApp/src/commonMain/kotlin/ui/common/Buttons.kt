@@ -1,9 +1,11 @@
 package ui.common
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,6 +25,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
+import betterorioks.composeapp.generated.resources.Res
+import betterorioks.composeapp.generated.resources.arrow_right
+import org.jetbrains.compose.resources.painterResource
 import ui.theme.gradientColor1
 import ui.theme.gradientColor2
 import ui.theme.gradientColor3
@@ -47,12 +52,53 @@ fun SimpleIconButton(
                 painter = icon,
                 contentDescription = text,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(36.dp)
             )
             SmallSpacer()
             Text(
                 text = text,
                 style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+
+@Composable
+fun HorizontalIconTextButton(
+    painter: Painter,
+    text: String,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        color = Color.Transparent,
+        modifier = modifier
+            .clip(RoundedCornerShape(16.dp))
+            .clickable(onClick = onClick, enabled = enabled)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
+        ) {
+            Icon(
+                painter = painter,
+                tint = MaterialTheme.colorScheme.primary,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+            LargeSpacer()
+            Text(
+                text,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            )
+            Icon(
+                painter = painterResource(Res.drawable.arrow_right),
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
     }

@@ -21,7 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import model.AppScreens
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
 import ui.menuScreen.MenuScreenViewModel
@@ -57,7 +57,7 @@ fun BetterOrioksApp(
             modifier = Modifier.fillMaxSize()
         ) { paddingValues ->
             LoginScreen(
-                koinViewModel(),
+                koinInject(),
                 modifier = Modifier.fillMaxSize().padding(paddingValues)
             )
         }
@@ -69,8 +69,8 @@ fun AppNavigation(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val scheduleScreenViewModel = koinViewModel<ScheduleScreenViewModel>()
-    val menuScreenViewModel = koinViewModel<MenuScreenViewModel>()
+    val scheduleScreenViewModel = koinInject<ScheduleScreenViewModel>()
+    val menuScreenViewModel = koinInject<MenuScreenViewModel>()
 
     NavHost(
         navController = navController,

@@ -1,13 +1,18 @@
 package ui.common
 
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
@@ -42,10 +47,20 @@ fun SubjectCard(
     ) {
         Text("BOBS", modifier = Modifier.padding(16.dp))
     }
+}
 
-
-
-
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BoxScope.DefaultPullToRefresh(pullToRefreshState: PullToRefreshState) {
+    // TODO fix this in newer version of Material3
+    if (pullToRefreshState.progress > 0.5F) {
+        PullToRefreshContainer(
+            modifier = Modifier.align(Alignment.TopCenter),
+            state = pullToRefreshState,
+            contentColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.surfaceTint
+        )
+    }
 }
 
 @Composable

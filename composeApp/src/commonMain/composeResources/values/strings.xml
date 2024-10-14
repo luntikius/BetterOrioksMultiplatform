@@ -133,6 +133,10 @@
     <string name="login_title">Вход</string>
     <string name="news">Новости</string>
 
+    <string name="social_telegram">Telegram канал приложения</string>
+    <string name="social_github">GitHub репозиторий приложения</string>
+    <string name="social_orioks">Открыть Web версию</string>
+
     <string name="login_required_reason_was_not_logged_in">Войдите в свой аккаунт Orioks</string>
     <string name="login_required_reason_session_expired">Ваша сессия истекла, пожалуйста войдите заново</string>
     <string name="login_required_reason_bad_login_or_password">Неверный логин или пароль</string>

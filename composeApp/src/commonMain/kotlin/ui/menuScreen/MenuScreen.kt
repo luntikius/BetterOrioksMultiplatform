@@ -1,6 +1,8 @@
 package ui.menuScreen
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,28 +10,44 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.exit
+import betterorioks.composeapp.generated.resources.exit_alert_text
+import betterorioks.composeapp.generated.resources.github
 import betterorioks.composeapp.generated.resources.news
 import betterorioks.composeapp.generated.resources.notifications
 import betterorioks.composeapp.generated.resources.profile
 import betterorioks.composeapp.generated.resources.settings
+import betterorioks.composeapp.generated.resources.social_github
+import betterorioks.composeapp.generated.resources.social_orioks
+import betterorioks.composeapp.generated.resources.social_telegram
+import betterorioks.composeapp.generated.resources.telegram
+import betterorioks.composeapp.generated.resources.web
 import model.user.UserInfo
 import model.user.UserInfoState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ui.common.AttentionAlert
 import ui.common.CardButton
+import ui.common.DefaultPullToRefresh
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.GradientIcon
+import ui.common.HorizontalIconTextButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.SimpleIconButton
@@ -64,7 +82,7 @@ fun UserInfoBlock(
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
-        modifier = modifier,
+        modifier = modifier.animateContentSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (uiState.userInfoState) {
@@ -111,13 +129,79 @@ fun NavigationItemsRow(
 }
 
 @Composable
-fun MenuScreen(
-    viewModel: MenuScreenViewModel
+fun TextButtonColumn(
+    modifier: Modifier = Modifier
 ) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        HorizontalIconTextButton(
+            painterResource(Res.drawable.web),
+            text = stringResource(Res.string.social_orioks),
+            onClick = {},
+            modifier = Modifier.fillMaxWidth()
+        )
+        HorizontalIconTextButton(
+            painterResource(Res.drawable.telegram),
+            text = stringResource(Res.string.social_telegram),
+            onClick = {},
+            modifier = Modifier.fillMaxWidth()
+        )
+        HorizontalIconTextButton(
+            painterResource(Res.drawable.github),
+            text = stringResource(Res.string.social_github),
+            onClick = {},
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MenuScreen(
+    viewModel: MenuScreenViewModel,
+    modifier: Modifier = Modifier
+) {
+    var isExitAlertVisible by remember { mutableStateOf(false) }
+    val pullToRefreshState = rememberPullToRefreshState()
+
     LaunchedEffect(Unit) {
         viewModel.getScreenData()
     }
 
+    LaunchedEffect(pullToRefreshState.isRefreshing) {
+        if (pullToRefreshState.isRefreshing) {
+            viewModel.getScreenData(true)
+            pullToRefreshState.endRefresh()
+        }
+    }
+
+    Box(
+        modifier = modifier.nestedScroll(pullToRefreshState.nestedScrollConnection)
+    ) {
+        MenuScreenContent(
+            viewModel = viewModel,
+            onExitButtonClick = { isExitAlertVisible = true }
+        )
+
+        DefaultPullToRefresh(pullToRefreshState)
+
+        AttentionAlert(
+            isVisible = isExitAlertVisible,
+            text = stringResource(Res.string.exit_alert_text),
+            actionButtonText = stringResource(Res.string.exit),
+            onAction = { viewModel.logout() },
+            onDismiss = { isExitAlertVisible = false }
+        )
+    }
+}
+
+@Composable
+fun MenuScreenContent(
+    viewModel: MenuScreenViewModel,
+    onExitButtonClick: () -> Unit
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
@@ -127,12 +211,16 @@ fun MenuScreen(
         }
         item {
             NavigationItemsRow()
+            XLargeSpacer()
         }
-        item { repeat(10) { XLargeSpacer() } }
+        item {
+            TextButtonColumn()
+        }
+        item { repeat(3) { XLargeSpacer() } }
         item {
             CardButton(
                 text = stringResource(Res.string.exit),
-                onClick = viewModel::logout,
+                onClick = onExitButtonClick,
                 textColor = MaterialTheme.colorScheme.error,
                 modifier = Modifier.fillMaxWidth()
             )
