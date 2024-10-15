@@ -11,6 +11,7 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import ui.loginScreen.LoginScreenViewModel
 import ui.menuScreen.MenuScreenViewModel
+import ui.newsScreen.NewsViewModel
 import ui.scheduleScreen.ScheduleScreenViewModel
 
 fun sharedModule() = module {
@@ -29,4 +30,5 @@ fun sharedModule() = module {
     viewModel { AppViewModel(get()) }
     viewModel { MenuScreenViewModel(get(), get(), get()) }
     viewModel { LoginScreenViewModel(get(), get()) }
+    viewModel { NewsViewModel(get(), get()) }
 }

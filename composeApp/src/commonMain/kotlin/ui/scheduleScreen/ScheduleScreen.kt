@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import betterorioks.composeapp.generated.resources.Refresh
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_drop_down
 import betterorioks.composeapp.generated.resources.change_lesson_time
@@ -64,7 +65,6 @@ import betterorioks.composeapp.generated.resources.loading_schedule_from_web
 import betterorioks.composeapp.generated.resources.no_schedule
 import betterorioks.composeapp.generated.resources.no_schedule_full
 import betterorioks.composeapp.generated.resources.refresh_alert_text
-import betterorioks.composeapp.generated.resources.reload
 import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.schedule_scroll_to_today
 import betterorioks.composeapp.generated.resources.scheldule
@@ -644,7 +644,7 @@ fun ScheduleBox(
         AttentionAlert(
             isVisible = isRefreshAlertVisible,
             text = stringResource(Res.string.refresh_alert_text),
-            actionButtonText = stringResource(Res.string.reload),
+            actionButtonText = stringResource(Res.string.Refresh),
             onAction = { viewModel.loadSchedule(refresh = true) },
             onDismiss = { isRefreshAlertVisible = false },
         )

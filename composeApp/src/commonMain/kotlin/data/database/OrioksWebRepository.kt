@@ -16,6 +16,7 @@ import model.login.AuthData
 import model.login.AuthData.Companion.AUTH_COOKIE_CSRF
 import model.login.AuthData.Companion.AUTH_COOKIE_ORIOKS_IDENTITY
 import model.login.AuthData.Companion.AUTH_COOKIE_ORIOKS_SESSION
+import model.news.News
 import model.schedule.SemesterDates
 import model.scheduleJson.SubjectsSemesters
 import model.user.UserInfo
@@ -92,6 +93,17 @@ class OrioksWebRepository(
         val subjectsJson = htmlParser.getSubjectsJson(semesterDatesResponse)
         val subjectsSemesters: SubjectsSemesters = json.decodeFromString(subjectsJson)
         return subjectsSemesters.getLastSemesterDates()
+    }
+
+    suspend fun getNews(
+        authData: AuthData
+    ): List<News> {
+        val newsResponse = client.get(BASE_URL) {
+            header(HttpHeaders.Cookie, authData.cookieString)
+        }
+        val newsHtml = newsResponse.bodyAsText()
+        val newsList = htmlParser.getNewsList(newsHtml)
+        return newsList
     }
 
     private companion object {

@@ -25,6 +25,8 @@ import org.koin.compose.koinInject
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
 import ui.menuScreen.MenuScreenViewModel
+import ui.newsScreen.NewsScreen
+import ui.newsScreen.NewsViewModel
 import ui.scheduleScreen.ScheduleScreen
 import ui.scheduleScreen.ScheduleScreenViewModel
 
@@ -71,6 +73,7 @@ fun AppNavigation(
 ) {
     val scheduleScreenViewModel = koinInject<ScheduleScreenViewModel>()
     val menuScreenViewModel = koinInject<MenuScreenViewModel>()
+    val newsViewModel = koinInject<NewsViewModel>()
 
     NavHost(
         navController = navController,
@@ -86,7 +89,13 @@ fun AppNavigation(
         composable(
             route = AppScreens.Menu.name
         ) {
-            MenuScreen(menuScreenViewModel)
+            MenuScreen(navController, menuScreenViewModel)
+        }
+
+        composable(
+            route = AppScreens.News.name
+        ) {
+            NewsScreen(navController, newsViewModel)
         }
     }
 }

@@ -37,11 +37,15 @@ fun SimpleIconButton(
     icon: Painter,
     text: String,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
+    val alpha = if (enabled) 1f else 0.5f
     Surface(
         onClick = onClick,
-        modifier = modifier.clip(RoundedCornerShape(16.dp)),
+        shape = RoundedCornerShape(16.dp),
+        modifier = modifier,
+        enabled = enabled,
         color = Color.Transparent
     ) {
         Column(
@@ -51,13 +55,14 @@ fun SimpleIconButton(
             Icon(
                 painter = icon,
                 contentDescription = text,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = MaterialTheme.colorScheme.primary.copy(alpha = alpha),
                 modifier = Modifier.size(36.dp)
             )
             SmallSpacer()
             Text(
                 text = text,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = alpha)
             )
         }
     }

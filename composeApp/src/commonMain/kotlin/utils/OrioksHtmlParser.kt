@@ -1,6 +1,9 @@
 package utils
 
 import com.fleeksoft.ksoup.Ksoup
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format.char
+import model.news.News
 import model.user.UserInfo
 
 class OrioksHtmlParser {
@@ -33,5 +36,27 @@ class OrioksHtmlParser {
         val subjectsJson = parsed.getElementsByAttributeValue("style", "display:none;")
             .first()!!.ownText()
         return subjectsJson
+    }
+
+    fun getNewsList(html: String): List<News> {
+        val parsed = Ksoup.parse(html)
+        val newsTableBody = parsed.getElementsByTag("tbody").first()!!
+        val news = newsTableBody.getElementsByTag("tr")
+        return buildList {
+            for (i in 1..<news.size) {
+                val elements = news[i].getElementsByTag("td")
+                val date = dateTimeFormat.parse(elements[0].ownText())
+                val title = elements[1].ownText()
+                val url = elements[2].getElementsByTag("a").first()!!.attr("href")
+                add(News(title, date, url))
+            }
+        }
+    }
+
+    private companion object {
+        val dateTimeFormat = LocalDateTime.Format {
+            year(); char('-'); monthNumber(); char('-'); dayOfMonth(); char(' ')
+            hour(); char(':'); minute(); char(':'); second()
+        }
     }
 }

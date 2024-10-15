@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.exit
 import betterorioks.composeapp.generated.resources.exit_alert_text
@@ -38,6 +39,7 @@ import betterorioks.composeapp.generated.resources.social_orioks
 import betterorioks.composeapp.generated.resources.social_telegram
 import betterorioks.composeapp.generated.resources.telegram
 import betterorioks.composeapp.generated.resources.web
+import model.AppScreens
 import model.user.UserInfo
 import model.user.UserInfoState
 import org.jetbrains.compose.resources.painterResource
@@ -101,6 +103,7 @@ fun UserInfoBlock(
 
 @Composable
 fun NavigationItemsRow(
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -110,19 +113,21 @@ fun NavigationItemsRow(
         SimpleIconButton(
             icon = painterResource(Res.drawable.notifications),
             text = stringResource(Res.string.notifications),
-            onClick = {},
+            onClick = { },
+            enabled = false,
             modifier = Modifier.weight(1f)
         )
         SimpleIconButton(
             icon = painterResource(Res.drawable.news),
             text = stringResource(Res.string.news),
-            onClick = {},
+            onClick = { navController.navigate(AppScreens.News.name) },
             modifier = Modifier.weight(1f)
         )
         SimpleIconButton(
             icon = painterResource(Res.drawable.settings),
             text = stringResource(Res.string.settings),
-            onClick = {},
+            onClick = { },
+            enabled = false,
             modifier = Modifier.weight(1f)
         )
     }
@@ -160,6 +165,7 @@ fun TextButtonColumn(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuScreen(
+    navController: NavController,
     viewModel: MenuScreenViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -182,6 +188,7 @@ fun MenuScreen(
     ) {
         MenuScreenContent(
             viewModel = viewModel,
+            navController = navController,
             onExitButtonClick = { isExitAlertVisible = true }
         )
 
@@ -200,6 +207,7 @@ fun MenuScreen(
 @Composable
 fun MenuScreenContent(
     viewModel: MenuScreenViewModel,
+    navController: NavController,
     onExitButtonClick: () -> Unit
 ) {
     LazyColumn(
@@ -210,7 +218,7 @@ fun MenuScreenContent(
             LargeSpacer()
         }
         item {
-            NavigationItemsRow()
+            NavigationItemsRow(navController)
             XLargeSpacer()
         }
         item {
