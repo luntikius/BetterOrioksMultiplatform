@@ -45,6 +45,10 @@ fun NewsItem(
     ) {
         Column {
             Text(
+                text = stringResource(Res.string.news_date, NEWS_DATE_TIME_FORMAT.format(news.date)),
+                style = MaterialTheme.typography.labelMedium
+            )
+            Text(
                 text = news.title,
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 3,
@@ -52,10 +56,6 @@ fun NewsItem(
                 overflow = TextOverflow.Ellipsis
             )
             LargeSpacer()
-            Text(
-                text = stringResource(Res.string.news_date, NEWS_DATE_TIME_FORMAT.format(news.date)),
-                style = MaterialTheme.typography.labelMedium
-            )
         }
     }
 }

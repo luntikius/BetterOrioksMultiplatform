@@ -63,9 +63,18 @@ class OrioksHtmlParser {
             .first()?.nextSibling()?.toString()?.trim() ?: ""
         val title = document.select("h3:contains(Заголовок:)")
             .first()?.nextSibling()?.toString()?.trim() ?: ""
-        val newsBody = document.select("h3:contains(Тело новости:)")
+        val newsBodyElements = document.select("h3:contains(Тело новости:)")
             .first()?.nextElementSiblings()
-            ?.map { it.text() }?.takeWhile { it.trim() != "Прикреплённые файлы:" } ?: emptyList()
+            ?.takeWhile { it.text().trim() != "Прикреплённые файлы:" } ?: emptyList()
+        val newsBody = newsBodyElements.map { element ->
+            var paragraphText = element.text()
+            element.select("a").forEach { link ->
+                val linkText = link.text()
+                val linkHref = link.attr("href")
+                paragraphText = paragraphText.replace(linkText, "$linkText:$linkHref")
+            }
+            paragraphText
+        }
         val files = document.select("h3:contains(Прикреплённые файлы:)")
             .first()?.nextElementSibling()?.select("a")
             ?.map { it.ownText() to it.attr("href") } ?: emptyList()

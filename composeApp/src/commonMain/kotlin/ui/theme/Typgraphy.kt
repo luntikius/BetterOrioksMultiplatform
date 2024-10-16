@@ -85,7 +85,8 @@ fun BetterOrioksTypography(colorScheme: ColorScheme): Typography {
         ),
         titleMedium = MaterialTheme.typography.titleMedium.copy(
             fontFamily = betterOrioksFontFamily,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            fontSize = (MaterialTheme.typography.titleMedium.fontSize.value + 2).sp
         ),
         titleSmall = MaterialTheme.typography.titleSmall.copy(
             fontFamily = betterOrioksFontFamily,

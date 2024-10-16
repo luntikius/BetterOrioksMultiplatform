@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -17,10 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
-import betterorioks.composeapp.generated.resources.Resources
+import betterorioks.composeapp.generated.resources.attached_files
 import betterorioks.composeapp.generated.resources.files
 import betterorioks.composeapp.generated.resources.loading_news
 import betterorioks.composeapp.generated.resources.news_view
@@ -28,6 +31,7 @@ import model.news.newsViewScreen.NewsViewContent
 import model.news.newsViewScreen.NewsViewState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ui.common.DefaultHeader
@@ -38,26 +42,34 @@ import ui.common.MediumSpacer
 import ui.common.SmallSpacer
 import ui.common.XLargeSpacer
 import utils.BetterOrioksFormats
+import utils.UrlHandler
 
 @Composable
 fun FileItem(
     file: Pair<String, String>,
+    urlHandler: UrlHandler,
     modifier: Modifier = Modifier
 ) {
+    val url = file.second
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         modifier = modifier,
-        onClick = { }
+        onClick = { urlHandler.handleUrl(url) }
     ) {
-        Text(file.first, modifier.padding(16.dp))
+        Text(
+            text = file.first,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 
 @Composable
 fun FileItems(
     files: List<Pair<String, String>>,
+    urlHandler: UrlHandler,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -70,8 +82,8 @@ fun FileItems(
             )
             SmallSpacer()
             Text(
-                text = stringResource(Res.string.Resources),
-                style = MaterialTheme.typography.headlineSmall,
+                text = stringResource(Res.string.attached_files),
+                style = MaterialTheme.typography.titleLarge,
             )
         }
         LargeSpacer()
@@ -79,8 +91,28 @@ fun FileItems(
             items(files) {
                 FileItem(
                     file = it,
+                    urlHandler = urlHandler,
                     modifier = Modifier.fillParentMaxWidth(0.4f)
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun NewsBodyItem(
+    text: AnnotatedString,
+    urlHandler: UrlHandler,
+    modifier: Modifier = Modifier
+) {
+    MediumSpacer()
+    SelectionContainer {
+        ClickableText(
+            text = text,
+            modifier.padding(horizontal = 8.dp)
+        ) { offset ->
+            text.getStringAnnotations(tag = NewsViewContent.URL_TAG, start = offset, end = offset).firstOrNull()?.let {
+                urlHandler.handleUrl(it.item)
             }
         }
     }
@@ -90,8 +122,10 @@ fun FileItems(
 @Composable
 fun NewsContent(
     newsViewContent: NewsViewContent,
+    urlHandler: UrlHandler = koinInject(),
     modifier: Modifier = Modifier
 ) {
+    val contents = newsViewContent.getContentWithAnnotatedStrings()
     LazyColumn(
         modifier = modifier.padding(horizontal = 8.dp)
     ) {
@@ -112,20 +146,26 @@ fun NewsContent(
                     MediumSpacer()
                     Text(
                         newsViewContent.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
             }
             LargeSpacer()
         }
-        items(newsViewContent.content) {
-            MediumSpacer()
-            Text(it, modifier.padding(horizontal = 8.dp))
+        items(contents) {
+            NewsBodyItem(
+                text = it,
+                urlHandler = urlHandler
+            )
         }
         item {
             XLargeSpacer()
-            if(newsViewContent.files.isNotEmpty()) FileItems(newsViewContent.files)
+            if (newsViewContent.files.isNotEmpty()) {
+                FileItems(
+                    files = newsViewContent.files,
+                    urlHandler = urlHandler
+                )
+            }
         }
     }
 }
