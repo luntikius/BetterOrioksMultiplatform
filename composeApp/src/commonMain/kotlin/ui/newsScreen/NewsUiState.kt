@@ -1,5 +1,6 @@
 package ui.newsScreen
 
+
 import model.news.NewsState
 
 data class NewsUiState(

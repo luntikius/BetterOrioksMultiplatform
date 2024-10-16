@@ -14,10 +14,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import model.AppScreens
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
@@ -27,6 +29,7 @@ import ui.menuScreen.MenuScreen
 import ui.menuScreen.MenuScreenViewModel
 import ui.newsScreen.NewsScreen
 import ui.newsScreen.NewsViewModel
+import ui.newsScreen.newsViewScreen.NewsViewScreen
 import ui.scheduleScreen.ScheduleScreen
 import ui.scheduleScreen.ScheduleScreenViewModel
 
@@ -96,6 +99,14 @@ fun AppNavigation(
             route = AppScreens.News.name
         ) {
             NewsScreen(navController, newsViewModel)
+        }
+
+        composable(
+            route = "${AppScreens.NewsView.name}/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id") ?: return@composable
+            NewsViewScreen(id, navController)
         }
     }
 }

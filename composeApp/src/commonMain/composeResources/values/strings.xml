@@ -133,6 +133,7 @@
     <string name="lower">Знаменатель</string>
     <string name="login_title">Вход</string>
     <string name="news">Новости</string>
+    <string name="news_view">Просмотр новости</string>
 
     <string name="social_telegram">Telegram канал приложения</string>
     <string name="social_github">GitHub репозиторий приложения</string>

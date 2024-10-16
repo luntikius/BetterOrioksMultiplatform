@@ -5,5 +5,5 @@ import kotlinx.datetime.LocalDateTime
 data class News(
     val title: String,
     val date: LocalDateTime,
-    val url: String
+    val id: String
 )

@@ -47,8 +47,9 @@ class OrioksHtmlParser {
                 val elements = news[i].getElementsByTag("td")
                 val date = dateTimeFormat.parse(elements[0].ownText())
                 val title = elements[1].ownText()
-                val url = elements[2].getElementsByTag("a").first()!!.attr("href")
-                add(News(title, date, url))
+                val id = elements[2].getElementsByTag("a").first()!!
+                    .attr("href").substringAfter("=")
+                add(News(title, date, id))
             }
         }
     }

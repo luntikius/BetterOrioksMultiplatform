@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.loading_news
 import betterorioks.composeapp.generated.resources.news
+import model.AppScreens
 import model.news.News
 import model.news.NewsState
 import org.jetbrains.compose.resources.stringResource
@@ -32,10 +33,12 @@ import ui.common.LoadingScreen
 @Composable
 fun NewsItem(
     news: News,
+    onNewsClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
         color = MaterialTheme.colorScheme.background,
+        onClick = { onNewsClick(news.id) },
         modifier = modifier.padding(8.dp)
     ) {
         Column {
@@ -55,14 +58,14 @@ fun NewsItem(
 @Composable
 fun NewsContent(
     news: List<News>,
-    newsViewModel: NewsViewModel,
+    onNewsClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier
     ) {
         items(news) {
-            NewsItem(news = it, modifier = Modifier.fillMaxWidth())
+            NewsItem(news = it, onNewsClick, modifier = Modifier.fillMaxWidth())
             HorizontalDivider()
         }
     }
@@ -93,7 +96,7 @@ fun NewsScreen(
             is NewsState.Loading -> LoadingScreen(text = stringResource(Res.string.loading_news))
             is NewsState.Success -> NewsContent(
                 news = (uiState.newsState as NewsState.Success).news,
-                newsViewModel = newsViewModel,
+                onNewsClick = { navController.navigate("${AppScreens.NewsView.name}/$it") },
                 modifier = Modifier.fillMaxSize()
             )
             is NewsState.Error -> ErrorScreenWithReloadButton(

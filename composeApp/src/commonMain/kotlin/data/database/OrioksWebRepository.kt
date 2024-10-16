@@ -5,6 +5,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.header
+import io.ktor.client.request.parameter
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpHeaders
@@ -106,6 +107,18 @@ class OrioksWebRepository(
         return newsList
     }
 
+    suspend fun getNewsContent(
+        authData: AuthData,
+        id: String
+    ): String {
+        val newsContentResponse = client.get(NEWS_VIEW_URL) {
+            parameter(NEWS_VIEW_PARAM_ID, id)
+            header(HttpHeaders.Cookie, authData.cookieString)
+        }
+        val newsContentHtml = newsContentResponse.bodyAsText()
+        return newsContentHtml
+    }
+
     private companion object {
         private const val ACCEPT_HEADER_VALUE =
             "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp," +
@@ -117,9 +130,12 @@ class OrioksWebRepository(
         private const val AUTH_PARAM_PASSWORD = "LoginForm[password]"
         private const val AUTH_PARAM_REMEMBER_ME = "LoginForm[rememberMe]"
 
+        private const val NEWS_VIEW_PARAM_ID = "id"
+
         private const val BASE_URL = "https://orioks.miet.ru"
         private const val AUTH_URL = "user/login"
         private const val USER_URL = "user/profile"
         private const val SUBJECTS_URL = "student/student"
+        private const val NEWS_VIEW_URL = "main/view-news"
     }
 }
