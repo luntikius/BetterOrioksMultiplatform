@@ -118,7 +118,6 @@ fun NewsBodyItem(
     }
 }
 
-
 @Composable
 fun NewsContent(
     newsViewContent: NewsViewContent,
@@ -189,7 +188,10 @@ fun NewsViewScreen(
         MediumSpacer()
         when (uiState) {
             is NewsViewState.NotStarted,
-            is NewsViewState.Loading -> LoadingScreen(text = stringResource(Res.string.loading_news))
+            is NewsViewState.Loading -> LoadingScreen(
+                text = stringResource(Res.string.loading_news),
+                modifier = Modifier.fillMaxSize()
+            )
 
             is NewsViewState.Success -> NewsContent(
                 (uiState as NewsViewState.Success).newsViewContent

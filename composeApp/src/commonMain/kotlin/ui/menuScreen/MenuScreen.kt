@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -218,24 +219,22 @@ fun MenuScreenContent(
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
         item {
-            UserInfoBlock(viewModel, Modifier.fillParentMaxWidth().padding(16.dp))
-            LargeSpacer()
-        }
-        item {
-            NavigationItemsRow(navController)
-            XLargeSpacer()
-        }
-        item {
-            TextButtonColumn()
-        }
-        item { repeat(3) { XLargeSpacer() } }
-        item {
-            CardButton(
-                text = stringResource(Res.string.exit),
-                onClick = onExitButtonClick,
-                textColor = MaterialTheme.colorScheme.error,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Column(
+                modifier = Modifier.fillParentMaxHeight()
+            ) {
+                UserInfoBlock(viewModel, Modifier.fillParentMaxWidth().padding(16.dp))
+                LargeSpacer()
+                NavigationItemsRow(navController)
+                XLargeSpacer()
+                TextButtonColumn()
+                Spacer(Modifier.weight(1f))
+                CardButton(
+                    text = stringResource(Res.string.exit),
+                    onClick = onExitButtonClick,
+                    textColor = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

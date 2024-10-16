@@ -98,7 +98,10 @@ fun NewsScreen(
             onBackButtonClick = { navController.popBackStack() },
         )
         when (uiState.newsState) {
-            is NewsState.Loading -> LoadingScreen(text = stringResource(Res.string.loading_news))
+            is NewsState.Loading -> LoadingScreen(
+                text = stringResource(Res.string.loading_news),
+                modifier = Modifier.fillMaxSize()
+            )
             is NewsState.Success -> NewsContent(
                 news = (uiState.newsState as NewsState.Success).news,
                 onNewsClick = { navController.navigate("${AppScreens.NewsView.name}/$it") },
