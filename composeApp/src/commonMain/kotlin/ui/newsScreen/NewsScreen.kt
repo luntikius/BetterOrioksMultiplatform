@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.loading_news
 import betterorioks.composeapp.generated.resources.news
+import betterorioks.composeapp.generated.resources.news_date
 import model.AppScreens
 import model.news.News
 import model.news.NewsState
@@ -29,6 +30,7 @@ import ui.common.DefaultHeader
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
+import utils.BetterOrioksFormats.NEWS_DATE_TIME_FORMAT
 
 @Composable
 fun NewsItem(
@@ -50,7 +52,10 @@ fun NewsItem(
                 overflow = TextOverflow.Ellipsis
             )
             LargeSpacer()
-            Text(text = news.date.toString(), style = MaterialTheme.typography.labelMedium)
+            Text(
+                text = stringResource(Res.string.news_date, NEWS_DATE_TIME_FORMAT.format(news.date)),
+                style = MaterialTheme.typography.labelMedium
+            )
         }
     }
 }
