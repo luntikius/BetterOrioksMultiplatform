@@ -44,6 +44,7 @@ import model.user.UserInfo
 import model.user.UserInfoState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import ui.common.AttentionAlert
 import ui.common.CardButton
 import ui.common.DefaultPullToRefresh
@@ -55,6 +56,8 @@ import ui.common.LoadingScreen
 import ui.common.SimpleIconButton
 import ui.common.SmallSpacer
 import ui.common.XLargeSpacer
+import utils.UrlHandler
+import utils.UsefulUrls
 
 @Composable
 fun UserInfoContent(
@@ -135,6 +138,7 @@ fun NavigationItemsRow(
 
 @Composable
 fun TextButtonColumn(
+    urlHandler: UrlHandler = koinInject(),
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -144,19 +148,19 @@ fun TextButtonColumn(
         HorizontalIconTextButton(
             painterResource(Res.drawable.web),
             text = stringResource(Res.string.social_orioks),
-            onClick = {},
+            onClick = { urlHandler.handleUrl(UsefulUrls.ORIOKS_URL) },
             modifier = Modifier.fillMaxWidth()
         )
         HorizontalIconTextButton(
             painterResource(Res.drawable.telegram),
             text = stringResource(Res.string.social_telegram),
-            onClick = {},
+            onClick = { urlHandler.handleUrl(UsefulUrls.TELEGRAM_URL) },
             modifier = Modifier.fillMaxWidth()
         )
         HorizontalIconTextButton(
             painterResource(Res.drawable.github),
             text = stringResource(Res.string.social_github),
-            onClick = {},
+            onClick = { urlHandler.handleUrl(UsefulUrls.GITHUB_URL) },
             modifier = Modifier.fillMaxWidth()
         )
     }
