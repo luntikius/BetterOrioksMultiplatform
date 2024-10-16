@@ -29,8 +29,8 @@ class NewsViewViewModel(
             _uiState.update { NewsViewState.Loading }
             try {
                 val authData = userPreferencesRepository.authData.first()
-                val news = orioksWebRepository.getNewsContent(authData, id)
-                _uiState.update { NewsViewState.Success(news) }
+                val newsViewContent = orioksWebRepository.getNewsViewContent(authData, id)
+                _uiState.update { NewsViewState.Success(newsViewContent) }
             } catch (e: Exception) {
                 _uiState.update { NewsViewState.Error(e.message.toString()) }
             }

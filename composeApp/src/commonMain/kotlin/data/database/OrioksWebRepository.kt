@@ -18,6 +18,7 @@ import model.login.AuthData.Companion.AUTH_COOKIE_CSRF
 import model.login.AuthData.Companion.AUTH_COOKIE_ORIOKS_IDENTITY
 import model.login.AuthData.Companion.AUTH_COOKIE_ORIOKS_SESSION
 import model.news.News
+import model.news.newsViewScreen.NewsViewContent
 import model.schedule.SemesterDates
 import model.scheduleJson.SubjectsSemesters
 import model.user.UserInfo
@@ -107,16 +108,17 @@ class OrioksWebRepository(
         return newsList
     }
 
-    suspend fun getNewsContent(
+    suspend fun getNewsViewContent(
         authData: AuthData,
         id: String
-    ): String {
+    ): NewsViewContent {
         val newsContentResponse = client.get(NEWS_VIEW_URL) {
             parameter(NEWS_VIEW_PARAM_ID, id)
             header(HttpHeaders.Cookie, authData.cookieString)
         }
         val newsContentHtml = newsContentResponse.bodyAsText()
-        return newsContentHtml
+        val newsViewContent = htmlParser.getNewsViewContent(newsContentHtml)
+        return newsViewContent
     }
 
     private companion object {

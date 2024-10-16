@@ -1,9 +1,11 @@
 package utils
 
 import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Document
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format.char
 import model.news.News
+import model.news.newsViewScreen.NewsViewContent
 import model.user.UserInfo
 
 class OrioksHtmlParser {
@@ -54,10 +56,37 @@ class OrioksHtmlParser {
         }
     }
 
+    fun getNewsViewContent(html: String): NewsViewContent {
+        val document: Document = Ksoup.parse(html)
+
+        val dateOfCreation = document.select("h3:contains(Дата создания:)")
+            .first()?.nextSibling()?.toString()?.trim() ?: ""
+        val title = document.select("h3:contains(Заголовок:)")
+            .first()?.nextSibling()?.toString()?.trim() ?: ""
+        val newsBody = document.select("h3:contains(Тело новости:)")
+            .first()?.nextElementSiblings()
+            ?.map { it.text() }?.takeWhile { it.trim() != "Прикреплённые файлы:" } ?: emptyList()
+        val files = document.select("h3:contains(Прикреплённые файлы:)")
+            .first()?.nextElementSibling()?.select("a")
+            ?.map { it.ownText() to it.attr("href") } ?: emptyList()
+
+        return NewsViewContent(
+            title,
+            newsContentDateTimeFormat.parse(dateOfCreation),
+            newsBody,
+            files
+        )
+    }
+
     private companion object {
         val dateTimeFormat = LocalDateTime.Format {
             year(); char('-'); monthNumber(); char('-'); dayOfMonth(); char(' ')
             hour(); char(':'); minute(); char(':'); second()
+        }
+
+        val newsContentDateTimeFormat = LocalDateTime.Format {
+            dayOfMonth(); char('-'); monthNumber(); char('-'); year()
+            char(' '); hour(); char(':'); minute(); char(':'); second()
         }
     }
 }
