@@ -16,7 +16,11 @@ data class NewsViewContent(
 ) {
     @Composable
     fun getContentWithAnnotatedStrings(): List<AnnotatedString> = content.map { text ->
-        val urlRegex = Regex("(\\S+?:)?(https?://[\\w-]+(\\.[\\w-]+)+(:\\d+)?(/\\S*)?)")
+        val urlRegex = Regex(
+            "(\\S+?\\${SPLITTER_SUFFIX})?" +
+                "(https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}" +
+                "\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)\\b([^\\s)\\]}.,:>?;'\"]*))"
+        )
         val fontSize = MaterialTheme.typography.bodyLarge.fontSize
 
         val builder = AnnotatedString.Builder()
@@ -38,7 +42,7 @@ data class NewsViewContent(
             }
 
             if (descriptiveText != null) {
-                val displayText = descriptiveText.removeSuffix(":")
+                val displayText = descriptiveText.removeSuffix(SPLITTER_SUFFIX)
                 builder.pushStringAnnotation(tag = URL_TAG, annotation = url ?: "")
                 builder.withStyle(
                     style = SpanStyle(
@@ -82,5 +86,6 @@ data class NewsViewContent(
 
     companion object {
         const val URL_TAG = "url"
+        const val SPLITTER_SUFFIX = "֍"
     }
 }

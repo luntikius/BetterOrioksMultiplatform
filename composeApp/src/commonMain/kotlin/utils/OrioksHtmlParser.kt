@@ -6,6 +6,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format.char
 import model.news.News
 import model.news.newsViewScreen.NewsViewContent
+import model.news.newsViewScreen.NewsViewContent.Companion.SPLITTER_SUFFIX
 import model.user.UserInfo
 
 class OrioksHtmlParser {
@@ -71,7 +72,13 @@ class OrioksHtmlParser {
             element.select("a").forEach { link ->
                 val linkText = link.text()
                 val linkHref = link.attr("href")
-                paragraphText = paragraphText.replace(linkText, "$linkText:$linkHref")
+                if (linkText.isNotBlank() && linkHref.isNotBlank() &&
+                    (linkText.lowercase().trim(' ', '\n', '\t', '/') != linkHref.lowercase().trim(' ', '\n', '\t', '/'))
+                ) {
+                    paragraphText = paragraphText.replace(linkText, "$linkText$SPLITTER_SUFFIX$linkHref")
+                } else if (linkHref.isNotBlank()) {
+                    paragraphText = paragraphText.replace(linkText, linkHref)
+                }
             }
             paragraphText
         }

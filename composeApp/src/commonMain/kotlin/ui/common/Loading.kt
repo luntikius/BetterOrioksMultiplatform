@@ -33,7 +33,7 @@ fun LoadingScreen(
 ) {
     Box(
         modifier = modifier
-            .padding(64.dp)
+            .padding(32.dp)
     ) {
         LoadingAnimation(
             modifier = Modifier.align(Alignment.Center)
