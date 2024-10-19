@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
@@ -73,7 +74,9 @@ fun FileItems(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
                 painter = painterResource(Res.drawable.files),
                 contentDescription = null,
@@ -83,7 +86,7 @@ fun FileItems(
             SmallSpacer()
             Text(
                 text = stringResource(Res.string.attached_files),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
             )
         }
         LargeSpacer()

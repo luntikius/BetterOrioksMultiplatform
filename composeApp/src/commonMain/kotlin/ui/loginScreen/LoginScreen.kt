@@ -40,18 +40,21 @@ import betterorioks.composeapp.generated.resources.app_name
 import betterorioks.composeapp.generated.resources.login
 import betterorioks.composeapp.generated.resources.logo
 import betterorioks.composeapp.generated.resources.password
-import betterorioks.composeapp.generated.resources.telegram
+import betterorioks.composeapp.generated.resources.telegram_filled
 import betterorioks.composeapp.generated.resources.visibility
 import betterorioks.composeapp.generated.resources.visibility_off
 import betterorioks.composeapp.generated.resources.visibility_on
 import model.login.LoginState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import ui.common.GradientButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
 import ui.common.XLargeSpacer
+import utils.UrlHandler
+import utils.UsefulUrls
 
 @Composable
 fun StaticLogo(
@@ -138,6 +141,7 @@ fun LoginInfoInput(
 @Composable
 fun LoginScreenContent(
     loginScreenViewModel: LoginScreenViewModel,
+    urlHandler: UrlHandler = koinInject(),
     modifier: Modifier = Modifier
 ) {
     val uiState by loginScreenViewModel.uiState.collectAsState()
@@ -151,7 +155,7 @@ fun LoginScreenContent(
         ErrorText(uiState.loginState)
         LoginInfoInput(loginScreenViewModel)
         Spacer(Modifier.weight(1f))
-        TelegramIconButton(onClick = {})
+        TelegramIconButton(onClick = { urlHandler.handleUrl(UsefulUrls.TELEGRAM_URL) })
     }
 }
 
@@ -214,7 +218,7 @@ fun TelegramIconButton(
         modifier = modifier
     ) {
         Icon(
-            painter = painterResource(Res.drawable.telegram),
+            painter = painterResource(Res.drawable.telegram_filled),
             contentDescription = null,
             modifier = Modifier.size(30.dp),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
