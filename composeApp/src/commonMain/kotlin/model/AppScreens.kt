@@ -10,5 +10,8 @@ enum class AppScreens {
     Resources,
 
     Menu,
-    Settings
+    Settings,
+    Notifications,
+    News,
+    NewsView
 }

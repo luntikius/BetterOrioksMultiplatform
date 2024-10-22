@@ -35,7 +35,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import betterorioks.composeapp.generated.resources.Refresh
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_drop_down
 import betterorioks.composeapp.generated.resources.change_lesson_time
@@ -82,11 +82,12 @@ import model.schedule.ScheduleWeek
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import ui.common.AttentionAlert
+import ui.common.DefaultPullToRefresh
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
-import ui.common.RefreshAlert
 import ui.common.SmallSpacer
 import ui.common.SwitchAlert
 import utils.getMonthStringRes
@@ -214,14 +215,14 @@ fun WeekInfoRow(
         Text(
             type,
             textAlign = TextAlign.End,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
         Text("", modifier = Modifier.padding(horizontal = 8.dp))
         Text(
             number,
             textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
     }
@@ -319,7 +320,7 @@ fun DatePickerElement(
                 Text(
                     text = date.dayOfMonth.toString(),
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
                         .padding(8.dp)
                 )
@@ -461,13 +462,13 @@ fun ClassItemContent(
         MediumSpacer()
         Text(
             text = scheduleClass.teacher,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
         SmallSpacer()
         Text(
             text = stringResource(Res.string.room_number, scheduleClass.room),
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
         MediumSpacer()
@@ -502,7 +503,7 @@ fun CircleText(text: String, modifier: Modifier = Modifier, color: Color = Mater
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .wrapContentSize(Alignment.Center)
                 .padding(horizontal = 8.dp)
@@ -638,20 +639,13 @@ fun ScheduleBox(
             LargeSpacer()
         }
 
-        // TODO fix this in newer version of Material3
-        if (pullToRefreshState.progress > 0.5F) {
-            PullToRefreshContainer(
-                modifier = Modifier.align(Alignment.TopCenter),
-                state = pullToRefreshState,
-                contentColor = MaterialTheme.colorScheme.primary,
-                containerColor = MaterialTheme.colorScheme.surfaceTint
-            )
-        }
+        DefaultPullToRefresh(pullToRefreshState)
 
-        RefreshAlert(
+        AttentionAlert(
             isVisible = isRefreshAlertVisible,
             text = stringResource(Res.string.refresh_alert_text),
-            onRefresh = { viewModel.loadSchedule(refresh = true) },
+            actionButtonText = stringResource(Res.string.Refresh),
+            onAction = { viewModel.loadSchedule(refresh = true) },
             onDismiss = { isRefreshAlertVisible = false },
         )
 

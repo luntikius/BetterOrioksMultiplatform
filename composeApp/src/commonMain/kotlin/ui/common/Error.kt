@@ -45,7 +45,7 @@ fun ErrorScreenWithReloadButton(
             item {
                 Text(
                     text,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelSmall,
                     textAlign = TextAlign.Center,
                     maxLines = 1
                 )

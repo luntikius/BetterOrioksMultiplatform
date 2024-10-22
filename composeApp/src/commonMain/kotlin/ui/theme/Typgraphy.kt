@@ -79,22 +79,35 @@ fun BetterOrioksTypography(colorScheme: ColorScheme): Typography {
             fontFamily = betterOrioksFontFamily
         ),
 
-        titleLarge = MaterialTheme.typography.titleLarge.copy(fontFamily = betterOrioksFontFamily),
-        titleMedium = MaterialTheme.typography.titleMedium.copy(fontFamily = betterOrioksFontFamily),
-        titleSmall = MaterialTheme.typography.titleSmall.copy(fontFamily = betterOrioksFontFamily),
+        titleLarge = MaterialTheme.typography.titleLarge.copy(
+            fontFamily = betterOrioksFontFamily,
+            fontWeight = FontWeight.SemiBold
+        ),
+        titleMedium = MaterialTheme.typography.titleMedium.copy(
+            fontFamily = betterOrioksFontFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = (MaterialTheme.typography.titleMedium.fontSize.value + 2).sp
+        ),
+        titleSmall = MaterialTheme.typography.titleSmall.copy(
+            fontFamily = betterOrioksFontFamily,
+            fontWeight = FontWeight.SemiBold
+        ),
 
         bodyLarge = MaterialTheme.typography.bodyLarge.copy(fontFamily = betterOrioksFontFamily),
         bodyMedium = MaterialTheme.typography.bodyMedium.copy(fontFamily = betterOrioksFontFamily),
         bodySmall = MaterialTheme.typography.bodySmall.copy(fontFamily = betterOrioksFontFamily),
 
-        labelLarge = MaterialTheme.typography.labelLarge.copy(fontFamily = betterOrioksFontFamily),
+        labelLarge = MaterialTheme.typography.labelLarge.copy(
+            fontFamily = betterOrioksFontFamily
+        ),
         labelMedium = MaterialTheme.typography.labelMedium.copy(
-            fontSize = 14.sp,
+            fontSize = 16.sp,
             color = colorScheme.onSurfaceVariant,
             fontFamily = betterOrioksFontFamily
         ),
         labelSmall = MaterialTheme.typography.labelSmall.copy(
             fontSize = 14.sp,
+            color = colorScheme.onSurfaceVariant,
             fontFamily = betterOrioksFontFamily
         )
     )

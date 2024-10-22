@@ -14,16 +14,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import model.AppScreens
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
+import ui.menuScreen.MenuScreenViewModel
+import ui.newsScreen.NewsScreen
+import ui.newsScreen.NewsViewModel
+import ui.newsScreen.newsViewScreen.NewsViewScreen
 import ui.scheduleScreen.ScheduleScreen
 
 private val BOTTOM_NAV_SCREENS = listOf(
@@ -67,6 +73,10 @@ fun AppNavigation(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    val scheduleScreenViewModel = koinInject<ScheduleScreenViewModel>()
+    val menuScreenViewModel = koinInject<MenuScreenViewModel>()
+    val newsViewModel = koinInject<NewsViewModel>()
+
     NavHost(
         navController = navController,
         startDestination = AppScreens.Schedule.name,
@@ -75,13 +85,27 @@ fun AppNavigation(
         composable(
             route = AppScreens.Schedule.name
         ) {
-            ScheduleScreen(koinInject())
+            ScheduleScreen(scheduleScreenViewModel)
         }
 
         composable(
             route = AppScreens.Menu.name
         ) {
-            MenuScreen(koinInject())
+            MenuScreen(navController, menuScreenViewModel)
+        }
+
+        composable(
+            route = AppScreens.News.name
+        ) {
+            NewsScreen(navController, newsViewModel)
+        }
+
+        composable(
+            route = "${AppScreens.NewsView.name}/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id") ?: return@composable
+            NewsViewScreen(id, navController)
         }
     }
 }

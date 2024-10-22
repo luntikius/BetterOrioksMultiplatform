@@ -11,6 +11,8 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import ui.loginScreen.LoginScreenViewModel
 import ui.menuScreen.MenuScreenViewModel
+import ui.newsScreen.NewsViewModel
+import ui.newsScreen.newsViewScreen.NewsViewViewModel
 import ui.scheduleScreen.ScheduleScreenViewModel
 
 fun sharedModule() = module {
@@ -25,8 +27,10 @@ fun sharedModule() = module {
     single { OrioksWebRepository() }
 
     // view models
-    single { ScheduleScreenViewModel(get(), get(), get(), get()) }
-    single { AppViewModel(get()) }
-    viewModel { MenuScreenViewModel(get(), get()) }
+    viewModel { ScheduleScreenViewModel(get(), get(), get(), get()) }
+    viewModel { AppViewModel(get()) }
+    viewModel { MenuScreenViewModel(get(), get(), get()) }
     viewModel { LoginScreenViewModel(get(), get()) }
+    viewModel { NewsViewModel(get(), get()) }
+    viewModel { parameters -> NewsViewViewModel(parameters.get(), get(), get()) }
 }

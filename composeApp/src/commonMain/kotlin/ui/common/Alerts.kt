@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import betterorioks.composeapp.generated.resources.Refresh
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.attention
 import betterorioks.composeapp.generated.resources.cancel
@@ -29,15 +28,16 @@ import ui.scheduleScreen.ScheduleScreenUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RefreshAlert(
+fun AttentionAlert(
     isVisible: Boolean,
     text: String,
-    onRefresh: () -> Unit,
+    actionButtonText: String,
+    onAction: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val onRefreshButtonClick = {
-        onRefresh()
+    val onActionButtonClick = {
+        onAction()
         onDismiss()
     }
     if (isVisible) {
@@ -68,8 +68,8 @@ fun RefreshAlert(
                     LargeSpacer()
                     Row {
                         Spacer(Modifier.weight(1F))
-                        TextButton(onClick = onRefreshButtonClick) {
-                            Text(stringResource(Res.string.Refresh), color = MaterialTheme.colorScheme.error)
+                        TextButton(onClick = onActionButtonClick) {
+                            Text(actionButtonText, color = MaterialTheme.colorScheme.error)
                         }
                         TextButton(onClick = onDismiss) {
                             Text(stringResource(Res.string.cancel))

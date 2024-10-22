@@ -8,10 +8,7 @@ import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -34,21 +31,19 @@ fun LoadingScreen(
     modifier: Modifier = Modifier,
     text: String = ""
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+    Box(
         modifier = modifier
-            .padding(64.dp)
-            .fillMaxSize()
+            .padding(32.dp)
     ) {
-        Spacer(modifier.weight(1f))
-        LoadingAnimation()
-        Spacer(modifier.weight(1f))
+        LoadingAnimation(
+            modifier = Modifier.align(Alignment.Center)
+        )
         if (text.isNotBlank()) {
             Text(
                 text = text,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp)
             )
         }
     }

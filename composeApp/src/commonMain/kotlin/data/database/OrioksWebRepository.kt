@@ -5,6 +5,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.header
+import io.ktor.client.request.parameter
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpHeaders
@@ -16,6 +17,8 @@ import model.login.AuthData
 import model.login.AuthData.Companion.AUTH_COOKIE_CSRF
 import model.login.AuthData.Companion.AUTH_COOKIE_ORIOKS_IDENTITY
 import model.login.AuthData.Companion.AUTH_COOKIE_ORIOKS_SESSION
+import model.news.News
+import model.news.newsViewScreen.NewsViewContent
 import model.schedule.SemesterDates
 import model.scheduleJson.SubjectsSemesters
 import model.user.UserInfo
@@ -94,6 +97,30 @@ class OrioksWebRepository(
         return subjectsSemesters.getLastSemesterDates()
     }
 
+    suspend fun getNews(
+        authData: AuthData
+    ): List<News> {
+        val newsResponse = client.get(BASE_URL) {
+            header(HttpHeaders.Cookie, authData.cookieString)
+        }
+        val newsHtml = newsResponse.bodyAsText()
+        val newsList = htmlParser.getNewsList(newsHtml)
+        return newsList
+    }
+
+    suspend fun getNewsViewContent(
+        authData: AuthData,
+        id: String
+    ): NewsViewContent {
+        val newsContentResponse = client.get(NEWS_VIEW_URL) {
+            parameter(NEWS_VIEW_PARAM_ID, id)
+            header(HttpHeaders.Cookie, authData.cookieString)
+        }
+        val newsContentHtml = newsContentResponse.bodyAsText()
+        val newsViewContent = htmlParser.getNewsViewContent(newsContentHtml)
+        return newsViewContent
+    }
+    
     private companion object {
         private const val ACCEPT_HEADER_VALUE =
             "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp," +
@@ -105,9 +132,12 @@ class OrioksWebRepository(
         private const val AUTH_PARAM_PASSWORD = "LoginForm[password]"
         private const val AUTH_PARAM_REMEMBER_ME = "LoginForm[rememberMe]"
 
+        private const val NEWS_VIEW_PARAM_ID = "id"
+
         private const val BASE_URL = "https://orioks.miet.ru"
         private const val AUTH_URL = "user/login"
         private const val USER_URL = "user/profile"
         private const val SUBJECTS_URL = "student/student"
+        private const val NEWS_VIEW_URL = "main/view-news"
     }
 }

@@ -34,7 +34,9 @@ import betterorioks.composeapp.generated.resources.october_short
 import betterorioks.composeapp.generated.resources.september_short
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
+import kotlinx.datetime.format.char
 import org.jetbrains.compose.resources.StringResource
 
 fun LocalDate.getWeekStringRes(): StringResource {
@@ -80,5 +82,12 @@ fun LocalDate.getShortMonthStringRes(): StringResource {
         Month.OCTOBER -> Res.string.october_short
         Month.NOVEMBER -> Res.string.november_short
         else -> Res.string.december_short
+    }
+}
+
+object BetterOrioksFormats {
+    val NEWS_DATE_TIME_FORMAT = LocalDateTime.Format {
+        dayOfMonth(); char('.'); monthNumber(); char('.'); year()
+        char(' '); hour(); char(':'); minute()
     }
 }
