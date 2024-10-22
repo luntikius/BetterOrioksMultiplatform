@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
@@ -36,6 +35,10 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ui.common.LargeSpacer
 import ui.common.MediumSpacer
+import ui.theme.bad_mark_color
+import ui.theme.excellent_mark_color
+import ui.theme.good_mark_color
+import ui.theme.ok_mark_color
 
 @Composable
 fun SubjectsHeader(
@@ -117,7 +120,7 @@ fun SubjectItem(
 ) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         modifier = modifier
     ) {
@@ -159,11 +162,27 @@ fun SubjectsScreen(
     val subjects = listOf(
         DisplaySubject(
             "Основы теории информации и кодирования",
-            "35", "35", Color.Green
+            "35", "35", excellent_mark_color
         ),
         DisplaySubject(
             "Математическое моделирование",
-            14, 53, Color.Red
+            14, 53, good_mark_color
+        ),
+        DisplaySubject(
+            "Основы теории информации и кодирования",
+            "35", "35", ok_mark_color
+        ),
+        DisplaySubject(
+            "Математическое моделирование",
+            "Н", 53, bad_mark_color
+        ),
+        DisplaySubject(
+            "Основы теории информации и кодирования",
+            "—", "0", MaterialTheme.colorScheme.primary
+        ),
+        DisplaySubject(
+            "Основы теории информации и кодирования",
+            "0", "0", MaterialTheme.colorScheme.primary
         )
     )
     Column(
