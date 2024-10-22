@@ -31,7 +31,6 @@ import ui.newsScreen.NewsScreen
 import ui.newsScreen.NewsViewModel
 import ui.newsScreen.newsViewScreen.NewsViewScreen
 import ui.scheduleScreen.ScheduleScreen
-import ui.scheduleScreen.ScheduleScreenViewModel
 
 private val BOTTOM_NAV_SCREENS = listOf(
     BottomNavItem.Schedule,

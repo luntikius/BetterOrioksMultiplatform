@@ -120,7 +120,7 @@ class OrioksWebRepository(
         val newsViewContent = htmlParser.getNewsViewContent(newsContentHtml)
         return newsViewContent
     }
-
+    
     private companion object {
         private const val ACCEPT_HEADER_VALUE =
             "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp," +
