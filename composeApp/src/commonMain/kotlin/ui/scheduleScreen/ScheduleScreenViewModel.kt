@@ -3,9 +3,9 @@ package ui.scheduleScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.MietWebRepository
+import data.OrioksWebRepository
 import data.ScheduleDatabaseRepository
 import data.UserPreferencesRepository
-import data.database.OrioksWebRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -33,6 +33,7 @@ import ui.newsScreen.newsViewScreen.NewsViewScreen
 import ui.scheduleScreen.ScheduleScreen
 import ui.scheduleScreen.ScheduleScreenViewModel
 import ui.subjectsScreen.SubjectsScreen
+import ui.subjectsScreen.SubjectsViewModel
 
 private val BOTTOM_NAV_SCREENS = listOf(
     BottomNavItem.Schedule,
@@ -79,6 +80,7 @@ fun AppNavigation(
     val scheduleScreenViewModel = koinInject<ScheduleScreenViewModel>()
     val menuScreenViewModel = koinInject<MenuScreenViewModel>()
     val newsViewModel = koinInject<NewsViewModel>()
+    val subjectsViewModel = koinInject<SubjectsViewModel>()
 
     NavHost(
         navController = navController,
@@ -94,7 +96,7 @@ fun AppNavigation(
         composable(
             route = AppScreens.Subjects.name
         ) {
-            SubjectsScreen(navController)
+            SubjectsScreen(navController, subjectsViewModel)
         }
 
         composable(
