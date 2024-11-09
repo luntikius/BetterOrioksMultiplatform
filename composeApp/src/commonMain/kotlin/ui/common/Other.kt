@@ -1,5 +1,6 @@
 package ui.common
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -10,7 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -18,6 +21,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_left
@@ -89,4 +93,34 @@ fun GradientIcon(
                 }
             }
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SwipeRefreshBox(
+    onSwipeRefresh: () -> Unit,
+    isRefreshing: Boolean,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    val pullToRefreshState = rememberPullToRefreshState()
+
+    LaunchedEffect(pullToRefreshState.isRefreshing) {
+        if (pullToRefreshState.isRefreshing) {
+            onSwipeRefresh.invoke()
+        }
+    }
+
+    LaunchedEffect(isRefreshing, pullToRefreshState.isRefreshing) {
+        if (!isRefreshing && pullToRefreshState.isRefreshing) {
+            pullToRefreshState.endRefresh()
+        }
+    }
+
+    Box(
+        modifier = modifier.nestedScroll(pullToRefreshState.nestedScrollConnection)
+    ) {
+        content()
+        DefaultPullToRefresh(pullToRefreshState)
+    }
 }

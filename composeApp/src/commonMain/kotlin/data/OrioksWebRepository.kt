@@ -19,7 +19,7 @@ import model.login.AuthData.Companion.AUTH_COOKIE_ORIOKS_SESSION
 import model.news.News
 import model.news.newsViewScreen.NewsViewContent
 import model.schedule.SemesterDates
-import model.scheduleJson.SubjectsSemesters
+import model.schedule.scheduleJson.SubjectsSemesters
 import model.user.UserInfo
 import utils.OrioksHtmlParser
 

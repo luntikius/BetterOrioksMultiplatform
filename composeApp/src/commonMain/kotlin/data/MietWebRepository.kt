@@ -12,7 +12,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.Parameters
 import kotlinx.serialization.json.Json
-import model.scheduleJson.FullSchedule
+import model.schedule.scheduleJson.FullSchedule
 
 class MietWebRepository {
 

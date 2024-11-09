@@ -23,7 +23,7 @@ class SubjectsWebRepository(
     private val htmlParser: OrioksHtmlParser = OrioksHtmlParser(),
 ) {
 
-    private inline fun tryDecode(
+    private fun tryDecode(
         serializer: KSerializer<out SubjectsData>,
         json: Json,
         jsonString: String

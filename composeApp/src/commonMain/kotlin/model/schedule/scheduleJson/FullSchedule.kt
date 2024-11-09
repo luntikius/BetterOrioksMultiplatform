@@ -1,4 +1,4 @@
-package model.scheduleJson
+package model.schedule.scheduleJson
 
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate

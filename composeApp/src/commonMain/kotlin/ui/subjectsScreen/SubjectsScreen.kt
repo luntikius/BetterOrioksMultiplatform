@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,18 +25,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.academic_performance_caps
 import betterorioks.composeapp.generated.resources.change_semester
 import betterorioks.composeapp.generated.resources.content_description_group_subjects
 import betterorioks.composeapp.generated.resources.content_description_select_semester
+import betterorioks.composeapp.generated.resources.loading_schedule
+import betterorioks.composeapp.generated.resources.loading_subjects
 import betterorioks.composeapp.generated.resources.sort
+import model.schedule.ScheduleState
 import model.subjects.DisplaySubject
+import model.subjects.SubjectsState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
+import ui.common.LoadingScreen
 import ui.common.MediumSpacer
+import ui.common.SwipeRefreshBox
 
 @Composable
 fun SubjectsHeader(
@@ -139,14 +148,42 @@ fun SubjectItem(
 @Composable
 fun SubjectsColumn(
     subjects: List<DisplaySubject>,
+    subjectsViewModel: SubjectsViewModel,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
+    SwipeRefreshBox(
+        onSwipeRefresh = { subjectsViewModel.getSubjects(true) },
+        isRefreshing = false,
         modifier = modifier
     ) {
-        items(subjects) {
-            MediumSpacer()
-            SubjectItem(it, modifier = Modifier.fillParentMaxWidth())
+        LazyColumn {
+            items(subjects) {
+                MediumSpacer()
+                SubjectItem(it, modifier = Modifier.fillParentMaxWidth())
+            }
+        }
+    }
+}
+
+@Composable
+fun SubjectsScreenContent(
+    subjectsState: SubjectsState,
+    subjectsViewModel: SubjectsViewModel,
+    modifier: Modifier = Modifier
+) {
+    when (subjectsState) {
+        is SubjectsState.Success -> {
+            SubjectsColumn(subjectsState.displaySubjects, subjectsViewModel = subjectsViewModel, modifier = modifier)
+        }
+        is SubjectsState.Error -> {
+            ErrorScreenWithReloadButton(
+                text = subjectsState.message,
+                onClick = { subjectsViewModel.getSubjects(reload = true) },
+                modifier = modifier.fillMaxSize()
+            )
+        }
+        else -> {
+            LoadingScreen(modifier.fillMaxSize(), text = stringResource(Res.string.loading_subjects))
         }
     }
 }
@@ -157,13 +194,21 @@ fun SubjectsScreen(
     subjectsViewModel: SubjectsViewModel,
     modifier: Modifier = Modifier
 ) {
-    var subjects by remember { mutableStateOf(listOf<DisplaySubject>()) }
-    LaunchedEffect(Unit) { subjects = subjectsViewModel.getSubjects() }
+    LaunchedEffect(Unit) {
+        subjectsViewModel.getSubjects()
+    }
+
+    val subjectsState by subjectsViewModel.subjectsState.collectAsState()
+
     Column(
         modifier = modifier.fillMaxSize().padding(16.dp)
     ) {
         SubjectsHeader()
         LargeSpacer()
-        SubjectsColumn(subjects)
+        SubjectsScreenContent(
+            subjectsState,
+            subjectsViewModel
+        )
     }
+
 }
