@@ -63,6 +63,6 @@ class SubjectsWebRepository(
         private val SUBJECTS_DATA_CLASSES = listOf(ListSubjectsData::class, MapSubjectsData::class)
 
         private const val SUBJECTS_URL = "student/student"
-        private const val SUBJECTS_PARAM_SEMESTER_ID = "semesterId"
+        private const val SUBJECTS_PARAM_SEMESTER_ID = "id_semester"
     }
 }

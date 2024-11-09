@@ -13,15 +13,16 @@ class SubjectsRepository(
     private val _subjectsState: MutableStateFlow<SubjectsState> = MutableStateFlow(SubjectsState.NotStarted)
     val subjectsState = _subjectsState.asStateFlow()
 
-    suspend fun getSubjects(reload: Boolean = false) {
+    suspend fun getSubjects(reload: Boolean = false, semesterId: String? = null) {
         if (subjectsState.value is SubjectsState.NotStarted || subjectsState.value is SubjectsState.Error || reload) {
             _subjectsState.update { SubjectsState.Loading }
             try {
                 val authData = userPreferencesRepository.authData.first()
-                val subjects = subjectsWebRepository.getSubjects(authData)
+                val subjects = subjectsWebRepository.getSubjects(authData, semesterId)
                 _subjectsState.update {
                     SubjectsState.Success(
-                        displaySubjects = subjects.displaySubjects
+                        displaySubjects = subjects.displaySubjects,
+                        semesters = subjects.semesters
                     )
                 }
             } catch (e: Exception) {

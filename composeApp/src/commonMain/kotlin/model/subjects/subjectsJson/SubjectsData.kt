@@ -6,11 +6,12 @@ import model.subjects.subjectsJson.jsonElements.SubjectFromWeb
 
 interface SubjectsData {
     val subjects: List<SubjectFromWeb>
+    val offsetSubjects: List<SubjectFromWeb>
     val debts: List<SubjectFromWeb>
     val semesters: List<Semester>
 
     val displaySubjects: List<DisplaySubject>
-        get() = subjects.map {
+        get() = (subjects + offsetSubjects).map {
             DisplaySubject(
                 id = it.id.toString(),
                 name = it.name,
