@@ -1,7 +1,6 @@
-package data.database
+package data
 
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -25,24 +24,10 @@ import model.user.UserInfo
 import utils.OrioksHtmlParser
 
 class OrioksWebRepository(
-    private val htmlParser: OrioksHtmlParser = OrioksHtmlParser()
+    private val client: HttpClient,
+    private val json: Json,
+    private val htmlParser: OrioksHtmlParser = OrioksHtmlParser(),
 ) {
-    private val json = Json {
-        ignoreUnknownKeys = true
-        coerceInputValues = true
-        isLenient = true
-    }
-
-    private val client: HttpClient by lazy {
-        HttpClient {
-            defaultRequest {
-                url(BASE_URL)
-                header(HttpHeaders.Accept, ACCEPT_HEADER_VALUE)
-                header(HttpHeaders.UserAgent, USER_AGENT_HEADER_VALUE)
-            }
-            followRedirects = false
-        }
-    }
 
     private fun getAuthDataFromResponse(authResponse: HttpResponse): AuthData {
         val authCookies = authResponse.setCookie()
@@ -120,13 +105,8 @@ class OrioksWebRepository(
         val newsViewContent = htmlParser.getNewsViewContent(newsContentHtml)
         return newsViewContent
     }
-    
-    private companion object {
-        private const val ACCEPT_HEADER_VALUE =
-            "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp," +
-                "image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
-        private const val USER_AGENT_HEADER_VALUE = "BetterOrioksMultiplatform"
 
+    private companion object {
         private const val AUTH_PARAM_CSRF = "_csrf"
         private const val AUTH_PARAM_LOGIN = "LoginForm[login]"
         private const val AUTH_PARAM_PASSWORD = "LoginForm[password]"

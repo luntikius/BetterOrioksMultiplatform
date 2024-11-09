@@ -16,6 +16,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,10 +36,6 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ui.common.LargeSpacer
 import ui.common.MediumSpacer
-import ui.theme.bad_mark_color
-import ui.theme.excellent_mark_color
-import ui.theme.good_mark_color
-import ui.theme.ok_mark_color
 
 @Composable
 fun SubjectsHeader(
@@ -107,7 +104,7 @@ fun PointsDisplay(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             Text(
-                subject.getPointsAnnotatedString(subject.color)
+                subject.getPointsAnnotatedString()
             )
         }
     }
@@ -157,34 +154,11 @@ fun SubjectsColumn(
 @Composable
 fun SubjectsScreen(
     navController: NavController,
+    subjectsViewModel: SubjectsViewModel,
     modifier: Modifier = Modifier
 ) {
-    val subjects = listOf(
-        DisplaySubject(
-            "Основы теории информации и кодирования",
-            "35", "35", excellent_mark_color
-        ),
-        DisplaySubject(
-            "Математическое моделирование",
-            14, 53, good_mark_color
-        ),
-        DisplaySubject(
-            "Основы теории информации и кодирования",
-            "35", "35", ok_mark_color
-        ),
-        DisplaySubject(
-            "Математическое моделирование",
-            "Н", 53, bad_mark_color
-        ),
-        DisplaySubject(
-            "Основы теории информации и кодирования",
-            "—", "0", MaterialTheme.colorScheme.primary
-        ),
-        DisplaySubject(
-            "Основы теории информации и кодирования",
-            "0", "0", MaterialTheme.colorScheme.primary
-        )
-    )
+    var subjects by remember { mutableStateOf(listOf<DisplaySubject>()) }
+    LaunchedEffect(Unit) { subjects = subjectsViewModel.getSubjects() }
     Column(
         modifier = modifier.fillMaxSize().padding(16.dp)
     ) {

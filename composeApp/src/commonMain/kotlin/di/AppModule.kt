@@ -3,9 +3,11 @@ package di
 import AppViewModel
 import androidx.room.RoomDatabase
 import data.MietWebRepository
+import data.OrioksWebRepository
 import data.ScheduleDatabaseRepository
+import data.SubjectsRepository
+import data.SubjectsWebRepository
 import data.UserPreferencesRepository
-import data.database.OrioksWebRepository
 import data.database.ScheduleDatabase
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -14,17 +16,24 @@ import ui.menuScreen.MenuScreenViewModel
 import ui.newsScreen.NewsViewModel
 import ui.newsScreen.newsViewScreen.NewsViewViewModel
 import ui.scheduleScreen.ScheduleScreenViewModel
+import ui.subjectsScreen.SubjectsViewModel
+import utils.getDefaultHttpClient
+import utils.getJson
 
 fun sharedModule() = module {
     // web
+    single { getDefaultHttpClient() }
+    single { getJson() }
     single { MietWebRepository() }
+    single { OrioksWebRepository(get(), get()) }
+    single { SubjectsWebRepository(get(), get()) }
+    single { SubjectsRepository(get(), get()) }
 
     // db
     single { ScheduleDatabase.getRoomDatabase(get<RoomDatabase.Builder<ScheduleDatabase>>()) }
     single { get<ScheduleDatabase>().getDao() }
     single { ScheduleDatabaseRepository(get()) }
     single { UserPreferencesRepository(get()) }
-    single { OrioksWebRepository() }
 
     // view models
     viewModel { ScheduleScreenViewModel(get(), get(), get(), get()) }
@@ -33,4 +42,5 @@ fun sharedModule() = module {
     viewModel { LoginScreenViewModel(get(), get()) }
     viewModel { NewsViewModel(get(), get()) }
     viewModel { parameters -> NewsViewViewModel(parameters.get(), get(), get()) }
+    viewModel { SubjectsViewModel(get(), get()) }
 }

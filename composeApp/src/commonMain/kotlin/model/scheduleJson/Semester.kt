@@ -7,6 +7,8 @@ import model.schedule.SemesterDates
 @Serializable
 data class Semester(
     @SerialName("id")
+    val id: String,
+    @SerialName("year")
     val year: String,
     @SerialName("date_start")
     val startDate: String?,
