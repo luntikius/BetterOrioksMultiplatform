@@ -13,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,9 +43,11 @@ import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
 import ui.common.SwipeRefreshBox
+import utils.disabled
 
 @Composable
 fun SubjectsHeader(
+    enabled: Boolean,
     modifier: Modifier = Modifier
 ) {
     var popupIsVisible by remember { mutableStateOf(false) }
@@ -71,13 +74,17 @@ fun SubjectsHeader(
 
         IconButton(
             onClick = { popupIsVisible = true },
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier.size(32.dp),
+            enabled = enabled,
+            colors = IconButtonDefaults.iconButtonColors(
+                contentColor = MaterialTheme.colorScheme.primary,
+                disabledContentColor = MaterialTheme.colorScheme.primary.disabled()
+            )
         ) {
             Icon(
                 painter = painterResource(Res.drawable.change_semester),
                 contentDescription = stringResource(Res.string.content_description_select_semester),
-                modifier = Modifier.size(32.dp),
-                tint = MaterialTheme.colorScheme.primary
+                modifier = Modifier.size(32.dp)
             )
         }
 
@@ -85,13 +92,17 @@ fun SubjectsHeader(
 
         IconButton(
             onClick = { TODO() },
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier.size(32.dp),
+            enabled = enabled,
+            colors = IconButtonDefaults.iconButtonColors(
+                contentColor = MaterialTheme.colorScheme.primary,
+                disabledContentColor = MaterialTheme.colorScheme.primary.disabled()
+            )
         ) {
             Icon(
                 painter = painterResource(Res.drawable.sort),
                 contentDescription = stringResource(Res.string.content_description_group_subjects),
-                modifier = Modifier.size(32.dp),
-                tint = MaterialTheme.colorScheme.primary
+                modifier = Modifier.size(32.dp)
             )
         }
     }
@@ -203,7 +214,9 @@ fun SubjectsScreen(
     Column(
         modifier = modifier.fillMaxSize().padding(16.dp)
     ) {
-        SubjectsHeader()
+        SubjectsHeader(
+            enabled = subjectsState is SubjectsState.Success
+        )
         LargeSpacer()
         SubjectsScreenContent(
             subjectsState,
