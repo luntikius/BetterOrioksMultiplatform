@@ -25,17 +25,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.academic_performance_caps
 import betterorioks.composeapp.generated.resources.change_semester
 import betterorioks.composeapp.generated.resources.content_description_group_subjects
 import betterorioks.composeapp.generated.resources.content_description_select_semester
-import betterorioks.composeapp.generated.resources.loading_schedule
 import betterorioks.composeapp.generated.resources.loading_subjects
 import betterorioks.composeapp.generated.resources.sort
-import model.schedule.ScheduleState
 import model.subjects.DisplaySubject
 import model.subjects.SubjectsState
 import org.jetbrains.compose.resources.painterResource
@@ -61,7 +58,10 @@ fun SubjectsHeader(
 //        )
     }
 
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+    ) {
         Text(
             text = stringResource(Res.string.academic_performance_caps),
             style = MaterialTheme.typography.headlineSmall
@@ -210,5 +210,4 @@ fun SubjectsScreen(
             subjectsViewModel
         )
     }
-
 }
