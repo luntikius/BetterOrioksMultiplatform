@@ -1,7 +1,7 @@
 package model.subjects.subjectsJson
 
 import kotlinx.serialization.SerialName
-import model.scheduleJson.Semester
+import model.schedule.scheduleJson.Semester
 import model.subjects.subjectsJson.jsonElements.SubjectFromWeb
 
 @kotlinx.serialization.Serializable

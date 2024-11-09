@@ -1,4 +1,4 @@
-package model.scheduleJson
+package model.schedule.scheduleJson
 
 import kotlinx.serialization.SerialName
 import model.database.ScheduleElementEntity
