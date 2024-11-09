@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -33,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
@@ -180,7 +182,7 @@ fun SubjectsHeader(
         LargeSpacer()
 
         IconButton(
-            onClick = { TODO() },
+            onClick = { viewModel.toggleGrouping() },
             modifier = Modifier.size(32.dp),
             enabled = enabled,
             colors = IconButtonDefaults.iconButtonColors(
@@ -210,10 +212,11 @@ fun PointsDisplay(
         modifier = modifier
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                subject.getPointsAnnotatedString()
+                subject.getPointsAnnotatedString(),
             )
         }
     }
@@ -222,7 +225,8 @@ fun PointsDisplay(
 @Composable
 fun SubjectItem(
     subject: DisplaySubject,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    pointsDisplayModifier: Modifier
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -240,7 +244,7 @@ fun SubjectItem(
                 modifier = Modifier.weight(1f)
             )
             LargeSpacer()
-            PointsDisplay(subject)
+            PointsDisplay(subject, modifier = pointsDisplayModifier)
         }
     }
 }
@@ -251,16 +255,38 @@ fun SubjectsColumn(
     subjectsViewModel: SubjectsViewModel,
     modifier: Modifier = Modifier
 ) {
-    SwipeRefreshBox(
-        onSwipeRefresh = { subjectsViewModel.getSubjects(true) },
-        isRefreshing = false,
-        modifier = modifier
-    ) {
-        LazyColumn {
-            items(subjects) {
-                MediumSpacer()
-                SubjectItem(it, modifier = Modifier.fillParentMaxWidth())
+    SubcomposeLayout { constraints ->
+        val composables: List<@Composable () -> Unit> = subjects.map { @Composable { PointsDisplay(it) } }
+        val placeables = composables.mapIndexed { index, composable ->
+            val placeable = subcompose(index) {
+                composable()
+            }.first().measure(constraints)
+            placeable
+        }
+
+        val width = placeables.maxBy { it.measuredWidth }.measuredWidth.toDp()
+
+        val mainPlaceable = subcompose(composables.size + 1) {
+            SwipeRefreshBox(
+                onSwipeRefresh = { subjectsViewModel.getSubjects(true) },
+                isRefreshing = false,
+                modifier = modifier
+            ) {
+                LazyColumn {
+                    items(subjects) {
+                        MediumSpacer()
+                        SubjectItem(
+                            subject = it,
+                            modifier = Modifier.fillParentMaxWidth(),
+                            pointsDisplayModifier = Modifier.width(width)
+                        )
+                    }
+                }
             }
+        }.first().measure(constraints)
+
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            mainPlaceable.place(0, 0)
         }
     }
 }
