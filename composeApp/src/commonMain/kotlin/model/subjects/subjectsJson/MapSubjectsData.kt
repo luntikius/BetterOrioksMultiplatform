@@ -8,6 +8,8 @@ import model.subjects.subjectsJson.jsonElements.SubjectFromWeb
 data class MapSubjectsData(
     @SerialName("dises")
     private val mapSubjects: Map<String, SubjectFromWeb> = mapOf(),
+    @SerialName("offset_dises")
+    override val offsetSubjects: List<SubjectFromWeb> = listOf(),
     @SerialName("dolg_dises")
     override val debts: List<SubjectFromWeb> = listOf(),
     @SerialName("sems")
