@@ -46,6 +46,10 @@ class UserPreferencesRepository(
         )
     }
 
+    val isSubjectsGroupingEnabled: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[IS_SUBJECTS_GROUPING_ENABLED] ?: false
+    }
+
     suspend fun isSessionInvalidated(): Boolean {
         return dataStore.data.map { preferences ->
             preferences[IS_SESSION_INVALIDATED] ?: false
@@ -78,6 +82,12 @@ class UserPreferencesRepository(
         }
     }
 
+    suspend fun toggleSubjectsGrouping() {
+        dataStore.edit { preferences ->
+            preferences[IS_SUBJECTS_GROUPING_ENABLED] = !(preferences[IS_SUBJECTS_GROUPING_ENABLED] ?: false)
+        }
+    }
+
     suspend fun logout() {
         dataStore.edit { preferences ->
             preferences.clear()
@@ -95,5 +105,6 @@ class UserPreferencesRepository(
         private val SEMESTER_START_DATE = stringPreferencesKey("SEMESTER_START_DATE")
         private val SESSION_START_DATE = stringPreferencesKey("SESSION_START_DATE")
         private val SESSION_END_DATE = stringPreferencesKey("SESSION_END_DATE")
+        private val IS_SUBJECTS_GROUPING_ENABLED = booleanPreferencesKey("IS_SUBJECTS_GROUPING_ENABLED")
     }
 }

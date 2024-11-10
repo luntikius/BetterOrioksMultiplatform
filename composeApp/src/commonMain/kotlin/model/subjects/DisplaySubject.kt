@@ -16,7 +16,8 @@ data class DisplaySubject(
     val id: String,
     val name: String,
     val currentPoints: String,
-    val maxPoints: String
+    val maxPoints: String,
+    val formOfControl: Int,
 ) {
 
     @Composable
@@ -69,5 +70,9 @@ data class DisplaySubject(
                 append(formatDouble(maxPoints))
             }
         }.toAnnotatedString()
+    }
+
+    companion object {
+        const val FORM_OF_CONTROL_CREDIT = 1
     }
 }

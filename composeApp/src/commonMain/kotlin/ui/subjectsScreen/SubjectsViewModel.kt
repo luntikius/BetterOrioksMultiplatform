@@ -15,6 +15,7 @@ class SubjectsViewModel(
 ) : ViewModel() {
 
     val subjectsState = subjectsRepository.subjectsState
+    val isSubjectsGroupingEnabled = userPreferencesRepository.isSubjectsGroupingEnabled
 
     private val _subjectsScreenUiState = MutableStateFlow(SubjectsScreenUiState())
     val subjectsScreenUiState = _subjectsScreenUiState.asStateFlow()
@@ -32,6 +33,8 @@ class SubjectsViewModel(
     }
 
     fun toggleGrouping() {
-        _subjectsScreenUiState.update { uis -> uis.copy(isGroupingEnabled = !uis.isGroupingEnabled) }
+        viewModelScope.launch {
+            userPreferencesRepository.toggleSubjectsGrouping()
+        }
     }
 }
