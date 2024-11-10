@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
@@ -48,6 +47,7 @@ import betterorioks.composeapp.generated.resources.loading_subjects
 import betterorioks.composeapp.generated.resources.sort
 import model.schedule.scheduleJson.Semester
 import model.subjects.DisplaySubject
+import model.subjects.SubjectsGroup
 import model.subjects.SubjectsState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -212,7 +212,7 @@ fun PointsDisplay(
         modifier = modifier
     ) {
         Row(
-            modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = modifier.padding(8.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -253,6 +253,7 @@ fun SubjectItem(
 fun SubjectsColumn(
     subjects: List<DisplaySubject>,
     subjectsViewModel: SubjectsViewModel,
+    isGroupingEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
     SubcomposeLayout { constraints ->
@@ -273,13 +274,20 @@ fun SubjectsColumn(
                 modifier = modifier
             ) {
                 LazyColumn {
-                    items(subjects) {
-                        MediumSpacer()
-                        SubjectItem(
-                            subject = it,
-                            modifier = Modifier.fillParentMaxWidth(),
-                            pointsDisplayModifier = Modifier.width(width)
-                        )
+                    item {
+                        if (isGroupingEnabled) {
+                            GroupedSubjects(
+                                subjects = subjects,
+                                modifier = Modifier.fillParentMaxWidth(),
+                                pointsDisplayModifier = Modifier.width(width)
+                            )
+                        } else {
+                            UngroupedSubjects(
+                                subjects = subjects,
+                                modifier = Modifier.fillParentMaxWidth(),
+                                pointsDisplayModifier = Modifier.width(width)
+                            )
+                        }
                     }
                 }
             }
@@ -292,14 +300,81 @@ fun SubjectsColumn(
 }
 
 @Composable
+fun UngroupedSubjects(
+    subjects: List<DisplaySubject>,
+    modifier: Modifier = Modifier,
+    pointsDisplayModifier: Modifier
+) {
+    subjects.forEach {
+        SubjectItem(
+            subject = it,
+            modifier = modifier,
+            pointsDisplayModifier = pointsDisplayModifier
+        )
+        MediumSpacer()
+    }
+}
+
+@Composable
+fun GroupOfSubjects(
+    groupName: String,
+    subjects: List<DisplaySubject>,
+    modifier: Modifier = Modifier,
+    pointsDisplayModifier: Modifier
+) {
+    MediumSpacer()
+    Text(
+        text = groupName,
+        style = MaterialTheme.typography.titleLarge,
+        modifier = modifier.padding(start = 16.dp)
+    )
+    MediumSpacer()
+    subjects.forEach {
+        SubjectItem(
+            subject = it,
+            modifier = modifier,
+            pointsDisplayModifier = pointsDisplayModifier
+        )
+        MediumSpacer()
+    }
+}
+
+@Composable
+fun GroupedSubjects(
+    subjects: List<DisplaySubject>,
+    modifier: Modifier = Modifier,
+    pointsDisplayModifier: Modifier
+) {
+    SubjectsGroup.entries.forEach { group ->
+        val filteredSubjects = subjects.filter { group.filterLambda(it) }
+        if (filteredSubjects.isNotEmpty()) {
+            GroupOfSubjects(
+                groupName = stringResource(group.nameRes),
+                subjects = filteredSubjects,
+                modifier = modifier,
+                pointsDisplayModifier = pointsDisplayModifier
+            )
+        }
+    }
+}
+
+
+@Composable
 fun SubjectsScreenContent(
     subjectsState: SubjectsState,
     subjectsViewModel: SubjectsViewModel,
     modifier: Modifier = Modifier
 ) {
+    val isGroupingEnabled by subjectsViewModel.isSubjectsGroupingEnabled.collectAsState(false)
+
     when (subjectsState) {
         is SubjectsState.Success -> {
-            SubjectsColumn(subjectsState.displaySubjects, subjectsViewModel = subjectsViewModel, modifier = modifier)
+            SubjectsColumn(
+                subjectsState.displaySubjects,
+                subjectsViewModel = subjectsViewModel,
+                isGroupingEnabled = isGroupingEnabled,
+                modifier = modifier
+            )
         }
         is SubjectsState.Error -> {
             ErrorScreenWithReloadButton(

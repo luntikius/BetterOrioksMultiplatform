@@ -16,8 +16,8 @@ interface SubjectsData {
                 id = it.id.toString(),
                 name = it.name,
                 currentPoints = it.currentPoints,
-                maxPoints = it.maxPoints.toString()
-
+                maxPoints = it.maxPoints.toString(),
+                formOfControl = it.formOfControl.id
             )
         }
 }
