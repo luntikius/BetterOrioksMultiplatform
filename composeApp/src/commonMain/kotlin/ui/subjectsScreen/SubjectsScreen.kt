@@ -358,7 +358,6 @@ fun GroupedSubjects(
     }
 }
 
-
 @Composable
 fun SubjectsScreenContent(
     subjectsState: SubjectsState,
