@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
@@ -212,7 +213,7 @@ fun PointsDisplay(
         modifier = modifier
     ) {
         Row(
-            modifier = modifier.padding(8.dp),
+            modifier = modifier.padding(vertical = 8.dp, horizontal = 12.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -325,7 +326,7 @@ fun GroupOfSubjects(
     MediumSpacer()
     Text(
         text = groupName,
-        style = MaterialTheme.typography.titleLarge,
+        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
         modifier = modifier.padding(start = 16.dp)
     )
     MediumSpacer()

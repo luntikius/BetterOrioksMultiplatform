@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
@@ -71,6 +71,7 @@ fun UserInfoContent(
     SmallSpacer()
     Text(
         text = userInfo.name,
+        textAlign = TextAlign.Center,
         style = MaterialTheme.typography.titleLarge
     )
     SmallSpacer()
@@ -218,23 +219,20 @@ fun MenuScreenContent(
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
+        item { UserInfoBlock(viewModel, Modifier.fillParentMaxWidth().padding(16.dp)) }
+        item { LargeSpacer() }
+        item { NavigationItemsRow(navController) }
+        item { XLargeSpacer() }
+        item { TextButtonColumn() }
+        item { XLargeSpacer() }
         item {
-            Column(
-                modifier = Modifier.fillParentMaxHeight()
-            ) {
-                UserInfoBlock(viewModel, Modifier.fillParentMaxWidth().padding(16.dp))
-                LargeSpacer()
-                NavigationItemsRow(navController)
-                XLargeSpacer()
-                TextButtonColumn()
-                Spacer(Modifier.weight(1f))
-                CardButton(
-                    text = stringResource(Res.string.exit),
-                    onClick = onExitButtonClick,
-                    textColor = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+            CardButton(
+                text = stringResource(Res.string.exit),
+                onClick = onExitButtonClick,
+                textColor = MaterialTheme.colorScheme.error,
+                modifier = Modifier.fillParentMaxWidth()
+            )
         }
+        item { XLargeSpacer() }
     }
 }
