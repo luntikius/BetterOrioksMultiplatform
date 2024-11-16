@@ -37,6 +37,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.format.char
+import model.schedule.SemesterDates.Companion.DATE_FORMAT
 import org.jetbrains.compose.resources.StringResource
 
 fun LocalDate.getWeekStringRes(): StringResource {
@@ -91,3 +92,5 @@ object BetterOrioksFormats {
         char(' '); hour(); char(':'); minute()
     }
 }
+
+fun String.toSemesterLocalDate(): LocalDate = DATE_FORMAT.parse(this)
