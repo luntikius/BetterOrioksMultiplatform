@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,6 +47,7 @@ import betterorioks.composeapp.generated.resources.content_description_group_sub
 import betterorioks.composeapp.generated.resources.content_description_select_semester
 import betterorioks.composeapp.generated.resources.loading_subjects
 import betterorioks.composeapp.generated.resources.sort
+import model.AppScreens
 import model.schedule.scheduleJson.Semester
 import model.subjects.DisplaySubject
 import model.subjects.SubjectsGroup
@@ -226,6 +228,7 @@ fun PointsDisplay(
 @Composable
 fun SubjectItem(
     subject: DisplaySubject,
+    onNavigateToSubject: (String) -> Unit,
     modifier: Modifier = Modifier,
     pointsDisplayModifier: Modifier
 ) {
@@ -233,7 +236,7 @@ fun SubjectItem(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        modifier = modifier
+        modifier = modifier.clip(RoundedCornerShape(16.dp)).clickable { onNavigateToSubject(subject.id) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -255,6 +258,7 @@ fun SubjectsColumn(
     subjects: List<DisplaySubject>,
     subjectsViewModel: SubjectsViewModel,
     isGroupingEnabled: Boolean,
+    onNavigateToSubject: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     SubcomposeLayout { constraints ->
@@ -279,12 +283,14 @@ fun SubjectsColumn(
                         if (isGroupingEnabled) {
                             GroupedSubjects(
                                 subjects = subjects,
+                                onNavigateToSubject = onNavigateToSubject,
                                 modifier = Modifier.fillParentMaxWidth(),
                                 pointsDisplayModifier = Modifier.width(width)
                             )
                         } else {
                             UngroupedSubjects(
                                 subjects = subjects,
+                                onNavigateToSubject = onNavigateToSubject,
                                 modifier = Modifier.fillParentMaxWidth(),
                                 pointsDisplayModifier = Modifier.width(width)
                             )
@@ -303,12 +309,14 @@ fun SubjectsColumn(
 @Composable
 fun UngroupedSubjects(
     subjects: List<DisplaySubject>,
+    onNavigateToSubject: (String) -> Unit,
     modifier: Modifier = Modifier,
     pointsDisplayModifier: Modifier
 ) {
     subjects.forEach {
         SubjectItem(
             subject = it,
+            onNavigateToSubject = onNavigateToSubject,
             modifier = modifier,
             pointsDisplayModifier = pointsDisplayModifier
         )
@@ -320,6 +328,7 @@ fun UngroupedSubjects(
 fun GroupOfSubjects(
     groupName: String,
     subjects: List<DisplaySubject>,
+    onNavigateToSubject: (String) -> Unit,
     modifier: Modifier = Modifier,
     pointsDisplayModifier: Modifier
 ) {
@@ -333,6 +342,7 @@ fun GroupOfSubjects(
     subjects.forEach {
         SubjectItem(
             subject = it,
+            onNavigateToSubject = onNavigateToSubject,
             modifier = modifier,
             pointsDisplayModifier = pointsDisplayModifier
         )
@@ -343,6 +353,7 @@ fun GroupOfSubjects(
 @Composable
 fun GroupedSubjects(
     subjects: List<DisplaySubject>,
+    onNavigateToSubject: (String) -> Unit,
     modifier: Modifier = Modifier,
     pointsDisplayModifier: Modifier
 ) {
@@ -352,6 +363,7 @@ fun GroupedSubjects(
             GroupOfSubjects(
                 groupName = stringResource(group.nameRes),
                 subjects = filteredSubjects,
+                onNavigateToSubject = onNavigateToSubject,
                 modifier = modifier,
                 pointsDisplayModifier = pointsDisplayModifier
             )
@@ -361,11 +373,15 @@ fun GroupedSubjects(
 
 @Composable
 fun SubjectsScreenContent(
+    navController: NavController,
     subjectsState: SubjectsState,
     subjectsViewModel: SubjectsViewModel,
     modifier: Modifier = Modifier
 ) {
     val isGroupingEnabled by subjectsViewModel.isSubjectsGroupingEnabled.collectAsState(false)
+    val onNavigateToSubject = { subjectId: String ->
+        navController.navigate("${AppScreens.SubjectPerformance.name}/$subjectId")
+    }
 
     when (subjectsState) {
         is SubjectsState.Success -> {
@@ -373,7 +389,8 @@ fun SubjectsScreenContent(
                 subjectsState.displaySubjects,
                 subjectsViewModel = subjectsViewModel,
                 isGroupingEnabled = isGroupingEnabled,
-                modifier = modifier
+                onNavigateToSubject = onNavigateToSubject,
+                modifier = modifier,
             )
         }
         is SubjectsState.Error -> {
@@ -402,13 +419,14 @@ fun SubjectsScreen(
     val subjectsState by subjectsViewModel.subjectsState.collectAsState()
 
     Column(
-        modifier = modifier.fillMaxSize().padding(16.dp)
+        modifier = modifier.fillMaxSize().padding(top = 16.dp, end = 16.dp, start = 16.dp)
     ) {
         SubjectsHeader(
             subjectsViewModel
         )
         LargeSpacer()
         SubjectsScreenContent(
+            navController,
             subjectsState,
             subjectsViewModel
         )

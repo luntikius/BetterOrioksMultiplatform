@@ -1,17 +1,15 @@
 package model
 
 enum class AppScreens {
-    LoginScreen,
-
     Schedule,
 
     Subjects,
     SubjectPerformance,
-    Resources,
+//    Resources,
 
     Menu,
-    Settings,
-    Notifications,
+//    Settings,
+//    Notifications,
     News,
     NewsView
 }

@@ -32,6 +32,7 @@ import ui.newsScreen.NewsViewModel
 import ui.newsScreen.newsViewScreen.NewsViewScreen
 import ui.scheduleScreen.ScheduleScreen
 import ui.scheduleScreen.ScheduleScreenViewModel
+import ui.subjectPerformance.SubjectPerformanceScreen
 import ui.subjectsScreen.SubjectsScreen
 import ui.subjectsScreen.SubjectsViewModel
 
@@ -97,6 +98,14 @@ fun AppNavigation(
             route = AppScreens.Subjects.name
         ) {
             SubjectsScreen(navController, subjectsViewModel)
+        }
+
+        composable(
+            route = "${AppScreens.SubjectPerformance.name}/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id") ?: return@composable
+            SubjectPerformanceScreen(id)
         }
 
         composable(
