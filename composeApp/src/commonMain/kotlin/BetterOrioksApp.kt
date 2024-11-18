@@ -32,7 +32,7 @@ import ui.newsScreen.NewsViewModel
 import ui.newsScreen.newsViewScreen.NewsViewScreen
 import ui.scheduleScreen.ScheduleScreen
 import ui.scheduleScreen.ScheduleScreenViewModel
-import ui.subjectPerformance.SubjectPerformanceScreen
+import ui.subjectPerformanceScreen.SubjectPerformanceScreen
 import ui.subjectsScreen.SubjectsScreen
 import ui.subjectsScreen.SubjectsViewModel
 
