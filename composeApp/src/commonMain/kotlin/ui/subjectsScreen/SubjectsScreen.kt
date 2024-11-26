@@ -49,7 +49,7 @@ import betterorioks.composeapp.generated.resources.loading_subjects
 import betterorioks.composeapp.generated.resources.sort
 import model.AppScreens
 import model.schedule.scheduleJson.Semester
-import model.subjects.DisplaySubject
+import model.subjects.SubjectListItem
 import model.subjects.SubjectsGroup
 import model.subjects.SubjectsState
 import org.jetbrains.compose.resources.painterResource
@@ -204,7 +204,7 @@ fun SubjectsHeader(
 
 @Composable
 fun PointsDisplay(
-    subject: DisplaySubject,
+    subject: SubjectListItem,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -227,7 +227,7 @@ fun PointsDisplay(
 
 @Composable
 fun SubjectItem(
-    subject: DisplaySubject,
+    subject: SubjectListItem,
     onNavigateToSubject: (String) -> Unit,
     modifier: Modifier = Modifier,
     pointsDisplayModifier: Modifier
@@ -255,7 +255,7 @@ fun SubjectItem(
 
 @Composable
 fun SubjectsColumn(
-    subjects: List<DisplaySubject>,
+    subjects: List<SubjectListItem>,
     subjectsViewModel: SubjectsViewModel,
     isGroupingEnabled: Boolean,
     onNavigateToSubject: (String) -> Unit,
@@ -308,7 +308,7 @@ fun SubjectsColumn(
 
 @Composable
 fun UngroupedSubjects(
-    subjects: List<DisplaySubject>,
+    subjects: List<SubjectListItem>,
     onNavigateToSubject: (String) -> Unit,
     modifier: Modifier = Modifier,
     pointsDisplayModifier: Modifier
@@ -327,7 +327,7 @@ fun UngroupedSubjects(
 @Composable
 fun GroupOfSubjects(
     groupName: String,
-    subjects: List<DisplaySubject>,
+    subjects: List<SubjectListItem>,
     onNavigateToSubject: (String) -> Unit,
     modifier: Modifier = Modifier,
     pointsDisplayModifier: Modifier
@@ -352,7 +352,7 @@ fun GroupOfSubjects(
 
 @Composable
 fun GroupedSubjects(
-    subjects: List<DisplaySubject>,
+    subjects: List<SubjectListItem>,
     onNavigateToSubject: (String) -> Unit,
     modifier: Modifier = Modifier,
     pointsDisplayModifier: Modifier
@@ -380,13 +380,13 @@ fun SubjectsScreenContent(
 ) {
     val isGroupingEnabled by subjectsViewModel.isSubjectsGroupingEnabled.collectAsState(false)
     val onNavigateToSubject = { subjectId: String ->
-        navController.navigate("${AppScreens.SubjectPerformance.name}/$subjectId")
+        navController.navigate("${AppScreens.ControlEvents.name}/$subjectId")
     }
 
     when (subjectsState) {
         is SubjectsState.Success -> {
             SubjectsColumn(
-                subjectsState.displaySubjects,
+                subjectsState.subjectListItems,
                 subjectsViewModel = subjectsViewModel,
                 isGroupingEnabled = isGroupingEnabled,
                 onNavigateToSubject = onNavigateToSubject,

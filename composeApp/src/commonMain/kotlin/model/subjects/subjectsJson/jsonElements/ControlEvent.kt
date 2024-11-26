@@ -1,8 +1,10 @@
 package model.subjects.subjectsJson.jsonElements
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import model.subjectPerformance.ControlEventsListItem
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class ControlEvent(
     @SerialName("id")
     val id: Int = 0,
@@ -38,4 +40,17 @@ data class ControlEvent(
     val resources: List<Resource> = listOf(),
     @SerialName("bonus")
     val bonus: Int = 0
-)
+) {
+
+    fun toControlEventItem(
+        controlForm: String
+    ): ControlEventsListItem.ControlEventItem = ControlEventsListItem.ControlEventItem(
+        id = id.toString(),
+        name = type.name.ifBlank { controlForm },
+        shortName = shortName,
+        currentPoints = grade.currentPoints,
+        maxPoints = maxScore.toString(),
+        resources = resources,
+        isBonus = bonus != 0
+    )
+}

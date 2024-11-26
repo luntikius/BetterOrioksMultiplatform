@@ -1,6 +1,6 @@
 package model.subjects
 
-data class DisplaySubject(
+data class SubjectListItem(
     val id: String,
     val name: String,
     override val currentPoints: String,

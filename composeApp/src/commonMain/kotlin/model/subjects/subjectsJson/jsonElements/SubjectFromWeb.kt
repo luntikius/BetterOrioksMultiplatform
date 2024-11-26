@@ -1,6 +1,7 @@
 package model.subjects.subjectsJson.jsonElements
 
 import kotlinx.serialization.SerialName
+import model.subjects.SubjectListItem
 
 @kotlinx.serialization.Serializable
 class SubjectFromWeb(
@@ -57,4 +58,13 @@ class SubjectFromWeb(
             }
             return maxScore
         }
+
+    fun toSubjectListItem(): SubjectListItem =
+        SubjectListItem(
+            id = id.toString(),
+            name = name,
+            currentPoints = currentPoints,
+            maxPoints = maxPoints.toString(),
+            formOfControl = formOfControl.id
+        )
 }

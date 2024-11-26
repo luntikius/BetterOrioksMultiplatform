@@ -24,6 +24,7 @@ import model.AppScreens
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
+import ui.controlEventsScreen.ControlEventsScreen
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
 import ui.menuScreen.MenuScreenViewModel
@@ -32,7 +33,6 @@ import ui.newsScreen.NewsViewModel
 import ui.newsScreen.newsViewScreen.NewsViewScreen
 import ui.scheduleScreen.ScheduleScreen
 import ui.scheduleScreen.ScheduleScreenViewModel
-import ui.subjectPerformanceScreen.SubjectPerformanceScreen
 import ui.subjectsScreen.SubjectsScreen
 import ui.subjectsScreen.SubjectsViewModel
 
@@ -101,11 +101,11 @@ fun AppNavigation(
         }
 
         composable(
-            route = "${AppScreens.SubjectPerformance.name}/{id}",
+            route = "${AppScreens.ControlEvents.name}/{id}",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id") ?: return@composable
-            SubjectPerformanceScreen(id)
+            ControlEventsScreen(id)
         }
 
         composable(

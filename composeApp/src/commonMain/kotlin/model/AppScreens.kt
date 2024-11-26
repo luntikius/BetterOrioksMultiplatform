@@ -4,7 +4,7 @@ enum class AppScreens {
     Schedule,
 
     Subjects,
-    SubjectPerformance,
+    ControlEvents,
 //    Resources,
 
     Menu,
