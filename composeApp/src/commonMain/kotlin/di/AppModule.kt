@@ -11,6 +11,7 @@ import data.UserPreferencesRepository
 import data.database.ScheduleDatabase
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import ui.controlEventsScreen.ControlEventsViewModel
 import ui.loginScreen.LoginScreenViewModel
 import ui.menuScreen.MenuScreenViewModel
 import ui.newsScreen.NewsViewModel
@@ -43,4 +44,5 @@ fun sharedModule() = module {
     viewModel { NewsViewModel(get(), get()) }
     viewModel { parameters -> NewsViewViewModel(parameters.get(), get(), get()) }
     viewModel { SubjectsViewModel(get(), get()) }
+    viewModel { parameters -> ControlEventsViewModel(parameters.get(), get()) }
 }

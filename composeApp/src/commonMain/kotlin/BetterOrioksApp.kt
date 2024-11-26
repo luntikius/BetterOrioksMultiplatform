@@ -105,7 +105,7 @@ fun AppNavigation(
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id") ?: return@composable
-            ControlEventsScreen(id)
+            ControlEventsScreen(id, navController)
         }
 
         composable(
