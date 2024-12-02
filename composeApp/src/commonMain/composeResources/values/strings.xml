@@ -118,12 +118,13 @@
     </plurals>
 
     <plurals name="weeks_before_event">
-        <item quantity="one">через %1$d неделю</item>
-        <item quantity="few">через %1$d недели</item>
-        <item quantity="other">через %1$d недель</item>
+        <item quantity="one">Через %1$d неделю</item>
+        <item quantity="few">Через %1$d недели</item>
+        <item quantity="other">Через %1$d недель</item>
     </plurals>
-    <string name="weeks_before_event_now">на этой неделе</string>
-    <string name="weeks_before_event_passed">прошло</string>
+    <string name="weeks_before_event_now">На этой неделе</string>
+    <string name="weeks_before_event_one">На следующей неделе</string>
+    <string name="weeks_before_event_passed">Прошло</string>
 
     <string name="week_number">%1$d - неделя</string>
     <string name="schedule_scroll_to_today">выбрать сегодняшний день в расписании</string>

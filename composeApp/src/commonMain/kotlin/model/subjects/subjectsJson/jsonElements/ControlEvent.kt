@@ -47,7 +47,8 @@ data class ControlEvent(
     ): ControlEventsListItem.ControlEventItem = ControlEventsListItem.ControlEventItem(
         id = id.toString(),
         name = type.name.ifBlank { controlForm },
-        shortName = shortName,
+        description = name.ifBlank { null },
+        shortName = if (shortName != "-" && shortName.isNotBlank()) "($shortName)" else "",
         currentPoints = grade.currentPoints,
         maxPoints = maxScore.toString(),
         resources = resources,

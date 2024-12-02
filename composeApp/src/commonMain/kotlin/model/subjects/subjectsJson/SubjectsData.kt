@@ -4,6 +4,7 @@ import model.schedule.SemesterDates
 import model.schedule.scheduleJson.Semester
 import model.subjectPerformance.ControlEventsListItem
 import model.subjectPerformance.DisplaySubjectPerformance
+import model.subjectPerformance.SubjectPerformanceListItems
 import model.subjects.SubjectListItem
 import model.subjects.subjectsJson.jsonElements.ControlEvent
 import model.subjects.subjectsJson.jsonElements.SubjectFromWeb
@@ -34,9 +35,11 @@ interface SubjectsData {
                 )
                 val displaySubjectPerformance = DisplaySubjectPerformance(
                     subject = subject.toSubjectListItem(),
-                    controlEvents = controlEventsList,
-                    controlForm = subject.formOfControl.name.ifBlank { null },
-                    teachers = subject.teachers
+                    subjectPerformanceListItems = SubjectPerformanceListItems(
+                        controlEvents = controlEventsList,
+                        controlForm = subject.formOfControl.name.ifBlank { null },
+                        teachers = subject.teachers
+                    )
                 )
                 put(
                     id, displaySubjectPerformance
@@ -54,7 +57,7 @@ interface SubjectsData {
         controlForm: String
     ): List<ControlEventsListItem> = buildSet {
         controlEvents.forEach { controlEvent ->
-            val weeksBeforeEvent = minOf(-1, controlEvent.week - weeksPassedSinceSemesterStart)
+            val weeksBeforeEvent = maxOf(-1, controlEvent.week - weeksPassedSinceSemesterStart - 1)
             val weeksLeftItem = ControlEventsListItem.WeeksLeftItem(weeksBeforeEvent)
             if (!this.contains(weeksLeftItem)) add(weeksLeftItem)
             add(controlEvent.toControlEventItem(controlForm))

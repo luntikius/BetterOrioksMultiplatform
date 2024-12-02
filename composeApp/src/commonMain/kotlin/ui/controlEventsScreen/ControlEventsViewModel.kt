@@ -46,4 +46,10 @@ class ControlEventsViewModel(
             }
         }
     }
+
+    fun reloadSubjects() {
+        viewModelScope.launch {
+            subjectsRepository.getSubjects(reload = true)
+        }
+    }
 }

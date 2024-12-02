@@ -418,29 +418,23 @@ fun ClassItem(
             .padding(horizontal = 16.dp)
             .defaultMinSize(minHeight = MIN_SCHEDULE_ITEM_HEIGHT.dp)
     ) {
-        Box {
-            ClassItemContent(scheduleClass)
-            if (scheduleClass.isSwitchable) {
-                SwitchButton(
-                    { recalculateWindows(scheduleClass) },
-                    modifier = Modifier.align(Alignment.BottomEnd)
-                )
-            }
-        }
+        ClassItemContent(scheduleClass, { recalculateWindows(scheduleClass) })
     }
 }
 
 @Composable
 fun ClassItemContent(
     scheduleClass: ScheduleClass,
+    onSwitchButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
+        MediumSpacer()
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             CircleText(text = scheduleClass.number.toString(), modifier = Modifier.size(26.dp))
             SmallSpacer()
@@ -457,21 +451,29 @@ fun ClassItemContent(
         MediumSpacer()
         Text(
             text = scheduleClass.subject,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = 24.dp)
         )
         MediumSpacer()
         Text(
             text = scheduleClass.teacher,
             style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = 24.dp)
         )
         SmallSpacer()
-        Text(
-            text = stringResource(Res.string.room_number, scheduleClass.room),
-            style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-        MediumSpacer()
+        Row {
+            LargeSpacer()
+            Text(
+                text = stringResource(Res.string.room_number, scheduleClass.room),
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 16.dp).weight(1f).align(Alignment.Top)
+            )
+            if (scheduleClass.isSwitchable) {
+                SwitchButton(
+                    onSwitchButtonClick,
+                    modifier = Modifier.padding(bottom = 4.dp, end = 4.dp).align(Alignment.Bottom)
+                )
+            }
+        }
     }
 }
 
@@ -483,7 +485,6 @@ fun SwitchButton(
     IconButton(
         onClick = onClick,
         modifier = modifier
-            .padding(4.dp)
     ) {
         Icon(
             painterResource(Res.drawable.swap_vert),

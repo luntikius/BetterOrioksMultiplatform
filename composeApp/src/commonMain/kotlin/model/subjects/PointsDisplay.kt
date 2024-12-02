@@ -17,7 +17,7 @@ interface PointsDisplay {
     val maxPoints: String
 
     @Composable
-    private fun getPointsColor(): Color {
+    fun getPointsColor(): Color {
         return if (currentPoints.toDoubleOrNull() != null && maxPoints.toDoubleOrNull() != null) {
             if (maxPoints.toDouble() == 0.0) {
                 MaterialTheme.colorScheme.primary

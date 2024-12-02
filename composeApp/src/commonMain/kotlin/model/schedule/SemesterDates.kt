@@ -3,8 +3,8 @@ package model.schedule
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
 import kotlinx.datetime.format.char
-import kotlinx.datetime.periodUntil
 import kotlinx.datetime.toLocalDateTime
 import utils.toSemesterLocalDate
 
@@ -17,7 +17,7 @@ data class SemesterDates(
         get() {
             val start = startDate.toSemesterLocalDate()
             val current = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-            val weeks = start.periodUntil(current).days / 7
+            val weeks = start.daysUntil(current) / 7
             return weeks
         }
 
