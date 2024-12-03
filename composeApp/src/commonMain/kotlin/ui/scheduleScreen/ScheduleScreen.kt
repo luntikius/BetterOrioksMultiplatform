@@ -454,19 +454,23 @@ fun ClassItemContent(
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         MediumSpacer()
-        Text(
-            text = scheduleClass.teacher,
-            style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.padding(horizontal = 24.dp)
-        )
-        SmallSpacer()
         Row {
-            LargeSpacer()
-            Text(
-                text = stringResource(Res.string.room_number, scheduleClass.room),
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 16.dp).weight(1f).align(Alignment.Top)
-            )
+            Column(
+                modifier = Modifier.weight(1F)
+            ) {
+                Text(
+                    text = scheduleClass.teacher,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+                SmallSpacer()
+                Text(
+                    text = stringResource(Res.string.room_number, scheduleClass.room),
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+                LargeSpacer()
+            }
             if (scheduleClass.isSwitchable) {
                 SwitchButton(
                     onSwitchButtonClick,

@@ -1,7 +1,9 @@
 package ui.controlEventsScreen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -19,13 +21,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_left
-import betterorioks.composeapp.generated.resources.arrow_right
+import betterorioks.composeapp.generated.resources.attachment
 import betterorioks.composeapp.generated.resources.back_button
+import betterorioks.composeapp.generated.resources.loading_subjects
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
 import model.subjectPerformance.DisplaySubjectPerformance
@@ -35,10 +39,12 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
-import ui.common.MediumSpacer
+import ui.common.LoadingScreen
 import ui.common.SmallSpacer
 import ui.common.SwipeRefreshBox
+import ui.common.XLargeSpacer
 import ui.subjectsScreen.PointsDisplay
 import utils.disabled
 
@@ -84,20 +90,37 @@ fun ControlEventItem(
     controlEventItem: ControlEventsListItem.ControlEventItem,
     modifier: Modifier = Modifier
 ) {
-    LargeSpacer()
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        modifier = modifier.clickable(
+            enabled = controlEventItem.resources.isNotEmpty(),
+            onClick = { }
+        )
     ) {
-        LargeSpacer()
+        XLargeSpacer()
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            Text(
-                text = controlEventItem.fullName,
-                maxLines = 3,
-                style = MaterialTheme.typography.bodyLarge
-            )
+            LargeSpacer()
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = controlEventItem.fullName,
+                    maxLines = 3,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                if (controlEventItem.resources.isNotEmpty()) {
+                    SmallSpacer()
+                    Icon(
+                        painterResource(Res.drawable.attachment),
+                        "",
+                        modifier = Modifier.size(16.dp).rotate(-45F),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
             if (controlEventItem.description != null) {
                 SmallSpacer()
                 Text(
@@ -106,22 +129,13 @@ fun ControlEventItem(
                     style = MaterialTheme.typography.labelSmall
                 )
             }
+            LargeSpacer()
         }
         LargeSpacer()
         Text(
             controlEventItem.getPointsAnnotatedString(),
         )
-        if (controlEventItem.resources.isNotEmpty()) {
-            SmallSpacer()
-            Icon(
-                painter = painterResource(Res.drawable.arrow_right),
-                contentDescription = stringResource(Res.string.back_button),
-                modifier = Modifier.size(32.dp)
-            )
-            MediumSpacer()
-        } else {
-            LargeSpacer()
-        }
+        LargeSpacer()
     }
     LargeSpacer()
 }
@@ -193,8 +207,7 @@ fun ControlEventsContent(
         )
         ControlEventsList(
             controlEventsListItems = subjectPerformance.subjectPerformanceListItems,
-            viewModel = viewModel,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            viewModel = viewModel
         )
     }
 }
@@ -204,14 +217,23 @@ fun ControlEventsScreen(id: String, navController: NavController) {
     val controlEventsViewViewModel = koinViewModel<ControlEventsViewModel>(parameters = { parametersOf(id) })
     val controlEventsUiState by controlEventsViewViewModel.controlEventsUiState.collectAsState()
 
-    if (controlEventsUiState.displaySubjectPerformanceState is ResponseState.Success) {
-        val subjectPerformanceDisplay =
-            (controlEventsUiState.displaySubjectPerformanceState as ResponseState.Success<DisplaySubjectPerformance>)
-                .result
-        ControlEventsContent(
-            subjectPerformance = subjectPerformanceDisplay,
-            navController = navController,
-            viewModel = controlEventsViewViewModel
-        )
+    when (val displaySubjectPerformanceState = controlEventsUiState.displaySubjectPerformanceState) {
+        is ResponseState.Success -> {
+            ControlEventsContent(
+                subjectPerformance = displaySubjectPerformanceState.result,
+                navController = navController,
+                viewModel = controlEventsViewViewModel
+            )
+        }
+        is ResponseState.Error -> {
+            ErrorScreenWithReloadButton(
+                text = displaySubjectPerformanceState.error ?: "",
+                onClick = { controlEventsViewViewModel.reloadSubjects() },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+        else -> {
+            LoadingScreen(Modifier.fillMaxSize(), text = stringResource(Res.string.loading_subjects))
+        }
     }
 }
