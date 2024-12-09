@@ -15,4 +15,6 @@ sealed interface SubjectsState {
     ) : SubjectsState
 
     data class Error(val message: String) : SubjectsState
+
+    data class PollError(val url: String) : SubjectsState
 }

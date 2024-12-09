@@ -33,6 +33,7 @@ class ControlEventsViewModel(
                     is SubjectsState.NotStarted -> ResponseState.NotStarted
                     is SubjectsState.Loading -> ResponseState.Loading()
                     is SubjectsState.Error -> ResponseState.Error(subjectsState.message)
+                    is SubjectsState.PollError -> ResponseState.Error(subjectsState.url)
                     is SubjectsState.Success -> {
                         val displaySubjectPerformance = subjectsState.displaySubjectPerformance[id]
                         if (displaySubjectPerformance != null) {

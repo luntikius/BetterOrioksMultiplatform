@@ -16,6 +16,7 @@ import model.subjects.subjectsJson.ListSubjectsData
 import model.subjects.subjectsJson.MapSubjectsData
 import model.subjects.subjectsJson.SubjectsData
 import utils.OrioksHtmlParser
+import utils.checkForPollRedirect
 
 class SubjectsWebRepository(
     private val client: HttpClient,
@@ -53,7 +54,7 @@ class SubjectsWebRepository(
             if (semesterId != null) {
                 parameter(SUBJECTS_PARAM_SEMESTER_ID, semesterId)
             }
-        }.bodyAsText()
+        }.checkForPollRedirect().bodyAsText()
         val subjectsJson = htmlParser.getSubjectsJson(subjectsResponse)
         val subjects = decodeSubjectsData(subjectsJson)
         return subjects
