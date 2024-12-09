@@ -136,6 +136,10 @@
     <string name="no_schedule">расписание отсутствует</string>
     <string name="no_schedule_full">Расписание, сохраненное в памяти устройства пустое, попробуйте перезагрузить его, потянув пальцем вниз</string>
     <string name="reload">перезагрузить</string>
+    <string name="incomplete_poll_text">У вас есть непройденный опрос в ОРИОКС</string>
+    <string name="incomplete_poll_subtitle">Пока опрос не завершен, загрузить страницу не получится</string>
+    <string name="incomplete_poll_button">Пройти опрос</string>
+    <string name="incomplete_poll_completed">Я прошел опрос</string>
     <string name="switch_options_every_week">на каждой неделе</string>
     <string name="switch_options_every_two_weeks">только в %1$s</string>
     <string name="switch_options_every_four_weeks">только в %1$s</string>

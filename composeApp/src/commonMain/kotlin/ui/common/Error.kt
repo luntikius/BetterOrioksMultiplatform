@@ -8,23 +8,97 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Res
+import betterorioks.composeapp.generated.resources.done_img
 import betterorioks.composeapp.generated.resources.error_img
+import betterorioks.composeapp.generated.resources.incomplete_poll_button
+import betterorioks.composeapp.generated.resources.incomplete_poll_completed
+import betterorioks.composeapp.generated.resources.incomplete_poll_subtitle
+import betterorioks.composeapp.generated.resources.incomplete_poll_text
 import betterorioks.composeapp.generated.resources.loading_failed
 import betterorioks.composeapp.generated.resources.reload
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
+import utils.RedirectToPollException
+import utils.UrlHandler
 
 @Composable
+@Suppress("UseIfInsteadOfWhen")
 fun ErrorScreenWithReloadButton(
     exception: Exception,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    urlHandler: UrlHandler = koinInject(),
+    modifier: Modifier = Modifier,
+) {
+    when (exception) {
+        is RedirectToPollException -> {
+            PollErrorScreenWithReloadButton(
+                exception,
+                onClick,
+                urlHandler,
+                modifier
+            )
+        }
+        else -> {
+            BaseErrorScreenWithReloadButton(
+                exception,
+                onClick,
+                modifier
+            )
+        }
+    }
+}
+
+@Composable
+fun PollErrorScreenWithReloadButton(
+    exception: RedirectToPollException,
+    onClick: () -> Unit,
+    urlHandler: UrlHandler = koinInject(),
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.done_img),
+            contentDescription = null
+        )
+        LargeSpacer()
+        Text(
+            stringResource(Res.string.incomplete_poll_text),
+            textAlign = TextAlign.Center
+        )
+        MediumSpacer()
+        Text(
+            stringResource(Res.string.incomplete_poll_subtitle),
+            style = MaterialTheme.typography.labelSmall,
+            textAlign = TextAlign.Center
+        )
+        LargeSpacer()
+        Button(onClick = { urlHandler.handleUrl(exception.url) }) {
+            Text(stringResource(Res.string.incomplete_poll_button))
+        }
+        SmallSpacer()
+        TextButton(onClick = onClick) {
+            Text(stringResource(Res.string.incomplete_poll_completed))
+        }
+    }
+}
+
+@Composable
+fun BaseErrorScreenWithReloadButton(
+    exception: Exception,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.padding(16.dp),
