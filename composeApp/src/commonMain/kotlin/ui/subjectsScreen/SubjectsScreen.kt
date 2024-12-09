@@ -395,7 +395,7 @@ fun SubjectsScreenContent(
         }
         is SubjectsState.Error -> {
             ErrorScreenWithReloadButton(
-                text = subjectsState.message,
+                exception = subjectsState.exception,
                 onClick = { subjectsViewModel.getSubjects(reload = true) },
                 modifier = modifier.fillMaxSize()
             )

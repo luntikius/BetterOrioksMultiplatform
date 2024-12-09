@@ -29,7 +29,7 @@ class MenuScreenViewModel(
             userPreferencesRepository.setUserInfo(userInfo)
             _uiState.update { uis -> uis.copy(userInfoState = UserInfoState.Success(userInfo)) }
         } catch (e: Exception) {
-            _uiState.update { uis -> uis.copy(userInfoState = UserInfoState.Error(e.message.toString())) }
+            _uiState.update { uis -> uis.copy(userInfoState = UserInfoState.Error(e)) }
         }
     }
 

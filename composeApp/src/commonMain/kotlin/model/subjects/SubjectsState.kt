@@ -14,7 +14,5 @@ sealed interface SubjectsState {
         val semesters: List<Semester>
     ) : SubjectsState
 
-    data class Error(val message: String) : SubjectsState
-
-    data class PollError(val url: String) : SubjectsState
+    data class Error(val exception: Exception) : SubjectsState
 }

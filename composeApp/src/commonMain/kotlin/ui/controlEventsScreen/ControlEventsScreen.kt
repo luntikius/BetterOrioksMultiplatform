@@ -227,7 +227,7 @@ fun ControlEventsScreen(id: String, navController: NavController) {
         }
         is ResponseState.Error -> {
             ErrorScreenWithReloadButton(
-                text = displaySubjectPerformanceState.error ?: "",
+                exception = displaySubjectPerformanceState.exception,
                 onClick = { controlEventsViewViewModel.reloadSubjects() },
                 modifier = Modifier.fillMaxSize()
             )

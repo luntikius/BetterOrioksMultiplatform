@@ -140,7 +140,7 @@ class ScheduleScreenViewModel(
             } catch (e: Exception) {
                 println(e.stackTraceToString())
                 if (!scheduleDatabaseRepository.isScheduleStored()) {
-                    _scheduleState.update { ScheduleState.Error(e.message.toString()) }
+                    _scheduleState.update { ScheduleState.Error(e) }
                 } else {
                     // TODO добавить TOAST с текстом о том, что не удалось подключиться к интернету!
                     _scheduleState.update { ScheduleState.Success }

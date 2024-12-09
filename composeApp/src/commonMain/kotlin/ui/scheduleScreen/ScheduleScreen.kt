@@ -697,7 +697,7 @@ fun ScheduleScreen(
         }
         is ScheduleState.Error ->
             ErrorScreenWithReloadButton(
-                text = (scheduleState as ScheduleState.Error).errorText,
+                exception = (scheduleState as ScheduleState.Error).exception,
                 onClick = { viewModel.loadSchedule(refresh = true) },
                 modifier = Modifier.fillMaxSize()
             )

@@ -22,7 +22,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ErrorScreenWithReloadButton(
-    text: String,
+    exception: Exception,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -44,7 +44,7 @@ fun ErrorScreenWithReloadButton(
         LazyRow {
             item {
                 Text(
-                    text,
+                    exception.message.toString(),
                     style = MaterialTheme.typography.labelSmall,
                     textAlign = TextAlign.Center,
                     maxLines = 1

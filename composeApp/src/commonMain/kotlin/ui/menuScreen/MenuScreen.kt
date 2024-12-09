@@ -99,7 +99,7 @@ fun UserInfoBlock(
                 UserInfoContent(userInfo = ((uiState.userInfoState as UserInfoState.Success).userInfo))
             is UserInfoState.Error ->
                 ErrorScreenWithReloadButton(
-                    (uiState.userInfoState as UserInfoState.Error).message,
+                    (uiState.userInfoState as UserInfoState.Error).exception,
                     viewModel::getScreenData
                 )
         }

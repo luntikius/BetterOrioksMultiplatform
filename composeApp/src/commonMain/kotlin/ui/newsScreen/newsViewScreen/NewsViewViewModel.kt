@@ -32,7 +32,7 @@ class NewsViewViewModel(
                 val newsViewContent = orioksWebRepository.getNewsViewContent(authData, id)
                 _uiState.update { NewsViewState.Success(newsViewContent) }
             } catch (e: Exception) {
-                _uiState.update { NewsViewState.Error(e.message.toString()) }
+                _uiState.update { NewsViewState.Error(e) }
             }
         }
     }

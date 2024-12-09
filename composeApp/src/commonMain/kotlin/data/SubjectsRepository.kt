@@ -30,7 +30,7 @@ class SubjectsRepository(
                     )
                 }
             } catch (e: Exception) {
-                _subjectsState.update { SubjectsState.Error(e.message.toString()) }
+                _subjectsState.update { SubjectsState.Error(e) }
             }
         }
     }
