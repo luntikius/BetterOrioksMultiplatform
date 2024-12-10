@@ -13,7 +13,7 @@ data class Resource(
     @SerialName("name")
     val name: String = "",
     @SerialName("link")
-    val link: String = "",
+    val uri: String = "",
     @SerialName("type")
     val type: String = "",
     @SerialName("label")

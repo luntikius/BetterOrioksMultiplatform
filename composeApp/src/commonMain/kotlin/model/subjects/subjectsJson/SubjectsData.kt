@@ -4,7 +4,6 @@ import model.schedule.SemesterDates
 import model.schedule.scheduleJson.Semester
 import model.subjectPerformance.ControlEventsListItem
 import model.subjectPerformance.DisplaySubjectPerformance
-import model.subjectPerformance.SubjectPerformanceListItems
 import model.subjects.SubjectListItem
 import model.subjects.subjectsJson.jsonElements.ControlEvent
 import model.subjects.subjectsJson.jsonElements.SubjectFromWeb
@@ -35,11 +34,9 @@ interface SubjectsData {
                 )
                 val displaySubjectPerformance = DisplaySubjectPerformance(
                     subject = subject.toSubjectListItem(),
-                    subjectPerformanceListItems = SubjectPerformanceListItems(
-                        controlEvents = controlEventsList,
-                        controlForm = subject.formOfControl.name.ifBlank { null },
-                        teachers = subject.teachers
-                    )
+                    controlEvents = controlEventsList,
+                    controlForm = subject.formOfControl.name.ifBlank { null },
+                    teachers = subject.teachers,
                 )
                 put(
                     id, displaySubjectPerformance

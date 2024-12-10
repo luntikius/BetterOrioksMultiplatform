@@ -62,6 +62,7 @@ class SubjectFromWeb(
     fun toSubjectListItem(): SubjectListItem =
         SubjectListItem(
             id = id.toString(),
+            scienceId = scienceId.toString(),
             name = name,
             currentPoints = currentPoints,
             maxPoints = maxPoints.toString(),

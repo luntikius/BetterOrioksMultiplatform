@@ -33,10 +33,10 @@ import betterorioks.composeapp.generated.resources.loading_subjects
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
 import model.subjectPerformance.DisplaySubjectPerformance
-import model.subjectPerformance.SubjectPerformanceListItems
 import model.subjects.SubjectListItem
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ui.common.ErrorScreenWithReloadButton
@@ -46,6 +46,7 @@ import ui.common.SmallSpacer
 import ui.common.SwipeRefreshBox
 import ui.common.XLargeSpacer
 import ui.subjectsScreen.PointsDisplay
+import utils.UrlHandler
 import utils.disabled
 
 @Composable
@@ -162,10 +163,20 @@ fun WeeksLeftItem(
 }
 
 @Composable
+fun ControlEventsFooterButtons(
+    onResourceButtonClick: () -> Unit,
+    onMoodleButtonClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row {  }
+}
+
+@Composable
 fun ControlEventsList(
-    controlEventsListItems: SubjectPerformanceListItems,
+    subjectPerformance: DisplaySubjectPerformance,
     viewModel: ControlEventsViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    urlHandler: UrlHandler = koinInject(),
 ) {
     SwipeRefreshBox(
         onSwipeRefresh = viewModel::reloadSubjects,
@@ -175,7 +186,7 @@ fun ControlEventsList(
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(controlEventsListItems.controlEvents) { item ->
+            items(subjectPerformance.controlEvents) { item ->
                 when (item) {
                     is ControlEventsListItem.ControlEventItem -> {
                         ControlEventItem(item)
@@ -206,7 +217,7 @@ fun ControlEventsContent(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         ControlEventsList(
-            controlEventsListItems = subjectPerformance.subjectPerformanceListItems,
+            subjectPerformance = subjectPerformance,
             viewModel = viewModel
         )
     }
