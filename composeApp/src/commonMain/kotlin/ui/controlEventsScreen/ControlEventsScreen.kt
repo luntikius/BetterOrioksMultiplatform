@@ -3,6 +3,7 @@ package ui.controlEventsScreen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,6 +30,8 @@ import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_left
 import betterorioks.composeapp.generated.resources.attachment
 import betterorioks.composeapp.generated.resources.back_button
+import betterorioks.composeapp.generated.resources.content_description_subject_info
+import betterorioks.composeapp.generated.resources.info
 import betterorioks.composeapp.generated.resources.loading_subjects
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
@@ -36,23 +39,47 @@ import model.subjectPerformance.DisplaySubjectPerformance
 import model.subjects.SubjectListItem
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
+import ui.common.MediumSpacer
 import ui.common.SmallSpacer
 import ui.common.SwipeRefreshBox
 import ui.common.XLargeSpacer
 import ui.subjectsScreen.PointsDisplay
-import utils.UrlHandler
 import utils.disabled
+
+@Composable
+fun ControlEventsHeaderButtons(
+    onBackButtonClick: () -> Unit,
+    onInfoButtonClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier) {
+        IconButton(onClick = onBackButtonClick, modifier = Modifier.size(46.dp)) {
+            Icon(
+                painter = painterResource(Res.drawable.arrow_left),
+                contentDescription = stringResource(Res.string.back_button),
+                modifier = Modifier.size(38.dp)
+            )
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(onClick = onInfoButtonClick, modifier = Modifier.size(46.dp)) {
+            Icon(
+                painter = painterResource(Res.drawable.info),
+                contentDescription = stringResource(Res.string.content_description_subject_info),
+                modifier = Modifier.size(30.dp)
+            )
+        }
+        MediumSpacer()
+    }
+}
 
 @Composable
 fun ControlEventsHeader(
     subjectListItem: SubjectListItem,
-    onBackButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -66,13 +93,7 @@ fun ControlEventsHeader(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(vertical = 16.dp)
             ) {
-                IconButton(onClick = onBackButtonClick) {
-                    Icon(
-                        painter = painterResource(Res.drawable.arrow_left),
-                        contentDescription = stringResource(Res.string.back_button),
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
+                LargeSpacer()
                 Text(
                     text = subjectListItem.name,
                     maxLines = 3,
@@ -91,7 +112,6 @@ fun ControlEventItem(
     controlEventItem: ControlEventsListItem.ControlEventItem,
     modifier: Modifier = Modifier
 ) {
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.clickable(
@@ -136,7 +156,7 @@ fun ControlEventItem(
         Text(
             controlEventItem.getPointsAnnotatedString(),
         )
-        LargeSpacer()
+        XLargeSpacer()
     }
     LargeSpacer()
 }
@@ -162,21 +182,38 @@ fun WeeksLeftItem(
     }
 }
 
-@Composable
-fun ControlEventsFooterButtons(
-    onResourceButtonClick: () -> Unit,
-    onMoodleButtonClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row {  }
-}
+//
+//@Composable
+//fun ControlEventsFooterButtons(
+//    onResourceButtonClick: () -> Unit,
+//    onMoodleButtonClick: () -> Unit,
+//    modifier: Modifier = Modifier,
+//) {
+//    Row(
+//        modifier = modifier
+//    ) {
+//        Button(
+//            onClick = onResourceButtonClick,
+//            modifier = Modifier.weight(1f),
+//            enabled = false
+//        ) {
+//            Text(stringResource(Res.string.Resources))
+//        }
+//        MediumSpacer()
+//        Button(
+//            onClick = onMoodleButtonClick,
+//            modifier = Modifier.weight(1f)
+//        ) {
+//            Text(stringResource(Res.string.moodle_course))
+//        }
+//    }
+//}
 
 @Composable
 fun ControlEventsList(
     subjectPerformance: DisplaySubjectPerformance,
     viewModel: ControlEventsViewModel,
     modifier: Modifier = Modifier,
-    urlHandler: UrlHandler = koinInject(),
 ) {
     SwipeRefreshBox(
         onSwipeRefresh = viewModel::reloadSubjects,
@@ -186,6 +223,13 @@ fun ControlEventsList(
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            item {
+                LargeSpacer()
+                ControlEventsHeader(
+                    subjectListItem = subjectPerformance.subject,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
             items(subjectPerformance.controlEvents) { item ->
                 when (item) {
                     is ControlEventsListItem.ControlEventItem -> {
@@ -196,6 +240,15 @@ fun ControlEventsList(
                     }
                 }
             }
+//            item {
+//                val scienceId = subjectPerformance.subject.scienceId
+//                LargeSpacer()
+//                ControlEventsFooterButtons(
+//                    onMoodleButtonClick = { urlHandler.openMoodle(scienceId) },
+//                    onResourceButtonClick = { },
+//                    modifier = Modifier.padding(horizontal = 16.dp)
+//                )
+//            }
         }
     }
 }
@@ -210,10 +263,10 @@ fun ControlEventsContent(
     Column(
         modifier = modifier
     ) {
-        LargeSpacer()
-        ControlEventsHeader(
-            subjectListItem = subjectPerformance.subject,
+        SmallSpacer()
+        ControlEventsHeaderButtons(
             onBackButtonClick = { navController.navigateUp() },
+            onInfoButtonClick = { viewModel.showInfo() },
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         ControlEventsList(

@@ -1,9 +1,14 @@
 package model.subjects.subjectsJson.jsonElements
 
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.atTime
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import model.subjects.ExamInfo
 import model.subjects.SubjectListItem
+import utils.BetterOrioksFormats
 
-@kotlinx.serialization.Serializable
+@Serializable
 class SubjectFromWeb(
     @SerialName("id")
     val id: Int = 0,
@@ -24,17 +29,19 @@ class SubjectFromWeb(
     @SerialName("grade")
     private val grade: Grade = Grade(),
     @SerialName("date_exam")
-    val examDate: String = "",
+    private val examDate: String = "",
     @SerialName("time_exam")
-    val examTime: String = "",
+    private val examTime: String = "",
     @SerialName("room_exam")
-    val examRoom: String = "",
+    private val examRoom: String = "",
+    @SerialName("date_cons")
+    private val consultationDate: String = "",
+    @SerialName("time_cons")
+    private val consultationTime: String = "",
+    @SerialName("room_cons")
+    private val consultationRoom: String = "",
     @SerialName("debt")
     val isDebt: Boolean = false,
-//    @SerialName("mvb")
-//    val maxAvailableScore: Double = 0.0,
-    @SerialName("is_exam_time")
-    val isExamTime: Boolean = false,
     @SerialName("debtKms")
     val debtControlEvents: List<DebtControlEvent> = listOf()
 ) {
@@ -59,6 +66,34 @@ class SubjectFromWeb(
             return maxScore
         }
 
+    private fun getExamInfo(): ExamInfo? {
+        return try {
+            val date = BetterOrioksFormats.EXAM_DATE_FORMAT.parse(examDate)
+            val time = LocalTime.parse(examTime)
+            ExamInfo(
+                date = date.atTime(time),
+                room = examRoom,
+            )
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+            null
+        }
+    }
+
+    private fun getConsultationInfo(): ExamInfo? {
+        return try {
+            val consultationDate = BetterOrioksFormats.EXAM_DATE_FORMAT.parse(consultationDate)
+            val consultationTime = LocalTime.parse(consultationTime)
+            ExamInfo(
+                date = consultationDate.atTime(consultationTime),
+                room = consultationRoom
+            )
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+            null
+        }
+    }
+
     fun toSubjectListItem(): SubjectListItem =
         SubjectListItem(
             id = id.toString(),
@@ -66,6 +101,8 @@ class SubjectFromWeb(
             name = name,
             currentPoints = currentPoints,
             maxPoints = maxPoints.toString(),
-            formOfControl = formOfControl.id
+            formOfControl = formOfControl.id,
+            examInfo = getExamInfo(),
+            consultationInfo = getConsultationInfo(),
         )
 }

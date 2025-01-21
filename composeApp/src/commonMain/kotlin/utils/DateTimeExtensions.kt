@@ -36,6 +36,7 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
+import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 import model.schedule.SemesterDates.Companion.DATE_FORMAT
 import org.jetbrains.compose.resources.StringResource
@@ -87,9 +88,27 @@ fun LocalDate.getShortMonthStringRes(): StringResource {
 }
 
 object BetterOrioksFormats {
+    private val monthNames = MonthNames(
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+
     val NEWS_DATE_TIME_FORMAT = LocalDateTime.Format {
-        dayOfMonth(); char('.'); monthNumber(); char('.'); year()
-        char(' '); hour(); char(':'); minute()
+        dayOfMonth(); char('.'); monthNumber(); char('.'); year(); char(' '); hour(); char(':'); minute()
+    }
+
+    val EXAM_DATE_FORMAT = LocalDate.Format {
+        dayOfMonth(); char(' '); monthName(names = monthNames); char(' '); year()
     }
 }
 

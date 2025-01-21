@@ -7,6 +7,8 @@ data class SubjectListItem(
     override val currentPoints: String,
     override val maxPoints: String,
     val formOfControl: Int,
+    val examInfo: ExamInfo?,
+    val consultationInfo: ExamInfo?,
 ) : PointsDisplay {
     companion object {
         const val FORM_OF_CONTROL_CREDIT = 1

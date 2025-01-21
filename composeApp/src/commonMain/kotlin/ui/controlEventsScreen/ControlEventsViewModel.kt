@@ -52,4 +52,8 @@ class ControlEventsViewModel(
             subjectsRepository.getSubjects(reload = true)
         }
     }
+
+    fun showInfo() {
+
+    }
 }
