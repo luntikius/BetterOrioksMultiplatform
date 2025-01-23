@@ -1,11 +1,16 @@
 package ui.controlEventsScreen
 
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -26,8 +31,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
@@ -69,36 +76,66 @@ fun ControlEventsHeaderButtons(
     onInfoButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val text = if (uiState.shouldShowNameInHeader && uiState.displaySubjectPerformanceState is ResponseState.Success) {
-        uiState.displaySubjectPerformanceState.result.subject.name
-    } else {
-        ""
-    }
-    Row(modifier = modifier.animateContentSize(), verticalAlignment = Alignment.CenterVertically) {
-        IconButton(onClick = onBackButtonClick, modifier = Modifier.size(40.dp)) {
-            Icon(
-                painter = painterResource(Res.drawable.arrow_left),
-                contentDescription = stringResource(Res.string.back_button),
-                modifier = Modifier.size(32.dp)
+    SubcomposeLayout { constraints ->
+        val placeable = subcompose(0) {
+            Text(
+                text = (uiState.displaySubjectPerformanceState as ResponseState.Success).result.subject.name,
+                modifier = Modifier
+                    .padding(8.dp),
+                minLines = 2,
+                maxLines = 2,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                overflow = TextOverflow.Ellipsis,
             )
+        }.first().measure(constraints)
+        val height = placeable.measuredHeight.toDp()
+
+        val mainPlaceable = subcompose(1) {
+            val isTextVisible = uiState.shouldShowNameInHeader
+            Row(
+                modifier = modifier.height(height),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBackButtonClick, modifier = Modifier.size(40.dp)) {
+                    Icon(
+                        painter = painterResource(Res.drawable.arrow_left),
+                        contentDescription = stringResource(Res.string.back_button),
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+                Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.Center) {
+                    AnimatedVisibility(
+                        visible = isTextVisible,
+                        enter = fadeIn() + slideInVertically { it / 2 },
+                        exit = fadeOut() + slideOutVertically { it / 2 }
+                    ) {
+                        Text(
+                            text = (uiState.displaySubjectPerformanceState as ResponseState.Success)
+                                .result.subject.name,
+                            modifier = Modifier
+                                .padding(8.dp),
+                            maxLines = 2,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+                IconButton(onClick = onInfoButtonClick, modifier = Modifier.size(40.dp)) {
+                    Icon(
+                        painter = painterResource(Res.drawable.info),
+                        contentDescription = stringResource(Res.string.content_description_subject_info),
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+                MediumSpacer()
+            }
+        }.first().measure(constraints)
+
+        layout(constraints.maxWidth, mainPlaceable.measuredHeight) {
+            mainPlaceable.place(0, 0)
         }
-        Text(
-            text = text,
-            modifier = Modifier
-                .weight(1f)
-                .padding(8.dp),
-            maxLines = 3,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
-        )
-        IconButton(onClick = onInfoButtonClick, modifier = Modifier.size(40.dp)) {
-            Icon(
-                painter = painterResource(Res.drawable.info),
-                contentDescription = stringResource(Res.string.content_description_subject_info),
-                modifier = Modifier.size(28.dp)
-            )
-        }
-        MediumSpacer()
     }
 }
 
