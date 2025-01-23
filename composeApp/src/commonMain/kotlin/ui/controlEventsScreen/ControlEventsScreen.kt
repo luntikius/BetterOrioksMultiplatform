@@ -1,15 +1,17 @@
 package ui.controlEventsScreen
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -18,59 +20,82 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
+import betterorioks.composeapp.generated.resources.Resources
 import betterorioks.composeapp.generated.resources.arrow_left
 import betterorioks.composeapp.generated.resources.attachment
 import betterorioks.composeapp.generated.resources.back_button
 import betterorioks.composeapp.generated.resources.content_description_subject_info
 import betterorioks.composeapp.generated.resources.info
 import betterorioks.composeapp.generated.resources.loading_subjects
+import betterorioks.composeapp.generated.resources.moodle
+import betterorioks.composeapp.generated.resources.moodle_course
+import betterorioks.composeapp.generated.resources.resources
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
 import model.subjectPerformance.DisplaySubjectPerformance
 import model.subjects.SubjectListItem
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
+import ui.common.SimpleIconButton
 import ui.common.SmallSpacer
 import ui.common.SwipeRefreshBox
 import ui.common.XLargeSpacer
 import ui.subjectsScreen.PointsDisplay
+import utils.UrlHandler
 import utils.disabled
 
 @Composable
 fun ControlEventsHeaderButtons(
+    uiState: ControlEventsUiState,
     onBackButtonClick: () -> Unit,
     onInfoButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier) {
-        IconButton(onClick = onBackButtonClick, modifier = Modifier.size(46.dp)) {
+    val text = if (uiState.shouldShowNameInHeader && uiState.displaySubjectPerformanceState is ResponseState.Success) {
+        uiState.displaySubjectPerformanceState.result.subject.name
+    } else {
+        ""
+    }
+    Row(modifier = modifier.animateContentSize(), verticalAlignment = Alignment.CenterVertically) {
+        IconButton(onClick = onBackButtonClick, modifier = Modifier.size(40.dp)) {
             Icon(
                 painter = painterResource(Res.drawable.arrow_left),
                 contentDescription = stringResource(Res.string.back_button),
-                modifier = Modifier.size(38.dp)
+                modifier = Modifier.size(32.dp)
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
-        IconButton(onClick = onInfoButtonClick, modifier = Modifier.size(46.dp)) {
+        Text(
+            text = text,
+            modifier = Modifier
+                .weight(1f)
+                .padding(8.dp),
+            maxLines = 3,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+        )
+        IconButton(onClick = onInfoButtonClick, modifier = Modifier.size(40.dp)) {
             Icon(
                 painter = painterResource(Res.drawable.info),
                 contentDescription = stringResource(Res.string.content_description_subject_info),
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(28.dp)
             )
         }
         MediumSpacer()
@@ -104,6 +129,43 @@ fun ControlEventsHeader(
                 LargeSpacer()
             }
         }
+    }
+}
+
+@Composable
+fun NavigationItemsRow(
+    onResourcesButtonClick: () -> Unit,
+    onMoodleButtonClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+    ) {
+//        SimpleIconButton(
+//            icon = painterResource(Res.drawable.notifications),
+//            text = stringResource(Res.string.notifications),
+//            onClick = onNotificationsButtonClick,
+//            enabled = false,
+//            modifier = Modifier.weight(1f),
+//            iconSize = 32
+//        )
+        SimpleIconButton(
+            icon = painterResource(Res.drawable.resources),
+            text = stringResource(Res.string.Resources),
+            onClick = onResourcesButtonClick,
+            enabled = false,
+            modifier = Modifier.weight(1f),
+            iconSize = 32
+        )
+        SimpleIconButton(
+            icon = painterResource(Res.drawable.moodle),
+            text = stringResource(Res.string.moodle_course),
+            onClick = onMoodleButtonClick,
+            enabled = true,
+            modifier = Modifier.weight(1f),
+            iconSize = 32
+        )
     }
 }
 
@@ -182,45 +244,26 @@ fun WeeksLeftItem(
     }
 }
 
-//
-//@Composable
-//fun ControlEventsFooterButtons(
-//    onResourceButtonClick: () -> Unit,
-//    onMoodleButtonClick: () -> Unit,
-//    modifier: Modifier = Modifier,
-//) {
-//    Row(
-//        modifier = modifier
-//    ) {
-//        Button(
-//            onClick = onResourceButtonClick,
-//            modifier = Modifier.weight(1f),
-//            enabled = false
-//        ) {
-//            Text(stringResource(Res.string.Resources))
-//        }
-//        MediumSpacer()
-//        Button(
-//            onClick = onMoodleButtonClick,
-//            modifier = Modifier.weight(1f)
-//        ) {
-//            Text(stringResource(Res.string.moodle_course))
-//        }
-//    }
-//}
-
 @Composable
 fun ControlEventsList(
     subjectPerformance: DisplaySubjectPerformance,
     viewModel: ControlEventsViewModel,
+    urlHandler: UrlHandler = koinInject(),
     modifier: Modifier = Modifier,
 ) {
+    val state = rememberLazyListState()
+
+    LaunchedEffect(state.firstVisibleItemIndex) {
+        viewModel.onRecyclerFirstVisibleItemIndexChanged(state.firstVisibleItemIndex)
+    }
+
     SwipeRefreshBox(
         onSwipeRefresh = viewModel::reloadSubjects,
         isRefreshing = false,
         modifier = modifier
     ) {
         LazyColumn(
+            state = state,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
@@ -228,6 +271,16 @@ fun ControlEventsList(
                 ControlEventsHeader(
                     subjectListItem = subjectPerformance.subject,
                     modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+            item {
+                val scienceId = subjectPerformance.subject.scienceId
+
+                LargeSpacer()
+                NavigationItemsRow(
+                    onResourcesButtonClick = {},
+                    onMoodleButtonClick = { urlHandler.openMoodle(scienceId) },
+                    modifier = Modifier.padding(horizontal = 32.dp)
                 )
             }
             items(subjectPerformance.controlEvents) { item ->
@@ -240,15 +293,6 @@ fun ControlEventsList(
                     }
                 }
             }
-//            item {
-//                val scienceId = subjectPerformance.subject.scienceId
-//                LargeSpacer()
-//                ControlEventsFooterButtons(
-//                    onMoodleButtonClick = { urlHandler.openMoodle(scienceId) },
-//                    onResourceButtonClick = { },
-//                    modifier = Modifier.padding(horizontal = 16.dp)
-//                )
-//            }
         }
     }
 }
@@ -260,14 +304,16 @@ fun ControlEventsContent(
     viewModel: ControlEventsViewModel,
     modifier: Modifier = Modifier
 ) {
+    val uiState by viewModel.controlEventsUiState.collectAsState()
     Column(
         modifier = modifier
     ) {
         SmallSpacer()
         ControlEventsHeaderButtons(
+            uiState = uiState,
             onBackButtonClick = { navController.navigateUp() },
             onInfoButtonClick = { viewModel.showInfo() },
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp),
         )
         ControlEventsList(
             subjectPerformance = subjectPerformance,

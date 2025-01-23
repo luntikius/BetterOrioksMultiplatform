@@ -42,7 +42,9 @@ class ControlEventsViewModel(
                         }
                     }
                 }
-                _controlEventsUiState.update { uis -> uis.copy(displaySubjectPerformanceState) }
+                _controlEventsUiState.update { uis ->
+                    uis.copy(displaySubjectPerformanceState = displaySubjectPerformanceState)
+                }
             }
         }
     }
@@ -55,5 +57,17 @@ class ControlEventsViewModel(
 
     fun showInfo() {
 
+    }
+
+    fun onRecyclerFirstVisibleItemIndexChanged(index: Int) {
+        if (index == 0) {
+            _controlEventsUiState.update { uis ->
+                uis.copy(shouldShowNameInHeader = false)
+            }
+        } else {
+            _controlEventsUiState.update { uis ->
+                uis.copy(shouldShowNameInHeader = true)
+            }
+        }
     }
 }
