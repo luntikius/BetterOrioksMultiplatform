@@ -419,12 +419,11 @@ fun ControlEventsList(
                 )
             }
             item {
-                val scienceId = subjectPerformance.subject.scienceId
-
                 LargeSpacer()
                 NavigationItemsRow(
                     onResourcesButtonClick = {},
-                    onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl?.let { { urlHandler.handleUrl(it) } } ,
+                    onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl
+                        ?.let { { urlHandler.handleUrl(it) } },
                     modifier = Modifier.padding(horizontal = 32.dp)
                 )
             }
