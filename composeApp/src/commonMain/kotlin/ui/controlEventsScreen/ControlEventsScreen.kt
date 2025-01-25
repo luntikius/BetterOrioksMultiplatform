@@ -159,7 +159,7 @@ fun ResourcesPopup(
                             )
                         }
                     }
-                    LargeSpacer()
+                    MediumSpacer()
                     LazyColumn {
                         items(controlEventItem.resources) { resource ->
                             ResourceItem(

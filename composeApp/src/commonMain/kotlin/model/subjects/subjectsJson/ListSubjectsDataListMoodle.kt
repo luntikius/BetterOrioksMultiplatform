@@ -5,9 +5,9 @@ import model.schedule.scheduleJson.Semester
 import model.subjects.subjectsJson.jsonElements.SubjectFromWeb
 
 @kotlinx.serialization.Serializable
-data class MapSubjectsData(
+class ListSubjectsDataListMoodle(
     @SerialName("dises")
-    private val mapSubjects: Map<String, SubjectFromWeb> = mapOf(),
+    override val subjects: List<SubjectFromWeb> = listOf(),
     @SerialName("offset_dises")
     override val offsetSubjects: List<SubjectFromWeb> = listOf(),
     @SerialName("dolg_dises")
@@ -15,11 +15,6 @@ data class MapSubjectsData(
     @SerialName("sems")
     override val semesters: List<Semester> = listOf(),
     @SerialName("dises_moodle")
-    private val subjectsWithMoodleIdsMap: Map<String, String> = mapOf()
-) : SubjectsData {
-    override val subjects: List<SubjectFromWeb>
-        get() = mapSubjects.values.toList()
+    override val subjectsWithMoodleIds: List<String> = listOf()
+) : SubjectsData
 
-    override val subjectsWithMoodleIds: List<String>
-        get() = subjectsWithMoodleIdsMap.keys.toList()
-}
