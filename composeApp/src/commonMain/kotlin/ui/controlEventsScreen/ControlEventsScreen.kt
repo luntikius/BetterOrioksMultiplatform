@@ -9,7 +9,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,8 +20,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,12 +40,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.Resources
 import betterorioks.composeapp.generated.resources.arrow_left
 import betterorioks.composeapp.generated.resources.attachment
 import betterorioks.composeapp.generated.resources.back_button
+import betterorioks.composeapp.generated.resources.close
 import betterorioks.composeapp.generated.resources.content_description_subject_info
 import betterorioks.composeapp.generated.resources.info
 import betterorioks.composeapp.generated.resources.loading_subjects
@@ -50,6 +56,7 @@ import betterorioks.composeapp.generated.resources.moodle_course
 import betterorioks.composeapp.generated.resources.resources
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
+import model.subjectPerformance.DisplayResource
 import model.subjectPerformance.DisplaySubjectPerformance
 import model.subjects.SubjectListItem
 import org.jetbrains.compose.resources.painterResource
@@ -68,6 +75,104 @@ import ui.common.XLargeSpacer
 import ui.subjectsScreen.PointsDisplay
 import utils.UrlHandler
 import utils.disabled
+
+@Composable
+fun ResourceItem(
+    resource: DisplayResource,
+    modifier: Modifier = Modifier,
+    urlHandler: UrlHandler = koinInject()
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .clickable(onClick = { urlHandler.handleUrl(resource.url) }).padding(start = 16.dp, end = 32.dp)
+    ) {
+        Icon(
+            painter = painterResource(resource.iconRes),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(32.dp)
+        )
+        LargeSpacer()
+        Column {
+            LargeSpacer()
+            Text(
+                text = resource.name,
+                maxLines = 3,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.fillMaxWidth()
+            )
+            SmallSpacer()
+            Text(
+                text = resource.description,
+                maxLines = 3,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.fillMaxWidth()
+            )
+            LargeSpacer()
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ResourcesPopup(
+    uiState: ControlEventsUiState,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (uiState.resourcePopupVisibility is ResourcePopupVisibilityState.Visible) {
+        val controlEventItem = uiState.resourcePopupVisibility.controlEventItem
+        BasicAlertDialog(
+            onDismissRequest = { onDismiss() },
+            modifier = modifier,
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            Card(
+                colors = CardDefaults.cardColors().copy(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                ),
+                elevation = CardDefaults.cardElevation(0.dp),
+            ) {
+                Column(
+                    modifier = Modifier.padding(top = 16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(start = 24.dp, end = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            controlEventItem.fullName,
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.weight(1f)
+                        )
+                        IconButton(
+                            onClick = onDismiss
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.close),
+                                contentDescription = stringResource(Res.string.back_button),
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                    }
+                    LargeSpacer()
+                    LazyColumn {
+                        items(controlEventItem.resources) { resource ->
+                            ResourceItem(
+                                resource = resource,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun ControlEventsHeaderButtons(
@@ -208,6 +313,7 @@ fun NavigationItemsRow(
 
 @Composable
 fun ControlEventItem(
+    viewModel: ControlEventsViewModel,
     controlEventItem: ControlEventsListItem.ControlEventItem,
     modifier: Modifier = Modifier
 ) {
@@ -215,7 +321,7 @@ fun ControlEventItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.clickable(
             enabled = controlEventItem.resources.isNotEmpty(),
-            onClick = { }
+            onClick = { viewModel.showResourcePopup(controlEventItem = controlEventItem) }
         )
     ) {
         XLargeSpacer()
@@ -323,7 +429,7 @@ fun ControlEventsList(
             items(subjectPerformance.controlEvents) { item ->
                 when (item) {
                     is ControlEventsListItem.ControlEventItem -> {
-                        ControlEventItem(item)
+                        ControlEventItem(viewModel, item)
                     }
                     is ControlEventsListItem.WeeksLeftItem -> {
                         WeeksLeftItem(item)
@@ -342,6 +448,16 @@ fun ControlEventsContent(
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.controlEventsUiState.collectAsState()
+
+    ResourcesPopup(
+        uiState = uiState,
+        onDismiss = viewModel::hideResourcePopup,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.7f)
+            .padding(horizontal = 16.dp)
+    )
+
     Column(
         modifier = modifier
     ) {

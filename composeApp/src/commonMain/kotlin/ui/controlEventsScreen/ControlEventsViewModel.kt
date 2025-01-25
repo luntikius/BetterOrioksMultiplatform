@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import model.request.ResponseState
+import model.subjectPerformance.ControlEventsListItem
 import model.subjects.SubjectsState
 
 class ControlEventsViewModel(
@@ -56,7 +57,19 @@ class ControlEventsViewModel(
     }
 
     fun showInfo() {
+        TODO()
+    }
 
+    fun showResourcePopup(controlEventItem: ControlEventsListItem.ControlEventItem) {
+        _controlEventsUiState.update { uis ->
+            uis.copy(resourcePopupVisibility = ResourcePopupVisibilityState.Visible(controlEventItem))
+        }
+    }
+
+    fun hideResourcePopup() {
+        _controlEventsUiState.update { uis ->
+            uis.copy(resourcePopupVisibility = ResourcePopupVisibilityState.Invisible)
+        }
     }
 
     fun onRecyclerFirstVisibleItemIndexChanged(index: Int) {

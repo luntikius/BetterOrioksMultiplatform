@@ -1,6 +1,11 @@
 package model.subjects.subjectsJson.jsonElements
 
+import betterorioks.composeapp.generated.resources.Res
+import betterorioks.composeapp.generated.resources.files
+import betterorioks.composeapp.generated.resources.task
 import kotlinx.serialization.SerialName
+import model.subjectPerformance.DisplayResource
+import org.jetbrains.compose.resources.DrawableResource
 
 @kotlinx.serialization.Serializable
 data class Resource(
@@ -18,4 +23,28 @@ data class Resource(
     val type: String = "",
     @SerialName("label")
     val label: String = ""
-)
+) {
+    fun toBetterOrioksResource(): DisplayResource {
+        val url: String
+        val imageRes: DrawableResource
+        if (isTest) {
+            // Orioks Test Res
+            url = "https://orioks.miet.ru$uri&idKM=$controlEventId&debt=0"
+            imageRes = Res.drawable.task
+        } else if (uri.firstOrNull() == '/'){
+            // Orioks inside Res
+            url = "https://orioks.miet.ru$uri"
+            imageRes = Res.drawable.task
+        } else {
+            // Outside Res
+            url = uri
+            imageRes = Res.drawable.files
+        }
+        return DisplayResource(
+            name = type,
+            description = name,
+            url = url,
+            iconRes = imageRes
+        )
+    }
+}

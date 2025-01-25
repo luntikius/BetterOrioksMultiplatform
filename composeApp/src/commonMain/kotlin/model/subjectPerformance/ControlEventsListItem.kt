@@ -9,7 +9,6 @@ import betterorioks.composeapp.generated.resources.weeks_before_event_now
 import betterorioks.composeapp.generated.resources.weeks_before_event_one
 import betterorioks.composeapp.generated.resources.weeks_before_event_passed
 import model.subjects.PointsDisplay
-import model.subjects.subjectsJson.jsonElements.Resource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -22,7 +21,7 @@ sealed interface ControlEventsListItem {
         val shortName: String,
         override val currentPoints: String,
         override val maxPoints: String,
-        val resources: List<Resource>,
+        val resources: List<DisplayResource>,
         val isBonus: Boolean
     ) : PointsDisplay, ControlEventsListItem {
 

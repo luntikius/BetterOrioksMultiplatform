@@ -51,7 +51,7 @@ data class ControlEvent(
         shortName = if (shortName != "-" && shortName.isNotBlank()) "($shortName)" else "",
         currentPoints = grade.currentPoints,
         maxPoints = maxScore.toString(),
-        resources = resources,
+        resources = resources.map { it.toBetterOrioksResource() },
         isBonus = bonus != 0
     )
 }
