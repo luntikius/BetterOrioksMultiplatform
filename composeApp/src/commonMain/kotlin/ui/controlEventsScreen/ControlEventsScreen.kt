@@ -277,7 +277,7 @@ fun ControlEventsHeader(
 @Composable
 fun NavigationItemsRow(
     onResourcesButtonClick: () -> Unit,
-    onMoodleButtonClick: () -> Unit,
+    onMoodleButtonClick: (() -> Unit)?,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -300,14 +300,16 @@ fun NavigationItemsRow(
             modifier = Modifier.weight(1f),
             iconSize = 32
         )
-        SimpleIconButton(
-            icon = painterResource(Res.drawable.moodle),
-            text = stringResource(Res.string.moodle_course),
-            onClick = onMoodleButtonClick,
-            enabled = true,
-            modifier = Modifier.weight(1f),
-            iconSize = 32
-        )
+        if (onMoodleButtonClick != null) {
+            SimpleIconButton(
+                icon = painterResource(Res.drawable.moodle),
+                text = stringResource(Res.string.moodle_course),
+                onClick = onMoodleButtonClick,
+                enabled = true,
+                modifier = Modifier.weight(1f),
+                iconSize = 32
+            )
+        }
     }
 }
 
@@ -422,7 +424,7 @@ fun ControlEventsList(
                 LargeSpacer()
                 NavigationItemsRow(
                     onResourcesButtonClick = {},
-                    onMoodleButtonClick = { urlHandler.openMoodle(scienceId) },
+                    onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl?.let { { urlHandler.handleUrl(it) } } ,
                     modifier = Modifier.padding(horizontal = 32.dp)
                 )
             }

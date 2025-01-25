@@ -94,7 +94,7 @@ class SubjectFromWeb(
         }
     }
 
-    fun toSubjectListItem(): SubjectListItem =
+    fun toSubjectListItem(subjectsWithMoodleIds: List<String>): SubjectListItem =
         SubjectListItem(
             id = id.toString(),
             scienceId = scienceId.toString(),
@@ -104,5 +104,10 @@ class SubjectFromWeb(
             formOfControl = formOfControl.id,
             examInfo = getExamInfo(),
             consultationInfo = getConsultationInfo(),
+            moodleCourseUrl = if (id.toString() in subjectsWithMoodleIds) {
+                "https://orioks.miet.ru/mdl-gateway/course?science_id=$scienceId"
+            } else {
+                null
+            }
         )
 }

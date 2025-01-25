@@ -13,13 +13,14 @@ interface SubjectsData {
     val offsetSubjects: List<SubjectFromWeb>
     val debts: List<SubjectFromWeb>
     val semesters: List<Semester>
+    val subjectsWithMoodleIds: List<String> // Id subject'ов, у которых есть курс moodle
 
     val allSubjects: List<SubjectFromWeb>
         get() = subjects + offsetSubjects
 
     val subjectListItems: List<SubjectListItem>
         get() = allSubjects.map {
-            it.toSubjectListItem()
+            it.toSubjectListItem(subjectsWithMoodleIds)
         }
 
     val displaySubjectPerformance: Map<String, DisplaySubjectPerformance>
@@ -33,7 +34,7 @@ interface SubjectsData {
                     subject.formOfControl.name
                 )
                 val displaySubjectPerformance = DisplaySubjectPerformance(
-                    subject = subject.toSubjectListItem(),
+                    subject = subject.toSubjectListItem(subjectsWithMoodleIds),
                     controlEvents = controlEventsList,
                     controlForm = subject.formOfControl.name.ifBlank { null },
                     teachers = subject.teachers,

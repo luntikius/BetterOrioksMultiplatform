@@ -9,6 +9,7 @@ data class SubjectListItem(
     val formOfControl: Int,
     val examInfo: ExamInfo?,
     val consultationInfo: ExamInfo?,
+    val moodleCourseUrl: String?,
 ) : PointsDisplay {
     companion object {
         const val FORM_OF_CONTROL_CREDIT = 1
