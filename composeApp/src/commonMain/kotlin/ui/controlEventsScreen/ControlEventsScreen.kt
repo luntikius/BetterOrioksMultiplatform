@@ -53,6 +53,7 @@ import betterorioks.composeapp.generated.resources.info
 import betterorioks.composeapp.generated.resources.loading_subjects
 import betterorioks.composeapp.generated.resources.moodle
 import betterorioks.composeapp.generated.resources.moodle_course
+import betterorioks.composeapp.generated.resources.notifications
 import betterorioks.composeapp.generated.resources.resources
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
@@ -276,6 +277,7 @@ fun ControlEventsHeader(
 
 @Composable
 fun NavigationItemsRow(
+    onNotificationsButtonClick: () -> Unit,
     onResourcesButtonClick: () -> Unit,
     onMoodleButtonClick: (() -> Unit)?,
     modifier: Modifier = Modifier
@@ -284,14 +286,14 @@ fun NavigationItemsRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-//        SimpleIconButton(
-//            icon = painterResource(Res.drawable.notifications),
-//            text = stringResource(Res.string.notifications),
-//            onClick = onNotificationsButtonClick,
-//            enabled = false,
-//            modifier = Modifier.weight(1f),
-//            iconSize = 32
-//        )
+        SimpleIconButton(
+            icon = painterResource(Res.drawable.notifications),
+            text = stringResource(Res.string.notifications),
+            onClick = onNotificationsButtonClick,
+            enabled = false,
+            modifier = Modifier.weight(1f),
+            iconSize = 32
+        )
         SimpleIconButton(
             icon = painterResource(Res.drawable.resources),
             text = stringResource(Res.string.Resources),
@@ -421,7 +423,8 @@ fun ControlEventsList(
             item {
                 LargeSpacer()
                 NavigationItemsRow(
-                    onResourcesButtonClick = {},
+                    onNotificationsButtonClick = { TODO() },
+                    onResourcesButtonClick = { TODO() },
                     onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl
                         ?.let { { urlHandler.handleUrl(it) } },
                     modifier = Modifier.padding(horizontal = 32.dp)
