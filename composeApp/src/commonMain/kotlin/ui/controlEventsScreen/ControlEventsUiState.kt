@@ -17,5 +17,4 @@ sealed interface ResourcePopupVisibilityState {
     data class Visible(
         val controlEventItem: ControlEventsListItem.ControlEventItem
     ) : ResourcePopupVisibilityState
-
 }

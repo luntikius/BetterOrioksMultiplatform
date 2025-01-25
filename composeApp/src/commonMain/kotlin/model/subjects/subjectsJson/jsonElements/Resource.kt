@@ -31,7 +31,7 @@ data class Resource(
             // Orioks Test Res
             url = "https://orioks.miet.ru$uri&idKM=$controlEventId&debt=0"
             imageRes = Res.drawable.task
-        } else if (uri.firstOrNull() == '/'){
+        } else if (uri.firstOrNull() == '/') {
             // Orioks inside Res
             url = "https://orioks.miet.ru$uri"
             imageRes = Res.drawable.task
