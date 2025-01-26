@@ -147,7 +147,7 @@ fun ResourcesPopup(
                     ) {
                         Text(
                             controlEventItem.fullName,
-                            style = MaterialTheme.typography.headlineSmall,
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             modifier = Modifier.weight(1f)
                         )
                         IconButton(
@@ -156,7 +156,7 @@ fun ResourcesPopup(
                             Icon(
                                 painter = painterResource(Res.drawable.close),
                                 contentDescription = stringResource(Res.string.back_button),
-                                modifier = Modifier.size(32.dp)
+                                modifier = Modifier.size(24.dp)
                             )
                         }
                     }
