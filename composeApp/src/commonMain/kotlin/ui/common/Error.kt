@@ -1,6 +1,7 @@
 package ui.common
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ import betterorioks.composeapp.generated.resources.reload
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import utils.BufferHandler
 import utils.RedirectToPollException
 import utils.UrlHandler
 
@@ -35,6 +37,7 @@ fun ErrorScreenWithReloadButton(
     exception: Exception,
     onClick: () -> Unit,
     urlHandler: UrlHandler = koinInject(),
+    bufferHandler: BufferHandler = koinInject(),
     modifier: Modifier = Modifier,
 ) {
     when (exception) {
@@ -50,6 +53,7 @@ fun ErrorScreenWithReloadButton(
             BaseErrorScreenWithReloadButton(
                 exception,
                 onClick,
+                bufferHandler,
                 modifier
             )
         }
@@ -57,10 +61,10 @@ fun ErrorScreenWithReloadButton(
 }
 
 @Composable
-fun PollErrorScreenWithReloadButton(
+private fun PollErrorScreenWithReloadButton(
     exception: RedirectToPollException,
     onClick: () -> Unit,
-    urlHandler: UrlHandler = koinInject(),
+    urlHandler: UrlHandler,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -95,9 +99,10 @@ fun PollErrorScreenWithReloadButton(
 }
 
 @Composable
-fun BaseErrorScreenWithReloadButton(
+private fun BaseErrorScreenWithReloadButton(
     exception: Exception,
     onClick: () -> Unit,
+    bufferHandler: BufferHandler,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -115,7 +120,14 @@ fun BaseErrorScreenWithReloadButton(
             textAlign = TextAlign.Center
         )
         MediumSpacer()
-        LazyRow {
+        LazyRow(
+            modifier = Modifier.clickable {
+                bufferHandler.copyToClipboard(
+                    text = exception.message.toString(),
+                    label = "better orioks error message"
+                )
+            }
+        ) {
             item {
                 Text(
                     exception.message.toString(),
