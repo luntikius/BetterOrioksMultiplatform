@@ -374,12 +374,17 @@ fun ResourcesPopup(
                         }
                     }
                     MediumSpacer()
-                    LazyColumn {
-                        items(controlEventItem.resources) { resource ->
-                            ResourceItem(
-                                resource = resource,
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
+                        modifier = Modifier.padding(8.dp).fillMaxSize()
+                    ) {
+                        LazyColumn {
+                            items(controlEventItem.resources) { resource ->
+                                ResourceItem(
+                                    resource = resource,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
                         }
                     }
                 }
