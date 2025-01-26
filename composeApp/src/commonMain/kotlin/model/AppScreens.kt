@@ -8,6 +8,7 @@ enum class AppScreens {
     Resources,
 
     Menu,
+
 //    Settings,
 //    Notifications,
     News,

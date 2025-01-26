@@ -223,7 +223,4 @@ fun ResourcesScreen(
             )
         }
     }
-
-
-
 }

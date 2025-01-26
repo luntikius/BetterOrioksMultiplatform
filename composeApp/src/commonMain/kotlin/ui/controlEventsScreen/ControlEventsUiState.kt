@@ -12,8 +12,6 @@ data class ControlEventsUiState(
     val infoPopupVisibility: InfoPopupVisibilityState = InfoPopupVisibilityState.Invisible
 )
 
-
-
 sealed interface InfoPopupVisibilityState {
     data object Invisible : InfoPopupVisibilityState
 

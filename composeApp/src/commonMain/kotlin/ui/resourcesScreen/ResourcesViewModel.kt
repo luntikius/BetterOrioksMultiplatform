@@ -62,7 +62,7 @@ class ResourcesViewModel(
     }
 
     fun hideResourcePopup() {
-       _resourcesUiState.update { uis ->
+        _resourcesUiState.update { uis ->
             uis.copy(resourcePopupVisibility = ResourcePopupVisibilityState.Invisible)
         }
     }
