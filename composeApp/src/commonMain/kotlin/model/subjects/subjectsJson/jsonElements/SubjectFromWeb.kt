@@ -101,13 +101,14 @@ class SubjectFromWeb(
             name = name,
             currentPoints = currentPoints,
             maxPoints = maxPoints.toString(),
-            formOfControl = formOfControl.id,
+            formOfControl = formOfControl.toDisplayFormOfControl(),
             examInfo = getExamInfo(),
             consultationInfo = getConsultationInfo(),
             moodleCourseUrl = if (id.toString() in subjectsWithMoodleIds) {
                 "https://orioks.miet.ru/mdl-gateway/course?science_id=$scienceId"
             } else {
                 null
-            }
+            },
+            teachers = teachers.map { it.toDisplayTeacher() }
         )
 }

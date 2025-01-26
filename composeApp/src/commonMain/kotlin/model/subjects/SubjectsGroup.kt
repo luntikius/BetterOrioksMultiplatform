@@ -22,7 +22,7 @@ enum class SubjectsGroup(
     Normal(
         nameRes = Res.string.ok_mark,
         filterLambda = {
-            it.formOfControl != SubjectListItem.FORM_OF_CONTROL_CREDIT &&
+            !it.formOfControl.isCredit &&
                 it.currentPoints.toDoubleOrNull() != null &&
                 it.currentPoints.toDouble() >= 50 &&
                 it.currentPoints.toDouble() < 70
@@ -31,7 +31,7 @@ enum class SubjectsGroup(
     Good(
         nameRes = Res.string.good_mark,
         filterLambda = {
-            it.formOfControl != SubjectListItem.FORM_OF_CONTROL_CREDIT &&
+            !it.formOfControl.isCredit &&
                 it.currentPoints.toDoubleOrNull() != null &&
                 it.currentPoints.toDouble() >= 70 &&
                 it.currentPoints.toDouble() < 86
@@ -40,7 +40,7 @@ enum class SubjectsGroup(
     Excellent(
         nameRes = Res.string.excellent_mark,
         filterLambda = {
-            it.formOfControl != SubjectListItem.FORM_OF_CONTROL_CREDIT &&
+            !it.formOfControl.isCredit &&
                 it.currentPoints.toDoubleOrNull() != null &&
                 it.currentPoints.toDouble() >= 86
         }
@@ -48,7 +48,7 @@ enum class SubjectsGroup(
     Credit(
         nameRes = Res.string.Credit,
         filterLambda = {
-            it.formOfControl == SubjectListItem.FORM_OF_CONTROL_CREDIT &&
+            it.formOfControl.isCredit &&
                 it.currentPoints.toDoubleOrNull() != null &&
                 it.currentPoints.toDouble() >= 50
         }

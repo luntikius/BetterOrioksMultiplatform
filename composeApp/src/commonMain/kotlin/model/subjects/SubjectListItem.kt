@@ -6,12 +6,9 @@ data class SubjectListItem(
     val name: String,
     override val currentPoints: String,
     override val maxPoints: String,
-    val formOfControl: Int,
+    val formOfControl: DisplayFormOfControl,
     val examInfo: ExamInfo?,
     val consultationInfo: ExamInfo?,
     val moodleCourseUrl: String?,
-) : PointsDisplay {
-    companion object {
-        const val FORM_OF_CONTROL_CREDIT = 1
-    }
-}
+    val teachers: List<DisplayTeacher>
+) : PointsDisplay
