@@ -5,7 +5,7 @@ enum class AppScreens {
 
     Subjects,
     ControlEvents,
-//    Resources,
+    Resources,
 
     Menu,
 //    Settings,

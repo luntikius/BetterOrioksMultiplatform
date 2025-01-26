@@ -16,6 +16,7 @@ import ui.loginScreen.LoginScreenViewModel
 import ui.menuScreen.MenuScreenViewModel
 import ui.newsScreen.NewsViewModel
 import ui.newsScreen.newsViewScreen.NewsViewViewModel
+import ui.resourcesScreen.ResourcesViewModel
 import ui.scheduleScreen.ScheduleScreenViewModel
 import ui.subjectsScreen.SubjectsViewModel
 import utils.getDefaultHttpClient
@@ -45,4 +46,5 @@ fun sharedModule() = module {
     viewModel { parameters -> NewsViewViewModel(parameters.get(), get(), get()) }
     viewModel { SubjectsViewModel(get(), get()) }
     viewModel { parameters -> ControlEventsViewModel(parameters.get(), get()) }
+    viewModel { parameters -> ResourcesViewModel(parameters.get(), parameters.get(), get(), get()) }
 }

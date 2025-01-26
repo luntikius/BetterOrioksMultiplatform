@@ -1,4 +1,4 @@
-package model.subjectPerformance
+package model.resources
 
 import org.jetbrains.compose.resources.DrawableResource
 

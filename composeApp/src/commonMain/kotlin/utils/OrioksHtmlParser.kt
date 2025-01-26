@@ -1,5 +1,7 @@
 package utils
 
+import betterorioks.composeapp.generated.resources.Res
+import betterorioks.composeapp.generated.resources.files
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
 import kotlinx.datetime.LocalDateTime
@@ -7,6 +9,8 @@ import kotlinx.datetime.format.char
 import model.news.News
 import model.news.newsViewScreen.NewsViewContent
 import model.news.newsViewScreen.NewsViewContent.Companion.SPLITTER_SUFFIX
+import model.resources.DisplayResource
+import model.resources.DisplayResourceCategory
 import model.user.UserInfo
 
 class OrioksHtmlParser {
@@ -92,6 +96,34 @@ class OrioksHtmlParser {
             newsBody,
             files
         )
+    }
+
+    fun getResources(html: String): List<DisplayResourceCategory> {
+        val parsed = Ksoup.parse(html)
+        return buildList {
+            parsed.body().getElementsByClass("list-group").forEach {
+                val categoryName = it.getElementsByClass("list-group-item bg-grey pointer").text()
+                val resources = buildList {
+                    val divElement = it.getElementsByClass("panel-collapse collapse").first()
+                    divElement?.children()?.forEach { element ->
+                        add(
+                            DisplayResource(
+                                name = element.getElementsByTag("a").text(),
+                                description = element.getElementsByClass("label").text(),
+                                url = element.getElementsByTag("a").attr("href"),
+                                iconRes = Res.drawable.files,
+                            )
+                        )
+                    }
+                }
+                add(
+                    DisplayResourceCategory(
+                        name = categoryName,
+                        resources = resources
+                    )
+                )
+            }
+        }
     }
 
     private companion object {

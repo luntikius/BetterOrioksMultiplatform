@@ -1,7 +1,7 @@
 package ui.controlEventsScreen
 
 import model.request.ResponseState
-import model.subjectPerformance.ControlEventsListItem
+import model.resources.ResourcePopupVisibilityState
 import model.subjectPerformance.DisplaySubjectPerformance
 import model.subjects.SubjectListItem
 
@@ -12,14 +12,7 @@ data class ControlEventsUiState(
     val infoPopupVisibility: InfoPopupVisibilityState = InfoPopupVisibilityState.Invisible
 )
 
-sealed interface ResourcePopupVisibilityState {
 
-    data object Invisible : ResourcePopupVisibilityState
-
-    data class Visible(
-        val controlEventItem: ControlEventsListItem.ControlEventItem
-    ) : ResourcePopupVisibilityState
-}
 
 sealed interface InfoPopupVisibilityState {
     data object Invisible : InfoPopupVisibilityState

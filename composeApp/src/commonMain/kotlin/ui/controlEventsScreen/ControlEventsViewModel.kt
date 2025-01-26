@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import model.request.ResponseState
+import model.resources.ResourcePopupVisibilityState
 import model.subjectPerformance.ControlEventsListItem
 import model.subjects.SubjectListItem
 import model.subjects.SubjectsState
@@ -71,7 +72,12 @@ class ControlEventsViewModel(
 
     fun showResourcePopup(controlEventItem: ControlEventsListItem.ControlEventItem) {
         _controlEventsUiState.update { uis ->
-            uis.copy(resourcePopupVisibility = ResourcePopupVisibilityState.Visible(controlEventItem))
+            uis.copy(
+                resourcePopupVisibility = ResourcePopupVisibilityState.Visible(
+                    controlEventItem.fullName,
+                    controlEventItem.resources
+                )
+            )
         }
     }
 

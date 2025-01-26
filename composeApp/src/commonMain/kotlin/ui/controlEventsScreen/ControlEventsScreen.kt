@@ -67,9 +67,9 @@ import betterorioks.composeapp.generated.resources.resources
 import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.teacher
 import betterorioks.composeapp.generated.resources.teachers
+import model.AppScreens
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
-import model.subjectPerformance.DisplayResource
 import model.subjectPerformance.DisplaySubjectPerformance
 import model.subjects.DisplayTeacher
 import model.subjects.ExamInfo
@@ -88,6 +88,7 @@ import ui.common.SimpleIconButton
 import ui.common.SmallSpacer
 import ui.common.SwipeRefreshBox
 import ui.common.XLargeSpacer
+import ui.resourcesScreen.ResourcesPopup
 import ui.subjectsScreen.PointsDisplay
 import utils.BufferHandler
 import utils.UrlHandler
@@ -291,109 +292,6 @@ fun InfoPopup(
 }
 
 @Composable
-fun ResourceItem(
-    resource: DisplayResource,
-    modifier: Modifier = Modifier,
-    urlHandler: UrlHandler = koinInject()
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .clickable(onClick = { urlHandler.handleUrl(resource.url) }).padding(start = 16.dp, end = 32.dp)
-    ) {
-        Icon(
-            painter = painterResource(resource.iconRes),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(32.dp)
-        )
-        LargeSpacer()
-        Column {
-            LargeSpacer()
-            Text(
-                text = resource.name,
-                maxLines = 3,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.fillMaxWidth()
-            )
-            SmallSpacer()
-            Text(
-                text = resource.description,
-                maxLines = 3,
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier.fillMaxWidth()
-            )
-            LargeSpacer()
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ResourcesPopup(
-    uiState: ControlEventsUiState,
-    onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    if (uiState.resourcePopupVisibility is ResourcePopupVisibilityState.Visible) {
-        val controlEventItem = uiState.resourcePopupVisibility.controlEventItem
-        BasicAlertDialog(
-            onDismissRequest = { onDismiss() },
-            modifier = modifier,
-            properties = DialogProperties(
-                usePlatformDefaultWidth = false
-            )
-        ) {
-            Card(
-                colors = CardDefaults.cardColors().copy(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ),
-                elevation = CardDefaults.cardElevation(0.dp),
-            ) {
-                Column(
-                    modifier = Modifier.padding(top = 16.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(start = 24.dp, end = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            controlEventItem.fullName,
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            modifier = Modifier.weight(1f)
-                        )
-                        IconButton(
-                            onClick = onDismiss
-                        ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.close),
-                                contentDescription = stringResource(Res.string.back_button),
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
-                    MediumSpacer()
-                    Card(
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
-                        modifier = Modifier.padding(8.dp).fillMaxSize()
-                    ) {
-                        LazyColumn {
-                            items(controlEventItem.resources) { resource ->
-                                ResourceItem(
-                                    resource = resource,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
 fun ControlEventsHeaderButtons(
     uiState: ControlEventsUiState,
     onBackButtonClick: () -> Unit,
@@ -516,7 +414,6 @@ fun NavigationItemsRow(
             icon = painterResource(Res.drawable.resources),
             text = stringResource(Res.string.Resources),
             onClick = onResourcesButtonClick,
-            enabled = false,
             modifier = Modifier.weight(1f),
             iconSize = 32
         )
@@ -613,6 +510,7 @@ fun WeeksLeftItem(
 fun ControlEventsList(
     subjectPerformance: DisplaySubjectPerformance,
     viewModel: ControlEventsViewModel,
+    navController: NavController,
     urlHandler: UrlHandler = koinInject(),
     modifier: Modifier = Modifier,
 ) {
@@ -639,14 +537,18 @@ fun ControlEventsList(
                 )
             }
             item {
-                LargeSpacer()
-                NavigationItemsRow(
-                    onNotificationsButtonClick = { TODO() },
-                    onResourcesButtonClick = { TODO() },
-                    onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl
-                        ?.let { { urlHandler.handleUrl(it) } },
-                    modifier = Modifier.padding(horizontal = 32.dp)
-                )
+                subjectPerformance.subject.run {
+                    LargeSpacer()
+                    NavigationItemsRow(
+                        onNotificationsButtonClick = { TODO() },
+                        onResourcesButtonClick = {
+                            navController.navigate("${AppScreens.Resources.name}/$id/$scienceId/$name")
+                        },
+                        onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl
+                            ?.let { { urlHandler.handleUrl(it) } },
+                        modifier = Modifier.padding(horizontal = 32.dp)
+                    )
+                }
             }
             items(subjectPerformance.controlEvents) { item ->
                 when (item) {
@@ -672,7 +574,7 @@ fun ControlEventsContent(
     val uiState by viewModel.controlEventsUiState.collectAsState()
 
     ResourcesPopup(
-        uiState = uiState,
+        resourcePopupVisibilityState = uiState.resourcePopupVisibility,
         onDismiss = viewModel::hideResourcePopup,
         modifier = Modifier
             .fillMaxWidth()
@@ -701,7 +603,8 @@ fun ControlEventsContent(
         )
         ControlEventsList(
             subjectPerformance = subjectPerformance,
-            viewModel = viewModel
+            viewModel = viewModel,
+            navController = navController
         )
     }
 }
