@@ -5,6 +5,7 @@ import kotlinx.datetime.atTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import model.subjects.ExamInfo
+import model.subjects.SubjectInfo
 import model.subjects.SubjectListItem
 import utils.BetterOrioksFormats
 
@@ -101,14 +102,17 @@ class SubjectFromWeb(
             name = name,
             currentPoints = currentPoints,
             maxPoints = maxPoints.toString(),
-            formOfControl = formOfControl.toDisplayFormOfControl(),
-            examInfo = getExamInfo(),
-            consultationInfo = getConsultationInfo(),
+
             moodleCourseUrl = if (id.toString() in subjectsWithMoodleIds) {
                 "https://orioks.miet.ru/mdl-gateway/course?science_id=$scienceId"
             } else {
                 null
             },
-            teachers = teachers.map { it.toDisplayTeacher() }
+            subjectInfo = SubjectInfo(
+                formOfControl = formOfControl.toDisplayFormOfControl(),
+                examInfo = getExamInfo(),
+                consultationInfo = getConsultationInfo(),
+                teachers = teachers.map { it.toDisplayTeacher() }
+            ),
         )
 }

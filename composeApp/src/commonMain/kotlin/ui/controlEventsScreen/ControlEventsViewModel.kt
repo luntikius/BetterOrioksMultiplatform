@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
+import model.subjects.SubjectListItem
 import model.subjects.SubjectsState
 
 class ControlEventsViewModel(
@@ -56,8 +57,16 @@ class ControlEventsViewModel(
         }
     }
 
-    fun showInfo() {
-        TODO()
+    fun showInfoPopup(subjectListItem: SubjectListItem) {
+        _controlEventsUiState.update { uis ->
+            uis.copy(infoPopupVisibility = InfoPopupVisibilityState.Visible(subjectListItem = subjectListItem))
+        }
+    }
+
+    fun hideInfoPopup() {
+        _controlEventsUiState.update { uis ->
+            uis.copy(infoPopupVisibility = InfoPopupVisibilityState.Invisible)
+        }
     }
 
     fun showResourcePopup(controlEventItem: ControlEventsListItem.ControlEventItem) {

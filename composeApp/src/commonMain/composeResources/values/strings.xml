@@ -7,8 +7,9 @@
     <string name="ORIOKS">ОРИОКС</string>
     <string name="control_form">Форма контроля: %1$s</string>
     <string name="not_specified">Не назначено</string>
-    <string name="teachers">Преподаватели: </string>
-    <string name="teacher">Преподаватель: </string>
+    <string name="teachers">Преподаватели </string>
+    <string name="teacher">Преподаватель </string>
+    <string name="no_teachers">Преподаватели не указаны</string>
     <string name="loading_failed">Не удалось загрузить данные</string>
     <string name="login">Номер студенческого билета</string>
     <string name="password">Пароль</string>
@@ -153,6 +154,7 @@
     <string name="attached_files">Прикрепленные файлы</string>
     <string name="exam_info_exam">Экзамен</string>
     <string name="exam_info_consultation">Консультация</string>
+    <string name="abount_subject">О предмете</string>
 
     <string name="social_telegram">Telegram канал приложения</string>
     <string name="social_github">GitHub репозиторий приложения</string>
@@ -166,4 +168,6 @@
     <string name="content_description_group_subjects">Группировать предметы</string>
     <string name="content_description_select_semester">Выбрать семестр</string>
     <string name="content_description_subject_info">Информация о предмете</string>
+
+    <string name="buffer_text_exam">%1$s по "%2$s"\nКогда: %3$s\nАудитория:%4$s</string>
 </resources>
