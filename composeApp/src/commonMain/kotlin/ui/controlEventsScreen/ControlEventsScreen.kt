@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -34,6 +35,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.text.font.FontWeight
@@ -44,22 +46,35 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.Resources
+import betterorioks.composeapp.generated.resources.abount_subject
 import betterorioks.composeapp.generated.resources.arrow_left
 import betterorioks.composeapp.generated.resources.attachment
 import betterorioks.composeapp.generated.resources.back_button
+import betterorioks.composeapp.generated.resources.buffer_text_exam
 import betterorioks.composeapp.generated.resources.close
 import betterorioks.composeapp.generated.resources.content_description_subject_info
+import betterorioks.composeapp.generated.resources.control_form
+import betterorioks.composeapp.generated.resources.exam_info_consultation
+import betterorioks.composeapp.generated.resources.exam_info_exam
 import betterorioks.composeapp.generated.resources.info
 import betterorioks.composeapp.generated.resources.loading_subjects
 import betterorioks.composeapp.generated.resources.moodle
 import betterorioks.composeapp.generated.resources.moodle_course
+import betterorioks.composeapp.generated.resources.no_teachers
 import betterorioks.composeapp.generated.resources.notifications
+import betterorioks.composeapp.generated.resources.profile
 import betterorioks.composeapp.generated.resources.resources
+import betterorioks.composeapp.generated.resources.room_number
+import betterorioks.composeapp.generated.resources.teacher
+import betterorioks.composeapp.generated.resources.teachers
+import model.AppScreens
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
-import model.subjectPerformance.DisplayResource
 import model.subjectPerformance.DisplaySubjectPerformance
+import model.subjects.DisplayTeacher
+import model.subjects.ExamInfo
 import model.subjects.SubjectListItem
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -73,57 +88,110 @@ import ui.common.SimpleIconButton
 import ui.common.SmallSpacer
 import ui.common.SwipeRefreshBox
 import ui.common.XLargeSpacer
+import ui.resourcesScreen.ResourcesPopup
 import ui.subjectsScreen.PointsDisplay
+import utils.BufferHandler
 import utils.UrlHandler
 import utils.disabled
 
 @Composable
-fun ResourceItem(
-    resource: DisplayResource,
+fun ExamInfoItem(
+    title: StringResource,
+    subjectName: String,
+    examInfo: ExamInfo,
     modifier: Modifier = Modifier,
-    urlHandler: UrlHandler = koinInject()
+    bufferHandler: BufferHandler = koinInject(),
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    val titleString = stringResource(title)
+    val bufferTextExam = stringResource(
+        Res.string.buffer_text_exam, titleString, subjectName, examInfo.dateString, examInfo.room
+    )
+    Card(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        onClick = { bufferHandler.copyToClipboard(bufferTextExam) },
         modifier = modifier
-            .clickable(onClick = { urlHandler.handleUrl(resource.url) }).padding(start = 16.dp, end = 32.dp)
     ) {
-        Icon(
-            painter = painterResource(resource.iconRes),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(32.dp)
-        )
-        LargeSpacer()
-        Column {
-            LargeSpacer()
-            Text(
-                text = resource.name,
-                maxLines = 3,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.fillMaxWidth()
-            )
+        val examRoomString = stringResource(Res.string.room_number, examInfo.room)
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row {
+                Text(
+                    text = titleString,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = examInfo.dateString,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
             SmallSpacer()
             Text(
-                text = resource.description,
-                maxLines = 3,
+                text = examRoomString,
                 style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+fun TeacherItem(
+    teacher: DisplayTeacher,
+    modifier: Modifier = Modifier,
+    bufferHandler: BufferHandler = koinInject(),
+) {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.profile),
+                contentDescription = null,
+                modifier = Modifier.size(32.dp),
+                tint = MaterialTheme.colorScheme.primary
             )
             LargeSpacer()
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = teacher.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 2.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { bufferHandler.copyToClipboard(teacher.name) }
+                )
+                Text(
+                    text = teacher.email,
+                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 2.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { bufferHandler.copyToClipboard(teacher.email) }
+                )
+            }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResourcesPopup(
+fun InfoPopup(
     uiState: ControlEventsUiState,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (uiState.resourcePopupVisibility is ResourcePopupVisibilityState.Visible) {
-        val controlEventItem = uiState.resourcePopupVisibility.controlEventItem
+    if (uiState.infoPopupVisibility is InfoPopupVisibilityState.Visible) {
+        val subjectName = uiState.infoPopupVisibility.subjectListItem.name
+        val info = uiState.infoPopupVisibility.subjectListItem.subjectInfo
         BasicAlertDialog(
             onDismissRequest = { onDismiss() },
             modifier = modifier,
@@ -146,7 +214,7 @@ fun ResourcesPopup(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            controlEventItem.fullName,
+                            text = stringResource(Res.string.abount_subject),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             modifier = Modifier.weight(1f)
                         )
@@ -160,13 +228,61 @@ fun ResourcesPopup(
                             )
                         }
                     }
-                    MediumSpacer()
-                    LazyColumn {
-                        items(controlEventItem.resources) { resource ->
-                            ResourceItem(
-                                resource = resource,
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
+                        modifier = Modifier.padding(8.dp).fillMaxSize()
+                    ) {
+                        LazyColumn {
+                            item {
+                                LargeSpacer()
+                                Text(
+                                    text = stringResource(Res.string.control_form, info.formOfControl.name),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                            }
+                            info.examInfo?.let { examInfo ->
+                                item {
+                                    LargeSpacer()
+                                    ExamInfoItem(
+                                        title = Res.string.exam_info_exam,
+                                        subjectName = subjectName,
+                                        examInfo = examInfo,
+                                        modifier = Modifier.padding(horizontal = 16.dp)
+                                    )
+                                }
+                            }
+                            info.consultationInfo?.let { examInfo ->
+                                item {
+                                    LargeSpacer()
+                                    ExamInfoItem(
+                                        title = Res.string.exam_info_consultation,
+                                        subjectName = subjectName,
+                                        examInfo = examInfo,
+                                        modifier = Modifier.padding(horizontal = 16.dp)
+                                    )
+                                }
+                            }
+                            item {
+                                val teacherRes = when (info.teachers.size) {
+                                    0 -> Res.string.no_teachers
+                                    1 -> Res.string.teacher
+                                    else -> Res.string.teachers
+                                }
+                                XLargeSpacer()
+                                Text(
+                                    text = stringResource(teacherRes),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                            }
+                            items(info.teachers) { teacher ->
+                                LargeSpacer()
+                                TeacherItem(
+                                    teacher = teacher,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -298,7 +414,6 @@ fun NavigationItemsRow(
             icon = painterResource(Res.drawable.resources),
             text = stringResource(Res.string.Resources),
             onClick = onResourcesButtonClick,
-            enabled = false,
             modifier = Modifier.weight(1f),
             iconSize = 32
         )
@@ -395,6 +510,7 @@ fun WeeksLeftItem(
 fun ControlEventsList(
     subjectPerformance: DisplaySubjectPerformance,
     viewModel: ControlEventsViewModel,
+    navController: NavController,
     urlHandler: UrlHandler = koinInject(),
     modifier: Modifier = Modifier,
 ) {
@@ -421,14 +537,18 @@ fun ControlEventsList(
                 )
             }
             item {
-                LargeSpacer()
-                NavigationItemsRow(
-                    onNotificationsButtonClick = { TODO() },
-                    onResourcesButtonClick = { TODO() },
-                    onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl
-                        ?.let { { urlHandler.handleUrl(it) } },
-                    modifier = Modifier.padding(horizontal = 32.dp)
-                )
+                subjectPerformance.subject.run {
+                    LargeSpacer()
+                    NavigationItemsRow(
+                        onNotificationsButtonClick = { TODO() },
+                        onResourcesButtonClick = {
+                            navController.navigate("${AppScreens.Resources.name}/$id/$scienceId/$name")
+                        },
+                        onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl
+                            ?.let { { urlHandler.handleUrl(it) } },
+                        modifier = Modifier.padding(horizontal = 32.dp)
+                    )
+                }
             }
             items(subjectPerformance.controlEvents) { item ->
                 when (item) {
@@ -454,8 +574,17 @@ fun ControlEventsContent(
     val uiState by viewModel.controlEventsUiState.collectAsState()
 
     ResourcesPopup(
-        uiState = uiState,
+        resourcePopupVisibilityState = uiState.resourcePopupVisibility,
         onDismiss = viewModel::hideResourcePopup,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.7f)
+            .padding(horizontal = 16.dp)
+    )
+
+    InfoPopup(
+        uiState = uiState,
+        onDismiss = viewModel::hideInfoPopup,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.7f)
@@ -469,12 +598,13 @@ fun ControlEventsContent(
         ControlEventsHeaderButtons(
             uiState = uiState,
             onBackButtonClick = { navController.navigateUp() },
-            onInfoButtonClick = { viewModel.showInfo() },
+            onInfoButtonClick = { viewModel.showInfoPopup(subjectPerformance.subject) },
             modifier = Modifier.padding(horizontal = 16.dp),
         )
         ControlEventsList(
             subjectPerformance = subjectPerformance,
-            viewModel = viewModel
+            viewModel = viewModel,
+            navController = navController
         )
     }
 }

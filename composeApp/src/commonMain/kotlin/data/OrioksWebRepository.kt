@@ -18,6 +18,7 @@ import model.login.AuthData.Companion.AUTH_COOKIE_ORIOKS_IDENTITY
 import model.login.AuthData.Companion.AUTH_COOKIE_ORIOKS_SESSION
 import model.news.News
 import model.news.newsViewScreen.NewsViewContent
+import model.resources.DisplayResourceCategory
 import model.schedule.SemesterDates
 import model.schedule.scheduleJson.SubjectsSemesters
 import model.user.UserInfo
@@ -83,6 +84,21 @@ class OrioksWebRepository(
         return subjectsSemesters.getLastSemesterDates()
     }
 
+    suspend fun getResources(
+        authData: AuthData,
+        disciplineId: String,
+        scienceId: String
+    ): List<DisplayResourceCategory> {
+        val resourcesResponse = client.get(RESOURCES_URL) {
+            parameter(RESOURCES_PARAM_DISCIPLINE_ID, disciplineId)
+            parameter(RESOURCES_PARAM_SCIENCE_ID, scienceId)
+            header(HttpHeaders.Cookie, authData.cookieString)
+        }.checkForPollRedirect()
+        val resourcesHtml = resourcesResponse.bodyAsText()
+        val displayResourceCategories = htmlParser.getResources(resourcesHtml)
+        return displayResourceCategories
+    }
+
     suspend fun getNews(
         authData: AuthData
     ): List<News> {
@@ -115,10 +131,14 @@ class OrioksWebRepository(
 
         private const val NEWS_VIEW_PARAM_ID = "id"
 
+        private const val RESOURCES_PARAM_DISCIPLINE_ID = "id_dis"
+        private const val RESOURCES_PARAM_SCIENCE_ID = "id_science"
+
         private const val BASE_URL = "https://orioks.miet.ru"
         private const val AUTH_URL = "user/login"
         private const val USER_URL = "user/profile"
         private const val SUBJECTS_URL = "student/student"
         private const val NEWS_VIEW_URL = "main/view-news"
+        private const val RESOURCES_URL = "student/ir"
     }
 }

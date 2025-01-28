@@ -31,6 +31,7 @@ import ui.menuScreen.MenuScreenViewModel
 import ui.newsScreen.NewsScreen
 import ui.newsScreen.NewsViewModel
 import ui.newsScreen.newsViewScreen.NewsViewScreen
+import ui.resourcesScreen.ResourcesScreen
 import ui.scheduleScreen.ScheduleScreen
 import ui.scheduleScreen.ScheduleScreenViewModel
 import ui.subjectsScreen.SubjectsScreen
@@ -106,6 +107,25 @@ fun AppNavigation(
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id") ?: return@composable
             ControlEventsScreen(id, navController)
+        }
+
+        composable(
+            route = "${AppScreens.Resources.name}/{discipline_id}/{science_id}/{subject_name}",
+            arguments = listOf(
+                navArgument("discipline_id") { type = NavType.StringType },
+                navArgument("science_id") { type = NavType.StringType },
+                navArgument("subject_name") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val disciplineId = backStackEntry.arguments?.getString("discipline_id") ?: return@composable
+            val scienceId = backStackEntry.arguments?.getString("science_id") ?: return@composable
+            val subjectName = backStackEntry.arguments?.getString("subject_name") ?: return@composable
+            ResourcesScreen(
+                subjectName = subjectName,
+                disciplineId = disciplineId,
+                scienceId = scienceId,
+                navController = navController
+            )
         }
 
         composable(

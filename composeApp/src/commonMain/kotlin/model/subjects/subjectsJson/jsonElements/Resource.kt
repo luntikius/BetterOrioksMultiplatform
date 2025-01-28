@@ -4,7 +4,7 @@ import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.files
 import betterorioks.composeapp.generated.resources.task
 import kotlinx.serialization.SerialName
-import model.subjectPerformance.DisplayResource
+import model.resources.DisplayResource
 import org.jetbrains.compose.resources.DrawableResource
 
 @kotlinx.serialization.Serializable
@@ -41,8 +41,8 @@ data class Resource(
             imageRes = Res.drawable.files
         }
         return DisplayResource(
-            name = type,
-            description = name,
+            name = name,
+            description = type,
             url = url,
             iconRes = imageRes
         )

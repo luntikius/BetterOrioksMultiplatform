@@ -8,6 +8,7 @@ import betterorioks.composeapp.generated.resources.weeks_before_event
 import betterorioks.composeapp.generated.resources.weeks_before_event_now
 import betterorioks.composeapp.generated.resources.weeks_before_event_one
 import betterorioks.composeapp.generated.resources.weeks_before_event_passed
+import model.resources.DisplayResource
 import model.subjects.PointsDisplay
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
