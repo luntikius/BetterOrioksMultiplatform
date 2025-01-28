@@ -24,6 +24,7 @@ import model.AppScreens
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
+import ui.controlEventsScreen.ControlEventsScreen
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
 import ui.menuScreen.MenuScreenViewModel
@@ -97,6 +98,14 @@ fun AppNavigation(
             route = AppScreens.Subjects.name
         ) {
             SubjectsScreen(navController, subjectsViewModel)
+        }
+
+        composable(
+            route = "${AppScreens.ControlEvents.name}/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id") ?: return@composable
+            ControlEventsScreen(id, navController)
         }
 
         composable(

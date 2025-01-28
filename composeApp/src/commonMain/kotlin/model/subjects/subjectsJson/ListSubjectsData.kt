@@ -13,6 +13,11 @@ class ListSubjectsData(
     @SerialName("dolg_dises")
     override val debts: List<SubjectFromWeb> = listOf(),
     @SerialName("sems")
-    override val semesters: List<Semester> = listOf()
-) : SubjectsData
+    override val semesters: List<Semester> = listOf(),
+    @SerialName("dises_moodle")
+    private val subjectsWithMoodleIdsMap: Map<String, String> = mapOf()
+) : SubjectsData {
+    override val subjectsWithMoodleIds: List<String>
+        get() = subjectsWithMoodleIdsMap.keys.toList()
+}
 

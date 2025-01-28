@@ -13,9 +13,12 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import model.login.AuthData
 import model.subjects.subjectsJson.ListSubjectsData
+import model.subjects.subjectsJson.ListSubjectsDataListMoodle
 import model.subjects.subjectsJson.MapSubjectsData
+import model.subjects.subjectsJson.MapSubjectsDataListMoodle
 import model.subjects.subjectsJson.SubjectsData
 import utils.OrioksHtmlParser
+import utils.checkForPollRedirect
 
 class SubjectsWebRepository(
     private val client: HttpClient,
@@ -31,6 +34,7 @@ class SubjectsWebRepository(
         return try {
             json.decodeFromString(serializer, jsonString)
         } catch (e: SerializationException) {
+            println("SerializationException: ${e.message}")
             null
         }
     }
@@ -53,14 +57,19 @@ class SubjectsWebRepository(
             if (semesterId != null) {
                 parameter(SUBJECTS_PARAM_SEMESTER_ID, semesterId)
             }
-        }.bodyAsText()
+        }.checkForPollRedirect().bodyAsText()
         val subjectsJson = htmlParser.getSubjectsJson(subjectsResponse)
         val subjects = decodeSubjectsData(subjectsJson)
         return subjects
     }
 
     private companion object {
-        private val SUBJECTS_DATA_CLASSES = listOf(ListSubjectsData::class, MapSubjectsData::class)
+        private val SUBJECTS_DATA_CLASSES = listOf(
+            ListSubjectsData::class,
+            MapSubjectsData::class,
+            ListSubjectsDataListMoodle::class,
+            MapSubjectsDataListMoodle::class,
+        )
 
         private const val SUBJECTS_URL = "student/student"
         private const val SUBJECTS_PARAM_SEMESTER_ID = "id_semester"

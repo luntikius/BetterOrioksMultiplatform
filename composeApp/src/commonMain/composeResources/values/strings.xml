@@ -116,6 +116,16 @@
         <item quantity="few">Окно %1$d минуты</item>
         <item quantity="other">Окно %1$d минут</item>
     </plurals>
+
+    <plurals name="weeks_before_event">
+        <item quantity="one">Через %1$d неделю</item>
+        <item quantity="few">Через %1$d недели</item>
+        <item quantity="other">Через %1$d недель</item>
+    </plurals>
+    <string name="weeks_before_event_now">На этой неделе</string>
+    <string name="weeks_before_event_one">На следующей неделе</string>
+    <string name="weeks_before_event_passed">Прошло</string>
+
     <string name="week_number">%1$d - неделя</string>
     <string name="schedule_scroll_to_today">выбрать сегодняшний день в расписании</string>
     <string name="drop_down_menu">открыть выпадающее меню</string>
@@ -126,6 +136,10 @@
     <string name="no_schedule">расписание отсутствует</string>
     <string name="no_schedule_full">Расписание, сохраненное в памяти устройства пустое, попробуйте перезагрузить его, потянув пальцем вниз</string>
     <string name="reload">перезагрузить</string>
+    <string name="incomplete_poll_text">У вас есть непройденный опрос в ОРИОКС</string>
+    <string name="incomplete_poll_subtitle">Пока опрос не завершен, загрузить страницу не получится</string>
+    <string name="incomplete_poll_button">Пройти опрос</string>
+    <string name="incomplete_poll_completed">Я прошел опрос</string>
     <string name="switch_options_every_week">на каждой неделе</string>
     <string name="switch_options_every_two_weeks">только в %1$s</string>
     <string name="switch_options_every_four_weeks">только в %1$s</string>
@@ -137,6 +151,8 @@
     <string name="news_date">От %1$s</string>
     <string name="news_view">Просмотр новости</string>
     <string name="attached_files">Прикрепленные файлы</string>
+    <string name="exam_info_exam">Экзамен</string>
+    <string name="exam_info_consultation">Консультация</string>
 
     <string name="social_telegram">Telegram канал приложения</string>
     <string name="social_github">GitHub репозиторий приложения</string>
@@ -149,4 +165,5 @@
 
     <string name="content_description_group_subjects">Группировать предметы</string>
     <string name="content_description_select_semester">Выбрать семестр</string>
+    <string name="content_description_subject_info">Информация о предмете</string>
 </resources>

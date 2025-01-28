@@ -12,16 +12,12 @@ import ui.theme.excellent_mark_color
 import ui.theme.good_mark_color
 import ui.theme.ok_mark_color
 
-data class DisplaySubject(
-    val id: String,
-    val name: String,
-    val currentPoints: String,
-    val maxPoints: String,
-    val formOfControl: Int,
-) {
+interface PointsDisplay {
+    val currentPoints: String
+    val maxPoints: String
 
     @Composable
-    private fun getPointsColor(): Color {
+    fun getPointsColor(): Color {
         return if (currentPoints.toDoubleOrNull() != null && maxPoints.toDoubleOrNull() != null) {
             if (maxPoints.toDouble() == 0.0) {
                 MaterialTheme.colorScheme.primary
@@ -70,9 +66,5 @@ data class DisplaySubject(
                 append(formatDouble(maxPoints))
             }
         }.toAnnotatedString()
-    }
-
-    companion object {
-        const val FORM_OF_CONTROL_CREDIT = 1
     }
 }

@@ -22,6 +22,7 @@ import model.schedule.ScheduleState
 import model.schedule.SemesterDates
 import model.schedule.SwitchOptions
 import model.user.UserInfo
+import utils.toSemesterLocalDate
 
 class ScheduleScreenViewModel(
     private val scheduleDatabaseRepository: ScheduleDatabaseRepository,
@@ -124,7 +125,7 @@ class ScheduleScreenViewModel(
                     _scheduleState.update { ScheduleState.LoadingFromWeb }
                     val userInfo = getUserInfo(refresh)
                     val semesterDates = getSemesterDates(refresh)
-                    val startDate = SemesterDates.DATE_FORMAT.parse(semesterDates.startDate)
+                    val startDate = semesterDates.startDate.toSemesterLocalDate()
                     loadScheduleFromWeb(userInfo.group, startDate)
                     _scheduleState.update { ScheduleState.Loading }
                 }
@@ -139,7 +140,7 @@ class ScheduleScreenViewModel(
             } catch (e: Exception) {
                 println(e.stackTraceToString())
                 if (!scheduleDatabaseRepository.isScheduleStored()) {
-                    _scheduleState.update { ScheduleState.Error(e.message.toString()) }
+                    _scheduleState.update { ScheduleState.Error(e) }
                 } else {
                     // TODO добавить TOAST с текстом о том, что не удалось подключиться к интернету!
                     _scheduleState.update { ScheduleState.Success }

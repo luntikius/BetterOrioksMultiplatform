@@ -22,6 +22,7 @@ import model.schedule.SemesterDates
 import model.schedule.scheduleJson.SubjectsSemesters
 import model.user.UserInfo
 import utils.OrioksHtmlParser
+import utils.checkForPollRedirect
 
 class OrioksWebRepository(
     private val client: HttpClient,
@@ -67,7 +68,7 @@ class OrioksWebRepository(
     ): UserInfo {
         val userInfoResponse = client.get(USER_URL) {
             header(HttpHeaders.Cookie, authData.cookieString)
-        }.bodyAsText()
+        }.checkForPollRedirect().bodyAsText()
         return htmlParser.getUserInfo(userInfoResponse)
     }
 
@@ -76,7 +77,7 @@ class OrioksWebRepository(
     ): SemesterDates {
         val semesterDatesResponse = client.get(SUBJECTS_URL) {
             header(HttpHeaders.Cookie, authData.cookieString)
-        }.bodyAsText()
+        }.checkForPollRedirect().bodyAsText()
         val subjectsJson = htmlParser.getSubjectsJson(semesterDatesResponse)
         val subjectsSemesters: SubjectsSemesters = json.decodeFromString(subjectsJson)
         return subjectsSemesters.getLastSemesterDates()
@@ -87,7 +88,7 @@ class OrioksWebRepository(
     ): List<News> {
         val newsResponse = client.get(BASE_URL) {
             header(HttpHeaders.Cookie, authData.cookieString)
-        }
+        }.checkForPollRedirect()
         val newsHtml = newsResponse.bodyAsText()
         val newsList = htmlParser.getNewsList(newsHtml)
         return newsList
@@ -100,7 +101,7 @@ class OrioksWebRepository(
         val newsContentResponse = client.get(NEWS_VIEW_URL) {
             parameter(NEWS_VIEW_PARAM_ID, id)
             header(HttpHeaders.Cookie, authData.cookieString)
-        }
+        }.checkForPollRedirect()
         val newsContentHtml = newsContentResponse.bodyAsText()
         val newsViewContent = htmlParser.getNewsViewContent(newsContentHtml)
         return newsViewContent

@@ -108,7 +108,7 @@ fun NewsScreen(
                 modifier = Modifier.fillMaxSize()
             )
             is NewsState.Error -> ErrorScreenWithReloadButton(
-                (uiState.newsState as NewsState.Error).message,
+                (uiState.newsState as NewsState.Error).exception,
                 newsViewModel::getNews,
                 modifier = Modifier.fillMaxSize()
             )

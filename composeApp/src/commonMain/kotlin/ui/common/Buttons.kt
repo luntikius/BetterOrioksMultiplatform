@@ -38,7 +38,8 @@ fun SimpleIconButton(
     text: String,
     onClick: () -> Unit,
     enabled: Boolean = true,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    iconSize: Int = 36,
 ) {
     val alpha = if (enabled) 1f else 0.5f
     Surface(
@@ -56,7 +57,7 @@ fun SimpleIconButton(
                 painter = icon,
                 contentDescription = text,
                 tint = MaterialTheme.colorScheme.primary.copy(alpha = alpha),
-                modifier = Modifier.size(36.dp)
+                modifier = Modifier.size(iconSize.dp)
             )
             SmallSpacer()
             Text(
