@@ -60,8 +60,8 @@ import betterorioks.composeapp.generated.resources.info
 import betterorioks.composeapp.generated.resources.loading_subjects
 import betterorioks.composeapp.generated.resources.moodle
 import betterorioks.composeapp.generated.resources.moodle_course
+import betterorioks.composeapp.generated.resources.news
 import betterorioks.composeapp.generated.resources.no_teachers
-import betterorioks.composeapp.generated.resources.notifications
 import betterorioks.composeapp.generated.resources.profile
 import betterorioks.composeapp.generated.resources.resources
 import betterorioks.composeapp.generated.resources.room_number
@@ -393,7 +393,7 @@ fun ControlEventsHeader(
 
 @Composable
 fun NavigationItemsRow(
-    onNotificationsButtonClick: () -> Unit,
+    onNewsButtonClick: () -> Unit,
     onResourcesButtonClick: () -> Unit,
     onMoodleButtonClick: (() -> Unit)?,
     modifier: Modifier = Modifier
@@ -403,9 +403,9 @@ fun NavigationItemsRow(
         modifier = modifier
     ) {
         SimpleIconButton(
-            icon = painterResource(Res.drawable.notifications),
-            text = stringResource(Res.string.notifications),
-            onClick = onNotificationsButtonClick,
+            icon = painterResource(Res.drawable.news),
+            text = stringResource(Res.string.news),
+            onClick = onNewsButtonClick,
             enabled = false,
             modifier = Modifier.weight(1f),
             iconSize = 32
@@ -540,7 +540,7 @@ fun ControlEventsList(
                 subjectPerformance.subject.run {
                     LargeSpacer()
                     NavigationItemsRow(
-                        onNotificationsButtonClick = { TODO() },
+                        onNewsButtonClick = { TODO() },
                         onResourcesButtonClick = {
                             navController.navigate("${AppScreens.Resources.name}/$id/$scienceId/$name")
                         },
