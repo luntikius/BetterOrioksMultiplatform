@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 import model.subjects.ExamInfo
 import model.subjects.SubjectInfo
 import model.subjects.SubjectListItem
+import model.subjects.subjectsJson.SubjectsData.Companion.DEBT_POSTFIX
+import model.subjects.subjectsJson.SubjectsData.Companion.NO_DEBT_POSTFIX
 import utils.BetterOrioksFormats
 
 @Serializable
@@ -97,7 +99,7 @@ class SubjectFromWeb(
 
     fun toSubjectListItem(subjectsWithMoodleIds: List<String>): SubjectListItem =
         SubjectListItem(
-            id = id.toString(),
+            id = id.toString() + if (isDebt) DEBT_POSTFIX else NO_DEBT_POSTFIX,
             scienceId = scienceId.toString(),
             name = name,
             currentPoints = currentPoints,

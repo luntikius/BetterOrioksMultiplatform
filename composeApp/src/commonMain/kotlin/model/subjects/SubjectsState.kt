@@ -10,6 +10,7 @@ sealed interface SubjectsState {
 
     data class Success(
         val subjectListItems: List<SubjectListItem>,
+        val debtSubjectListItems: List<SubjectListItem>,
         val displaySubjectPerformance: Map<String, DisplaySubjectPerformance>,
         val semesters: List<Semester>
     ) : SubjectsState

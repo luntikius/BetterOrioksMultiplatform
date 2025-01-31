@@ -25,6 +25,7 @@ class SubjectsRepository(
                 _subjectsState.update {
                     SubjectsState.Success(
                         subjectListItems = subjects.subjectListItems,
+                        debtSubjectListItems = subjects.debtSubjectListItems,
                         displaySubjectPerformance = subjects.displaySubjectPerformance,
                         semesters = subjects.semesters
                     )

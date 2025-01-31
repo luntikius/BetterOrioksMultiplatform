@@ -15,18 +15,26 @@ interface SubjectsData {
     val semesters: List<Semester>
     val subjectsWithMoodleIds: List<String> // Id subject'ов, у которых есть курс moodle
 
-    val allSubjects: List<SubjectFromWeb>
+    val currentSubjects: List<SubjectFromWeb>
         get() = subjects + offsetSubjects
 
     val subjectListItems: List<SubjectListItem>
-        get() = allSubjects.map {
+        get() = currentSubjects.map {
             it.toSubjectListItem(subjectsWithMoodleIds)
         }
 
+    val debtSubjectListItems: List<SubjectListItem>
+        get() = debts.map {
+            it.toSubjectListItem(subjectsWithMoodleIds)
+        }
+
+    val allSubjects: List<SubjectFromWeb>
+        get() = currentSubjects + debts
+
     val displaySubjectPerformance: Map<String, DisplaySubjectPerformance>
         get() = buildMap {
-            subjects.forEach { subject ->
-                val id = subject.id.toString()
+            allSubjects.forEach { subject ->
+                val id = subject.id.toString() + if (subject.isDebt) DEBT_POSTFIX else NO_DEBT_POSTFIX
                 val weeksPassedSinceSemesterStart = getLastSemesterDates().weeksPassedSinceSemesterStart
                 val controlEventsList = buildControlEventsList(
                     subject.controlEvents,
@@ -61,4 +69,9 @@ interface SubjectsData {
             add(controlEvent.toControlEventItem(controlForm))
         }
     }.toList()
+
+    companion object {
+        const val DEBT_POSTFIX = "DEBT"
+        const val NO_DEBT_POSTFIX = ""
+    }
 }
