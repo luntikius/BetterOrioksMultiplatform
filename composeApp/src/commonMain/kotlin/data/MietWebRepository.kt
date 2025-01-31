@@ -16,6 +16,11 @@ import model.schedule.scheduleJson.FullSchedule
 
 class MietWebRepository {
 
+    private val json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+    }
+
     private val client: HttpClient get() {
         return HttpClient {
             defaultRequest {
@@ -37,18 +42,15 @@ class MietWebRepository {
     ): FullSchedule {
         return try {
             val client = client
-            val cookieRequest = client.get(SCHEDULE_URL).bodyAsText()
-            val cookie = cookieRequest.substringAfter("\"").substringBefore(";")
+            client.get(BASE_URL)
             val scheduleJsonResponse = client.submitForm(
                 url = SCHEDULE_URL,
                 formParameters = Parameters.build {
                     append(GROUP_PARAMETER_NAME, group)
                 },
                 encodeInQuery = false
-            ) {
-                header(HttpHeaders.Cookie, cookie)
-            }.bodyAsText()
-            Json.decodeFromString<FullSchedule>(scheduleJsonResponse)
+            ).bodyAsText()
+            json.decodeFromString<FullSchedule>(scheduleJsonResponse)
         } catch (e: Exception) {
             throw e
         } finally {

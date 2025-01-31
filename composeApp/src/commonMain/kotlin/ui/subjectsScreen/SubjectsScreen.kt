@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -37,6 +38,7 @@ import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import betterorioks.composeapp.generated.resources.Debts
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.Semester
 import betterorioks.composeapp.generated.resources.academic_performance_caps
@@ -78,6 +80,7 @@ fun ChangeSemesterPopup(
             title = stringResource(Res.string.Semester),
             onDismiss = onDismiss,
             modifier = modifier.fillMaxWidth(0.85f),
+            columnModifier = Modifier.wrapContentHeight(),
             buttons = {
                 TextButton(
                     onClick = { onDismiss() },
@@ -237,14 +240,16 @@ fun SubjectItem(
 
 @Composable
 fun SubjectsColumn(
-    subjects: List<SubjectListItem>,
+    subjectsState: SubjectsState.Success,
     subjectsViewModel: SubjectsViewModel,
     isGroupingEnabled: Boolean,
     onNavigateToSubject: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val allSubjects = subjectsState.subjectListItems + subjectsState.debtSubjectListItems
+
     SubcomposeLayout { constraints ->
-        val composables: List<@Composable () -> Unit> = subjects.map { @Composable { PointsDisplay(it) } }
+        val composables: List<@Composable () -> Unit> = allSubjects.map { @Composable { PointsDisplay(it) } }
         val placeables = composables.mapIndexed { index, composable ->
             val placeable = subcompose(index) {
                 composable()
@@ -264,14 +269,25 @@ fun SubjectsColumn(
                     item {
                         if (isGroupingEnabled) {
                             GroupedSubjects(
-                                subjects = subjects,
+                                subjects = subjectsState.subjectListItems,
                                 onNavigateToSubject = onNavigateToSubject,
                                 modifier = Modifier.fillParentMaxWidth(),
                                 pointsDisplayModifier = Modifier.width(width)
                             )
                         } else {
                             UngroupedSubjects(
-                                subjects = subjects,
+                                subjects = subjectsState.subjectListItems,
+                                onNavigateToSubject = onNavigateToSubject,
+                                modifier = Modifier.fillParentMaxWidth(),
+                                pointsDisplayModifier = Modifier.width(width)
+                            )
+                        }
+                    }
+                    if (subjectsState.debtSubjectListItems.isNotEmpty()) {
+                        item {
+                            GroupOfSubjects(
+                                groupName = stringResource(Res.string.Debts),
+                                subjects = subjectsState.debtSubjectListItems,
                                 onNavigateToSubject = onNavigateToSubject,
                                 modifier = Modifier.fillParentMaxWidth(),
                                 pointsDisplayModifier = Modifier.width(width)
@@ -368,7 +384,7 @@ fun SubjectsScreenContent(
     when (subjectsState) {
         is SubjectsState.Success -> {
             SubjectsColumn(
-                subjectsState.subjectListItems,
+                subjectsState,
                 subjectsViewModel = subjectsViewModel,
                 isGroupingEnabled = isGroupingEnabled,
                 onNavigateToSubject = onNavigateToSubject,

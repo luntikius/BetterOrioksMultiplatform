@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -55,6 +56,7 @@ fun AttentionAlert(
             title = stringResource(Res.string.attention),
             onDismiss = onDismiss,
             modifier = modifier.fillMaxWidth(0.85f),
+            columnModifier = Modifier.wrapContentHeight(),
             buttons = {
                 TextButton(onClick = onActionButtonClick) {
                     Text(actionButtonText, color = MaterialTheme.colorScheme.error)
@@ -95,6 +97,7 @@ fun SwitchAlert(
             title = stringResource(Res.string.switch_options_title),
             onDismiss = onDismiss,
             modifier = modifier.fillMaxWidth(0.85f),
+            columnModifier = Modifier.wrapContentHeight(),
             buttons = {
                 TextButton(onClick = onDismiss) {
                     Text(stringResource(Res.string.cancel))
@@ -139,6 +142,7 @@ fun BetterOrioksPopup(
     title: String,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
+    columnModifier: Modifier? = null,
     buttons: @Composable () -> Unit = {},
     content: LazyListScope.() -> Unit
 ) {
@@ -182,10 +186,11 @@ fun BetterOrioksPopup(
                 MediumSpacer()
                 Card(
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = (columnModifier ?: Modifier.weight(1f)).fillMaxWidth().padding(horizontal = 8.dp)
                 ) {
                     LazyColumn(
-                        content = content
+                        content = content,
+                        modifier = (columnModifier ?: Modifier.weight(1f)).fillMaxWidth()
                     )
                 }
                 SmallSpacer()
