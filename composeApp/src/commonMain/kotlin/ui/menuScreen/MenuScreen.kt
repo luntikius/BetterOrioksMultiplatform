@@ -205,7 +205,8 @@ fun MenuScreen(
             text = stringResource(Res.string.exit_alert_text),
             actionButtonText = stringResource(Res.string.exit),
             onAction = { viewModel.logout() },
-            onDismiss = { isExitAlertVisible = false }
+            onDismiss = { isExitAlertVisible = false },
+            modifier = Modifier.fillMaxWidth(0.7f)
         )
     }
 }
