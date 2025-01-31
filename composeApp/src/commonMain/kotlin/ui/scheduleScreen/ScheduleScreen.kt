@@ -658,7 +658,7 @@ fun ScheduleBox(
             isVisible = isSwitchOptionsAlertVisible,
             scheduleScreenUiState = uiState.value,
             onSelectOption = { switchOptions -> viewModel.recalculateWindows(switchOptions) },
-            onDismiss = { isSwitchOptionsAlertVisible = false }
+            onDismiss = { isSwitchOptionsAlertVisible = false },
         )
     }
 }

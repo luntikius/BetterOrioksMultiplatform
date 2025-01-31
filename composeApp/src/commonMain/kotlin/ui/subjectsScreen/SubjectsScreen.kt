@@ -11,12 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -54,6 +53,7 @@ import model.subjects.SubjectsGroup
 import model.subjects.SubjectsState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ui.common.BetterOrioksPopup
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
@@ -62,7 +62,6 @@ import ui.common.SmallSpacer
 import ui.common.SwipeRefreshBox
 import utils.disabled
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangeSemesterPopup(
     isVisible: Boolean,
@@ -75,63 +74,46 @@ fun ChangeSemesterPopup(
     val selectedSemesterId = currentlySelectedSemesterId ?: semesters.lastOrNull { it.startDate != null }?.id
 
     if (isVisible) {
-        BasicAlertDialog(
-            onDismissRequest = { onDismiss() },
-            modifier = modifier
-        ) {
-            Card(
-                colors = CardDefaults.cardColors().copy(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ),
-                elevation = CardDefaults.cardElevation(0.dp),
-            ) {
-                Column(
-                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 24.dp)
+        BetterOrioksPopup(
+            title = stringResource(Res.string.Semester),
+            onDismiss = onDismiss,
+            modifier = modifier.fillMaxWidth(0.85f),
+            buttons = {
+                TextButton(
+                    onClick = { onDismiss() },
+                    shape = RoundedCornerShape(16.dp)
                 ) {
                     Text(
-                        stringResource(Res.string.Semester),
-                        style = MaterialTheme.typography.headlineSmall
+                        text = stringResource(Res.string.cancel),
+                        color = MaterialTheme.colorScheme.primary,
                     )
-                    LargeSpacer()
-                    semesters.forEach { semester ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.clickable {
-                                onSelected(semester.id)
-                                onDismiss()
-                            }
-                        ) {
-                            RadioButton(
-                                selected = selectedSemesterId == semester.id,
-                                onClick = {
-                                    onSelected(semester.id)
-                                    onDismiss()
-                                }
-                            )
-                            SmallSpacer()
-                            Text(
-                                text = semester.name,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        TextButton(
-                            onClick = { onDismiss() },
-                            shape = RoundedCornerShape(16.dp)
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.cancel),
-                                color = MaterialTheme.colorScheme.primary,
-                            )
-                        }
-                    }
                 }
             }
+        ) {
+            item { LargeSpacer() }
+            items(semesters) { semester ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable {
+                        onSelected(semester.id)
+                        onDismiss()
+                    }.fillParentMaxWidth()
+                ) {
+                    RadioButton(
+                        selected = selectedSemesterId == semester.id,
+                        onClick = {
+                            onSelected(semester.id)
+                            onDismiss()
+                        }
+                    )
+                    SmallSpacer()
+                    Text(
+                        text = semester.name,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+            item { LargeSpacer() }
         }
     }
 }
