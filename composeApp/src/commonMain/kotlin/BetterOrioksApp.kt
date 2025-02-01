@@ -110,7 +110,7 @@ fun AppNavigation(
             val route = backStackEntry.toRoute<ResourcesScreen>()
             ResourcesScreen(
                 subjectName = route.subjectName,
-                disciplineId = route.scienceId,
+                disciplineId = route.subjectId,
                 scienceId = route.scienceId,
                 navController = navController
             )
