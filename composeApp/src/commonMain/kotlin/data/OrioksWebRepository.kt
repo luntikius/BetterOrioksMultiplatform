@@ -112,15 +112,21 @@ class OrioksWebRepository(
 
     suspend fun getNewsViewContent(
         authData: AuthData,
-        id: String
+        id: String,
+        newsType: NewsType
     ): NewsViewContent {
-        val newsContentResponse = client.get(NEWS_VIEW_URL) {
+        val newsContentResponse = client.get(newsType.url) {
             parameter(NEWS_VIEW_PARAM_ID, id)
             header(HttpHeaders.Cookie, authData.cookieString)
         }.checkForPollRedirect()
         val newsContentHtml = newsContentResponse.bodyAsText()
         val newsViewContent = htmlParser.getNewsViewContent(newsContentHtml)
         return newsViewContent
+    }
+
+    enum class NewsType(val url: String) {
+        Main(NEWS_VIEW_URL),
+        Student(STUDENT_NEWS_VIEW_URL)
     }
 
     private companion object {
@@ -139,6 +145,7 @@ class OrioksWebRepository(
         private const val USER_URL = "user/profile"
         private const val SUBJECTS_URL = "student/student"
         private const val NEWS_VIEW_URL = "main/view-news"
+        private const val STUDENT_NEWS_VIEW_URL = "student/news/view"
         private const val RESOURCES_URL = "student/ir"
     }
 }

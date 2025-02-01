@@ -26,6 +26,8 @@ import model.AppScreens
 import model.news.News
 import model.news.NewsState
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import ui.common.DefaultHeader
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
@@ -78,10 +80,13 @@ fun NewsContent(
 
 @Composable
 fun NewsScreen(
+    subjectId: String?,
     navController: NavController,
-    newsViewModel: NewsViewModel,
     modifier: Modifier = Modifier
 ) {
+    val newsViewModel = koinViewModel<NewsViewModel>(
+        parameters = { parametersOf(subjectId) }
+    )
     val uiState by newsViewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -104,7 +109,7 @@ fun NewsScreen(
             )
             is NewsState.Success -> NewsContent(
                 news = (uiState.newsState as NewsState.Success).news,
-                onNewsClick = { navController.navigate("${AppScreens.NewsView.name}/$it") },
+                onNewsClick = { navController.navigate("${AppScreens.NewsView.name}/$it/${uiState.newsType.name}") },
                 modifier = Modifier.fillMaxSize()
             )
             is NewsState.Error -> ErrorScreenWithReloadButton(

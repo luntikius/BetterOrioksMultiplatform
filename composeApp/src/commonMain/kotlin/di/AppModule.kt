@@ -42,8 +42,8 @@ fun sharedModule() = module {
     viewModel { AppViewModel(get()) }
     viewModel { MenuScreenViewModel(get(), get(), get()) }
     viewModel { LoginScreenViewModel(get(), get()) }
-    viewModel { NewsViewModel(get(), get()) }
-    viewModel { parameters -> NewsViewViewModel(parameters.get(), get(), get()) }
+    viewModel { parameters -> NewsViewModel(parameters.getOrNull(String::class), get(), get()) }
+    viewModel { parameters -> NewsViewViewModel(parameters.get(), parameters.get(), get(), get()) }
     viewModel { SubjectsViewModel(get(), get()) }
     viewModel { parameters -> ControlEventsViewModel(parameters.get(), get()) }
     viewModel { parameters -> ResourcesViewModel(parameters.get(), parameters.get(), get(), get()) }
