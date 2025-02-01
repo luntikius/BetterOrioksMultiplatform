@@ -11,6 +11,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.Parameters
 import io.ktor.http.renderCookieHeader
 import io.ktor.http.setCookie
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import model.login.AuthData
 import model.login.AuthData.Companion.AUTH_COOKIE_CSRF
@@ -139,6 +140,7 @@ class OrioksWebRepository(
         return newsViewContent
     }
 
+    @Serializable
     enum class NewsType(val mainUrl: String, val viewUrl: String) {
         Main(BASE_URL, NEWS_VIEW_URL),
         Subject(STUDENT_NEWS_URL, STUDENT_NEWS_VIEW_URL)
