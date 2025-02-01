@@ -22,7 +22,7 @@ class NewsViewModel(
 
     init {
         if (subjectId != null) {
-            _uiState.update { uis -> uis.copy(newsType = OrioksWebRepository.NewsType.Student) }
+            _uiState.update { uis -> uis.copy(newsType = OrioksWebRepository.NewsType.Subject) }
         }
     }
 

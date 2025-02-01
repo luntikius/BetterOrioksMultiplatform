@@ -66,7 +66,7 @@ class OrioksHtmlParser {
         val newsHtml = parsed.getElementsByAttribute("data-key")
         return buildList {
             newsHtml.forEach { element ->
-                val id = newsHtml.attr("data-key")
+                val id = element.attr("data-key")
                 val subElements = element.children()
                 val title = subElements[0].text()
                 val subtitle = subElements[1].ownText().substringAfter(": ").substringBefore(" ,")
@@ -110,6 +110,37 @@ class OrioksHtmlParser {
             newsContentDateTimeFormat.parse(dateOfCreation),
             newsBody,
             files
+        )
+    }
+
+    fun getSubjectNewsViewContent(html: String): NewsViewContent {
+        val parsed = Ksoup.parse(html)
+        val elements = parsed.getElementsByClass("container margin-top").first()!!.children()
+        val title = elements[3].text()
+        val subtitle = elements[4].ownText().substringAfter(": ").substringBefore(" ,")
+        val date = BetterOrioksFormats.NEWS_DATE_TIME_FORMAT.parse(subtitle)
+        val bodyElements = elements.getOrNull(5)?.children() ?: emptyList()
+        val newsBody = bodyElements.map { element ->
+            var paragraphText = element.text()
+            element.select("a").forEach { link ->
+                val linkText = link.text()
+                val linkHref = link.attr("href")
+                if (linkText.isNotBlank() && linkHref.isNotBlank() &&
+                    (linkText.lowercase().trim(' ', '\n', '\t', '/') != linkHref.lowercase().trim(' ', '\n', '\t', '/'))
+                ) {
+                    paragraphText = paragraphText.replace(linkText, "$linkText$SPLITTER_SUFFIX$linkHref")
+                } else if (linkHref.isNotBlank()) {
+                    paragraphText = paragraphText.replace(linkText, linkHref)
+                }
+            }
+            paragraphText
+        }
+
+        return NewsViewContent(
+            title,
+            date,
+            newsBody,
+            emptyList()
         )
     }
 
