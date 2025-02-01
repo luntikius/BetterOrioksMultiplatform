@@ -100,13 +100,25 @@ class OrioksWebRepository(
     }
 
     suspend fun getNews(
-        authData: AuthData
+        authData: AuthData,
+        newsType: NewsType,
+        subjectId: String?,
     ): List<News> {
-        val newsResponse = client.get(BASE_URL) {
+        val newsResponse = client.get(newsType.mainUrl) {
             header(HttpHeaders.Cookie, authData.cookieString)
+            subjectId?.let {
+                parameter(NEWS_PARAM_SUBJECT_ID, subjectId)
+            }
         }.checkForPollRedirect()
-        val newsHtml = newsResponse.bodyAsText()
-        val newsList = htmlParser.getNewsList(newsHtml)
+        val newsList = when (newsType) {
+            NewsType.Main -> {
+                htmlParser.getNewsList(newsResponse.bodyAsText())
+            }
+            NewsType.Student -> {
+                htmlParser.getSubjectNewsList(newsResponse.bodyAsText())
+            }
+        }
+
         return newsList
     }
 
@@ -115,7 +127,7 @@ class OrioksWebRepository(
         id: String,
         newsType: NewsType
     ): NewsViewContent {
-        val newsContentResponse = client.get(newsType.url) {
+        val newsContentResponse = client.get(newsType.viewUrl) {
             parameter(NEWS_VIEW_PARAM_ID, id)
             header(HttpHeaders.Cookie, authData.cookieString)
         }.checkForPollRedirect()
@@ -124,9 +136,9 @@ class OrioksWebRepository(
         return newsViewContent
     }
 
-    enum class NewsType(val url: String) {
-        Main(NEWS_VIEW_URL),
-        Student(STUDENT_NEWS_VIEW_URL)
+    enum class NewsType(val mainUrl: String, val viewUrl: String) {
+        Main(BASE_URL, NEWS_VIEW_URL),
+        Student(STUDENT_NEWS_URL, STUDENT_NEWS_VIEW_URL)
     }
 
     private companion object {
@@ -136,6 +148,8 @@ class OrioksWebRepository(
         private const val AUTH_PARAM_REMEMBER_ME = "LoginForm[rememberMe]"
 
         private const val NEWS_VIEW_PARAM_ID = "id"
+        private const val NEWS_PARAM_SUBJECT_ID = "discipline_id"
+
 
         private const val RESOURCES_PARAM_DISCIPLINE_ID = "id_dis"
         private const val RESOURCES_PARAM_SCIENCE_ID = "id_science"
@@ -145,6 +159,7 @@ class OrioksWebRepository(
         private const val USER_URL = "user/profile"
         private const val SUBJECTS_URL = "student/student"
         private const val NEWS_VIEW_URL = "main/view-news"
+        private const val STUDENT_NEWS_URL = "/student/news"
         private const val STUDENT_NEWS_VIEW_URL = "student/news/view"
         private const val RESOURCES_URL = "student/ir"
     }

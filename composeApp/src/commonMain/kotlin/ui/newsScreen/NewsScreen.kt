@@ -47,7 +47,7 @@ fun NewsItem(
     ) {
         Column {
             Text(
-                text = stringResource(Res.string.news_date, NEWS_DATE_TIME_FORMAT.format(news.date)),
+                text = news.date?.let { stringResource(Res.string.news_date, NEWS_DATE_TIME_FORMAT.format(it)) } ?: "",
                 style = MaterialTheme.typography.labelMedium
             )
             Text(
