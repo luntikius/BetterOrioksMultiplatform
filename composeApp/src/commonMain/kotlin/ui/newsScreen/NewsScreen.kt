@@ -22,6 +22,8 @@ import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.loading_news
 import betterorioks.composeapp.generated.resources.news
 import betterorioks.composeapp.generated.resources.news_date
+import betterorioks.composeapp.generated.resources.subject_news
+import data.OrioksWebRepository
 import model.AppScreens
 import model.news.News
 import model.news.NewsState
@@ -47,7 +49,7 @@ fun NewsItem(
     ) {
         Column {
             Text(
-                text = news.date?.let { stringResource(Res.string.news_date, NEWS_DATE_TIME_FORMAT.format(it)) } ?: "",
+                text = stringResource(Res.string.news_date, NEWS_DATE_TIME_FORMAT.format(news.date)),
                 style = MaterialTheme.typography.labelMedium
             )
             Text(
@@ -99,7 +101,10 @@ fun NewsScreen(
         modifier = modifier.padding(8.dp)
     ) {
         DefaultHeader(
-            stringResource(Res.string.news),
+            text = when (uiState.newsType) {
+                OrioksWebRepository.NewsType.Main -> stringResource(Res.string.news)
+                OrioksWebRepository.NewsType.Subject -> stringResource(Res.string.subject_news)
+            },
             onBackButtonClick = { navController.popBackStack() },
         )
         when (uiState.newsState) {
@@ -107,11 +112,13 @@ fun NewsScreen(
                 text = stringResource(Res.string.loading_news),
                 modifier = Modifier.fillMaxSize()
             )
+
             is NewsState.Success -> NewsContent(
                 news = (uiState.newsState as NewsState.Success).news,
                 onNewsClick = { navController.navigate("${AppScreens.NewsView.name}/$it/${uiState.newsType.name}") },
                 modifier = Modifier.fillMaxSize()
             )
+
             is NewsState.Error -> ErrorScreenWithReloadButton(
                 (uiState.newsState as NewsState.Error).exception,
                 newsViewModel::getNews,

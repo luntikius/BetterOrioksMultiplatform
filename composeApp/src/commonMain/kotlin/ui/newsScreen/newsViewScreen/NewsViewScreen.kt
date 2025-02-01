@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +29,8 @@ import betterorioks.composeapp.generated.resources.attached_files
 import betterorioks.composeapp.generated.resources.files
 import betterorioks.composeapp.generated.resources.loading_news
 import betterorioks.composeapp.generated.resources.news_view
+import betterorioks.composeapp.generated.resources.social_orioks
+import betterorioks.composeapp.generated.resources.web
 import data.OrioksWebRepository
 import model.news.newsViewScreen.NewsViewContent
 import model.news.newsViewScreen.NewsViewState
@@ -178,7 +181,8 @@ fun NewsViewScreen(
     id: String,
     newsType: OrioksWebRepository.NewsType,
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    urlHandler: UrlHandler = koinInject()
 ) {
     val newsViewViewModel = koinViewModel<NewsViewViewModel>(
         parameters = {
@@ -193,6 +197,16 @@ fun NewsViewScreen(
         DefaultHeader(
             stringResource(Res.string.news_view),
             onBackButtonClick = { navController.popBackStack() },
+            buttons = {
+                IconButton(onClick = { urlHandler.handleUrl(getNewsUrl(id, newsType)) }) {
+                    Icon(
+                        painter = painterResource(Res.drawable.web),
+                        contentDescription = stringResource(Res.string.social_orioks),
+                        modifier = Modifier.size(32.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
         )
         MediumSpacer()
         when (uiState) {
@@ -213,4 +227,8 @@ fun NewsViewScreen(
             )
         }
     }
+}
+
+fun getNewsUrl(id: String, type: OrioksWebRepository.NewsType): String {
+    return "https://orioks.miet.ru/${type.viewUrl}?id=$id"
 }

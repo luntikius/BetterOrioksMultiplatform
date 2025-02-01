@@ -36,7 +36,8 @@ import ui.theme.gradientColor3
 fun DefaultHeader(
     text: String,
     onBackButtonClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    buttons: @Composable () -> Unit = {},
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -49,7 +50,12 @@ fun DefaultHeader(
                 modifier = Modifier.size(32.dp)
             )
         }
-        Text(text = text, style = MaterialTheme.typography.headlineSmall)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.weight(1f)
+        )
+        buttons()
     }
 }
 

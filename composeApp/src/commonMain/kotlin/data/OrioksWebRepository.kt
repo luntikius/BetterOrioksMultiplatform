@@ -114,7 +114,7 @@ class OrioksWebRepository(
             NewsType.Main -> {
                 htmlParser.getNewsList(newsResponse.bodyAsText())
             }
-            NewsType.Student -> {
+            NewsType.Subject -> {
                 htmlParser.getSubjectNewsList(newsResponse.bodyAsText())
             }
         }
@@ -132,13 +132,16 @@ class OrioksWebRepository(
             header(HttpHeaders.Cookie, authData.cookieString)
         }.checkForPollRedirect()
         val newsContentHtml = newsContentResponse.bodyAsText()
-        val newsViewContent = htmlParser.getNewsViewContent(newsContentHtml)
+        val newsViewContent = when (newsType) {
+            NewsType.Main -> htmlParser.getNewsViewContent(newsContentHtml)
+            NewsType.Subject -> htmlParser.getSubjectNewsViewContent(newsContentHtml)
+        }
         return newsViewContent
     }
 
     enum class NewsType(val mainUrl: String, val viewUrl: String) {
         Main(BASE_URL, NEWS_VIEW_URL),
-        Student(STUDENT_NEWS_URL, STUDENT_NEWS_VIEW_URL)
+        Subject(STUDENT_NEWS_URL, STUDENT_NEWS_VIEW_URL)
     }
 
     private companion object {

@@ -10,5 +10,5 @@ data class News(
     @SerialName("title")
     val title: String,
     @SerialName("date")
-    val date: LocalDateTime? = null,
+    val date: LocalDateTime,
 )
