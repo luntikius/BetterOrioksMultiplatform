@@ -14,17 +14,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import data.OrioksWebRepository
-import model.AppScreens
+import androidx.navigation.toRoute
 import model.BottomNavItem
+import model.ControlEventsScreen
+import model.MenuScreen
+import model.NewsScreen
+import model.NewsViewScreen
+import model.ResourcesScreen
+import model.ScheduleScreen
+import model.SubjectsScreen
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
+import org.koin.core.component.getScopeName
 import ui.controlEventsScreen.ControlEventsScreen
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
@@ -85,79 +90,44 @@ fun AppNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = AppScreens.Schedule.name,
+        startDestination = ScheduleScreen,
         modifier = modifier
     ) {
-        composable(
-            route = AppScreens.Schedule.name
-        ) {
+        composable<ScheduleScreen> {
             ScheduleScreen(scheduleScreenViewModel)
         }
 
-        composable(
-            route = AppScreens.Subjects.name
-        ) {
+        composable<SubjectsScreen> {
             SubjectsScreen(navController, subjectsViewModel)
         }
 
-        composable(
-            route = "${AppScreens.ControlEvents.name}/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id") ?: return@composable
-            ControlEventsScreen(id, navController)
+        composable<ControlEventsScreen> { backStackEntry ->
+            val route = backStackEntry.toRoute<ControlEventsScreen>()
+            ControlEventsScreen(route.subjectId, navController)
         }
 
-        composable(
-            route = "${AppScreens.Resources.name}/{discipline_id}/{science_id}/{subject_name}",
-            arguments = listOf(
-                navArgument("discipline_id") { type = NavType.StringType },
-                navArgument("science_id") { type = NavType.StringType },
-                navArgument("subject_name") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val disciplineId = backStackEntry.arguments?.getString("discipline_id") ?: return@composable
-            val scienceId = backStackEntry.arguments?.getString("science_id") ?: return@composable
-            val subjectName = backStackEntry.arguments?.getString("subject_name") ?: return@composable
+        composable<ResourcesScreen> { backStackEntry ->
+            val route = backStackEntry.toRoute<ResourcesScreen>()
             ResourcesScreen(
-                subjectName = subjectName,
-                disciplineId = disciplineId,
-                scienceId = scienceId,
+                subjectName = route.subjectName,
+                disciplineId = route.scienceId,
+                scienceId = route.scienceId,
                 navController = navController
             )
         }
 
-        composable(
-            route = AppScreens.Menu.name
-        ) {
+        composable<MenuScreen> {
             MenuScreen(navController, menuScreenViewModel)
         }
 
-        composable(
-            route = "${AppScreens.News.name}/{subjectId}",
-            arguments = listOf(
-                navArgument("subjectId") {
-                    type = NavType.StringType
-                    nullable = true
-                }
-            )
-        ) { backstackEntry ->
-            val subjectId = backstackEntry.arguments?.getString("subjectId")
-            NewsScreen(subjectId, navController)
+        composable<NewsScreen> { backstackEntry ->
+            val route = backstackEntry.toRoute<NewsScreen>()
+            NewsScreen(route.subjectId, navController)
         }
 
-        composable(
-            route = "${AppScreens.NewsView.name}/{id}/{newsType}",
-            arguments = listOf(
-                navArgument("id") { type = NavType.StringType },
-                navArgument("newsType") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id") ?: return@composable
-            val newsType = OrioksWebRepository.NewsType.valueOf(
-                backStackEntry.arguments?.getString("newsType") ?: return@composable
-            )
-            NewsViewScreen(id, newsType, navController)
+        composable<NewsViewScreen> { backStackEntry ->
+            val route = backStackEntry.toRoute<NewsViewScreen>()
+            NewsViewScreen(route.id, route.getType(), navController)
         }
     }
 }
@@ -179,7 +149,7 @@ fun BottomNavigationBar(
                 icon = {
                     Icon(
                         painterResource(item.icon),
-                        contentDescription = item.screen.name,
+                        contentDescription = null,
                         modifier = Modifier.size(32.dp)
                     )
                 },
@@ -188,9 +158,9 @@ fun BottomNavigationBar(
                     unselectedIconColor = MaterialTheme.colorScheme.primary.copy(0.5f),
                     indicatorColor = MaterialTheme.colorScheme.primary.copy(0.0f)
                 ),
-                selected = currentRoute == item.screen.name,
+                selected = currentRoute == item.screen.getScopeName().toString(),
                 onClick = {
-                    navController.navigate(item.screen.name) {
+                    navController.navigate(item.screen) {
                         launchSingleTop = true
                         restoreState = item.restoreState
                     }

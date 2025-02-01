@@ -62,7 +62,8 @@ import betterorioks.composeapp.generated.resources.resources
 import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.teacher
 import betterorioks.composeapp.generated.resources.teachers
-import model.AppScreens
+import model.NewsScreen
+import model.ResourcesScreen
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
 import model.subjectPerformance.DisplaySubjectPerformance
@@ -498,10 +499,10 @@ fun ControlEventsList(
                     LargeSpacer()
                     NavigationItemsRow(
                         onNewsButtonClick = {
-                            navController.navigate("${AppScreens.News.name}/$id")
+                            navController.navigate(NewsScreen(id))
                         },
                         onResourcesButtonClick = {
-                            navController.navigate("${AppScreens.Resources.name}/$id/$scienceId/$name")
+                            navController.navigate(ResourcesScreen(id, scienceId, name))
                         },
                         onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl
                             ?.let { { urlHandler.handleUrl(it) } },

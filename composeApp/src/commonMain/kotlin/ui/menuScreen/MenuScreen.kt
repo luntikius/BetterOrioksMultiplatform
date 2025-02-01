@@ -40,7 +40,7 @@ import betterorioks.composeapp.generated.resources.social_orioks
 import betterorioks.composeapp.generated.resources.social_telegram
 import betterorioks.composeapp.generated.resources.telegram
 import betterorioks.composeapp.generated.resources.web
-import model.AppScreens
+import model.NewsScreen
 import model.user.UserInfo
 import model.user.UserInfoState
 import org.jetbrains.compose.resources.painterResource
@@ -125,7 +125,7 @@ fun NavigationItemsRow(
         SimpleIconButton(
             icon = painterResource(Res.drawable.news),
             text = stringResource(Res.string.news),
-            onClick = { navController.navigate("${AppScreens.News.name}/null") },
+            onClick = { navController.navigate(NewsScreen(null)) },
             modifier = Modifier.weight(1f)
         )
         SimpleIconButton(
