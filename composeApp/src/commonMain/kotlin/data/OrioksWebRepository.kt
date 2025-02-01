@@ -153,7 +153,6 @@ class OrioksWebRepository(
         private const val NEWS_VIEW_PARAM_ID = "id"
         private const val NEWS_PARAM_SUBJECT_ID = "discipline_id"
 
-
         private const val RESOURCES_PARAM_DISCIPLINE_ID = "id_dis"
         private const val RESOURCES_PARAM_SCIENCE_ID = "id_science"
 

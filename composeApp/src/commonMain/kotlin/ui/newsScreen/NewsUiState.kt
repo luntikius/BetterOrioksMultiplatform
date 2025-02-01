@@ -1,6 +1,5 @@
 package ui.newsScreen
 
-
 import data.OrioksWebRepository
 import model.news.NewsState
 
