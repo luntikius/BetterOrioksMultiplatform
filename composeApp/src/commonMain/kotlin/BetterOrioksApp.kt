@@ -1,7 +1,7 @@
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -179,8 +179,8 @@ fun BottomNavigationBar(
                 icon = {
                     Icon(
                         painterResource(item.icon),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxHeight(0.5F)
+                        contentDescription = item.screen.name,
+                        modifier = Modifier.size(32.dp)
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
@@ -194,7 +194,8 @@ fun BottomNavigationBar(
                         launchSingleTop = true
                         restoreState = item.restoreState
                     }
-                }
+                },
+                modifier = Modifier.padding(0.dp)
             )
         }
     }

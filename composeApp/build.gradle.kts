@@ -89,8 +89,8 @@ android {
         applicationId = "com.luntikius.betterorioks"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 2
-        versionName = "alpha-2.0"
+        versionCode = 3
+        versionName = "alpha-2.1"
     }
     packaging {
         resources {

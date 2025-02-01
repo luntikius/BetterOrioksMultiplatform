@@ -143,7 +143,7 @@ fun BetterOrioksPopup(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     columnModifier: Modifier? = null,
-    buttons: @Composable () -> Unit = {},
+    buttons: (@Composable () -> Unit)? = null,
     content: LazyListScope.() -> Unit
 ) {
     BasicAlertDialog(
@@ -171,16 +171,18 @@ fun BetterOrioksPopup(
                     Text(
                         title,
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f).padding(vertical = 4.dp)
                     )
-                    IconButton(
-                        onClick = onDismiss
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.close),
-                            contentDescription = stringResource(Res.string.back_button),
-                            modifier = Modifier.size(24.dp)
-                        )
+                    if (buttons == null) {
+                        IconButton(
+                            onClick = onDismiss
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.close),
+                                contentDescription = stringResource(Res.string.back_button),
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
                 }
                 MediumSpacer()
@@ -194,9 +196,13 @@ fun BetterOrioksPopup(
                     )
                 }
                 SmallSpacer()
-                Row(
-                    modifier = Modifier.padding(horizontal = 4.dp)
-                ) { buttons() }
+                buttons?.let {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 4.dp)
+                    ) {
+                        it()
+                    }
+                }
                 SmallSpacer()
             }
         }
