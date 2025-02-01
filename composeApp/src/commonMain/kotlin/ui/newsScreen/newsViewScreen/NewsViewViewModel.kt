@@ -13,6 +13,7 @@ import model.news.newsViewScreen.NewsViewState
 
 class NewsViewViewModel(
     private val id: String,
+    private val newsType: OrioksWebRepository.NewsType,
     private val userPreferencesRepository: UserPreferencesRepository,
     private val orioksWebRepository: OrioksWebRepository
 ) : ViewModel() {
@@ -29,7 +30,7 @@ class NewsViewViewModel(
             _uiState.update { NewsViewState.Loading }
             try {
                 val authData = userPreferencesRepository.authData.first()
-                val newsViewContent = orioksWebRepository.getNewsViewContent(authData, id)
+                val newsViewContent = orioksWebRepository.getNewsViewContent(authData, id, newsType)
                 _uiState.update { NewsViewState.Success(newsViewContent) }
             } catch (e: Exception) {
                 _uiState.update { NewsViewState.Error(e) }

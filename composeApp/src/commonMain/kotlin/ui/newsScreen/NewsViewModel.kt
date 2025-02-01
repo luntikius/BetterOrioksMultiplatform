@@ -12,12 +12,19 @@ import kotlinx.coroutines.launch
 import model.news.NewsState
 
 class NewsViewModel(
+    private val subjectId: String?,
     private val userPreferencesRepository: UserPreferencesRepository,
     private val orioksWebRepository: OrioksWebRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(NewsUiState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        if (subjectId != null) {
+            _uiState.update { uis -> uis.copy(newsType = OrioksWebRepository.NewsType.Student) }
+        }
+    }
 
     fun getNews() {
         viewModelScope.launch {

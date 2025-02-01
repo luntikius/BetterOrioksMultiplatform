@@ -125,7 +125,7 @@ fun NavigationItemsRow(
         SimpleIconButton(
             icon = painterResource(Res.drawable.news),
             text = stringResource(Res.string.news),
-            onClick = { navController.navigate(AppScreens.News.name) },
+            onClick = { navController.navigate("${AppScreens.News.name}/null") },
             modifier = Modifier.weight(1f)
         )
         SimpleIconButton(

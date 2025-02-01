@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import data.OrioksWebRepository
 import model.AppScreens
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
@@ -29,7 +30,6 @@ import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
 import ui.menuScreen.MenuScreenViewModel
 import ui.newsScreen.NewsScreen
-import ui.newsScreen.NewsViewModel
 import ui.newsScreen.newsViewScreen.NewsViewScreen
 import ui.resourcesScreen.ResourcesScreen
 import ui.scheduleScreen.ScheduleScreen
@@ -81,7 +81,6 @@ fun AppNavigation(
 ) {
     val scheduleScreenViewModel = koinInject<ScheduleScreenViewModel>()
     val menuScreenViewModel = koinInject<MenuScreenViewModel>()
-    val newsViewModel = koinInject<NewsViewModel>()
     val subjectsViewModel = koinInject<SubjectsViewModel>()
 
     NavHost(
@@ -135,17 +134,30 @@ fun AppNavigation(
         }
 
         composable(
-            route = AppScreens.News.name
-        ) {
-            NewsScreen(navController, newsViewModel)
+            route = "${AppScreens.News.name}/{subjectId}",
+            arguments = listOf(
+                navArgument("subjectId") {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            )
+        ) { backstackEntry ->
+            val subjectId = backstackEntry.arguments?.getString("subjectId")
+            NewsScreen(subjectId, navController)
         }
 
         composable(
-            route = "${AppScreens.NewsView.name}/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
+            route = "${AppScreens.NewsView.name}/{id}/{newsType}",
+            arguments = listOf(
+                navArgument("id") { type = NavType.StringType },
+                navArgument("newsType") { type = NavType.StringType }
+            )
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id") ?: return@composable
-            NewsViewScreen(id, navController)
+            val newsType = OrioksWebRepository.NewsType.valueOf(
+                backStackEntry.arguments?.getString("newsType") ?: return@composable
+            )
+            NewsViewScreen(id, newsType, navController)
         }
     }
 }

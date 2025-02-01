@@ -28,6 +28,7 @@ import betterorioks.composeapp.generated.resources.attached_files
 import betterorioks.composeapp.generated.resources.files
 import betterorioks.composeapp.generated.resources.loading_news
 import betterorioks.composeapp.generated.resources.news_view
+import data.OrioksWebRepository
 import model.news.newsViewScreen.NewsViewContent
 import model.news.newsViewScreen.NewsViewState
 import org.jetbrains.compose.resources.painterResource
@@ -175,10 +176,15 @@ fun NewsContent(
 @Composable
 fun NewsViewScreen(
     id: String,
+    newsType: OrioksWebRepository.NewsType,
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val newsViewViewModel = koinViewModel<NewsViewViewModel>(parameters = { parametersOf(id) })
+    val newsViewViewModel = koinViewModel<NewsViewViewModel>(
+        parameters = {
+            parametersOf(id, newsType)
+        }
+    )
     val uiState by newsViewViewModel.uiState.collectAsState()
 
     Column(
