@@ -365,7 +365,6 @@ fun NavigationItemsRow(
             icon = painterResource(Res.drawable.news),
             text = stringResource(Res.string.news),
             onClick = onNewsButtonClick,
-            enabled = false,
             modifier = Modifier.weight(1f),
             iconSize = 32
         )
@@ -381,7 +380,6 @@ fun NavigationItemsRow(
                 icon = painterResource(Res.drawable.moodle),
                 text = stringResource(Res.string.moodle_course),
                 onClick = onMoodleButtonClick,
-                enabled = true,
                 modifier = Modifier.weight(1f),
                 iconSize = 32
             )
@@ -499,7 +497,9 @@ fun ControlEventsList(
                 subjectPerformance.subject.run {
                     LargeSpacer()
                     NavigationItemsRow(
-                        onNewsButtonClick = { TODO() },
+                        onNewsButtonClick = {
+                            navController.navigate("${AppScreens.News.name}/$id")
+                        },
                         onResourcesButtonClick = {
                             navController.navigate("${AppScreens.Resources.name}/$id/$scienceId/$name")
                         },

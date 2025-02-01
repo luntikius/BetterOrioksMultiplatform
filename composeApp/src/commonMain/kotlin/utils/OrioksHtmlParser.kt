@@ -56,7 +56,22 @@ class OrioksHtmlParser {
                 val title = elements[1].ownText()
                 val id = elements[2].getElementsByTag("a").first()!!
                     .attr("href").substringAfter("=")
-                add(News(title, date, id))
+                add(News(id, title, date))
+            }
+        }
+    }
+
+    fun getSubjectNewsList(html: String): List<News> {
+        val parsed = Ksoup.parse(html)
+        val newsHtml = parsed.getElementsByAttribute("data-key")
+        return buildList {
+            newsHtml.forEach { element ->
+                val id = newsHtml.attr("data-key")
+                val subElements = element.children()
+                val title = subElements[0].text()
+                val subtitle = subElements[1].ownText().substringAfter(": ").substringBefore(" ,")
+                val date = BetterOrioksFormats.NEWS_DATE_TIME_FORMAT.parse(subtitle)
+                add(News(id, title, date))
             }
         }
     }

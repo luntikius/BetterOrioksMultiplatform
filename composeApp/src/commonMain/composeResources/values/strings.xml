@@ -150,6 +150,7 @@
     <string name="lower">Знаменатель</string>
     <string name="login_title">Вход</string>
     <string name="news">Новости</string>
+    <string name="subject_news">Новости предмета</string>
     <string name="news_date">От %1$s</string>
     <string name="news_view">Просмотр новости</string>
     <string name="attached_files">Прикрепленные файлы</string>
