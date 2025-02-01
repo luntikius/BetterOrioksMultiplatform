@@ -22,7 +22,7 @@ interface PointsDisplay {
             if (maxPoints.toDouble() == 0.0) {
                 MaterialTheme.colorScheme.primary
             } else {
-                val percentage = (currentPoints.toDouble() / maxPoints.toDouble() * 100).toInt()
+                val percentage = (currentPoints.toDouble() / maxPoints.toDouble().coerceAtMost(100.0) * 100).toInt()
                 when (percentage) {
                     in Int.MIN_VALUE..49 -> bad_mark_color
                     in 50..69 -> ok_mark_color

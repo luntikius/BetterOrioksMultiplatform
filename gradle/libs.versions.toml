@@ -1,21 +1,21 @@
 [versions]
-android-compileSdk = "34"
+android-compileSdk = "35"
 android-minSdk = "24"
-android-targetSdk = "34"
+android-targetSdk = "35"
 
 agp = "8.3.2"
-androidx-activityCompose = "1.9.2"
+androidx-activityCompose = "1.10.0"
 compose-plugin = "1.6.11"
 kotlin = "2.0.20"
-navigationCompose = "2.7.0-alpha07"
+navigationCompose = "2.8.0-alpha12"
 kotlinx-datetime = "0.6.0"
-kotlinxSerializationJson = "1.6.3"
+kotlinxSerializationJson = "1.7.3"
 ktor = "3.0.3"
 androidxRoom = "2.7.0-alpha09"
 sqlite = "2.5.0-alpha09"
 ksp = "2.0.20-1.0.24"
 koin = "4.0.0-RC2"
-preferencesDataStore = "1.1.1"
+preferencesDataStore = "1.1.2"
 kSoup = "0.1.9"
 
 [libraries]
