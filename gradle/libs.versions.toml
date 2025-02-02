@@ -5,7 +5,7 @@ android-targetSdk = "35"
 
 agp = "8.3.2"
 androidx-activityCompose = "1.10.0"
-compose-plugin = "1.6.11"
+compose-plugin = "1.7.3"
 kotlin = "2.0.20"
 navigationCompose = "2.8.0-alpha12"
 kotlinx-datetime = "0.6.0"

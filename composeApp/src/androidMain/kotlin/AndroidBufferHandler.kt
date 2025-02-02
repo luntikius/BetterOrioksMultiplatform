@@ -1,7 +1,7 @@
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import utils.BufferHandler
+import handlers.BufferHandler
 
 class AndroidBufferHandler(private val context: Context) : BufferHandler {
     override fun copyToClipboard(text: String, label: String) {

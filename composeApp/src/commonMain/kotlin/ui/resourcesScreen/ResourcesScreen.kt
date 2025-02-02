@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.loading_resources
+import handlers.UrlHandler
 import model.request.ResponseState
 import model.resources.DisplayResource
 import model.resources.DisplayResourceCategory
@@ -39,7 +40,6 @@ import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.SmallSpacer
-import utils.UrlHandler
 
 @Composable
 fun ResourceItem(

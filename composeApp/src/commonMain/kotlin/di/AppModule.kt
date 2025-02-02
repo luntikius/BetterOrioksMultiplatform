@@ -1,7 +1,6 @@
 package di
 
 import AppViewModel
-import androidx.room.RoomDatabase
 import data.MietWebRepository
 import data.NotificationsDatabaseRepository
 import data.OrioksWebRepository
@@ -12,6 +11,7 @@ import data.UserPreferencesRepository
 import data.database.NotificationsDatabase
 import data.database.ScheduleDatabase
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ui.controlEventsScreen.ControlEventsViewModel
 import ui.loginScreen.LoginScreenViewModel
@@ -34,8 +34,8 @@ fun sharedModule() = module {
     single { SubjectsRepository(get(), get()) }
 
     // db
-    single { ScheduleDatabase.getRoomDatabase(get<RoomDatabase.Builder<ScheduleDatabase>>()) }
-    single { NotificationsDatabase.getRoomDatabase(get<RoomDatabase.Builder<NotificationsDatabase>>()) }
+    single { ScheduleDatabase.getRoomDatabase(get(named(SCHEDULE_DATABASE_BUILDER_NAME))) }
+    single { NotificationsDatabase.getRoomDatabase(get(named(NOTIFICATIONS_DATABASE_BUILDER_NAME))) }
     single { get<ScheduleDatabase>().getDao() }
     single { get<NotificationsDatabase>().getDao() }
     single { ScheduleDatabaseRepository(get()) }
@@ -43,7 +43,7 @@ fun sharedModule() = module {
     single { UserPreferencesRepository(get()) }
 
     // view models
-    viewModel { ScheduleScreenViewModel(get(), get(), get(), get()) }
+    viewModel { ScheduleScreenViewModel(get(), get(), get(), get(), get()) }
     viewModel { AppViewModel(get()) }
     viewModel { MenuScreenViewModel(get(), get(), get()) }
     viewModel { LoginScreenViewModel(get(), get()) }
@@ -53,3 +53,6 @@ fun sharedModule() = module {
     viewModel { parameters -> ControlEventsViewModel(parameters.get(), get()) }
     viewModel { parameters -> ResourcesViewModel(parameters.get(), parameters.get(), get(), get()) }
 }
+
+const val SCHEDULE_DATABASE_BUILDER_NAME = "schedule_database_builder"
+const val NOTIFICATIONS_DATABASE_BUILDER_NAME = "notifications_database_builder"

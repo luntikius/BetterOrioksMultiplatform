@@ -24,12 +24,14 @@ import model.ControlEventsScreen
 import model.MenuScreen
 import model.NewsScreen
 import model.NewsViewScreen
+import model.NotificationsScreen
 import model.ResourcesScreen
 import model.ScheduleScreen
 import model.SubjectsScreen
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.core.component.getScopeName
+import ui.common.ConstructionScreen
 import ui.controlEventsScreen.ControlEventsScreen
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
@@ -128,6 +130,10 @@ fun AppNavigation(
         composable<NewsViewScreen> { backStackEntry ->
             val route = backStackEntry.toRoute<NewsViewScreen>()
             NewsViewScreen(route.id, route.getType(), navController)
+        }
+
+        composable<NotificationsScreen> {
+            ConstructionScreen(onBackButtonClick = navController::navigateUp)
         }
     }
 }

@@ -2,7 +2,6 @@ package ui.menuScreen
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,10 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -40,7 +36,9 @@ import betterorioks.composeapp.generated.resources.social_orioks
 import betterorioks.composeapp.generated.resources.social_telegram
 import betterorioks.composeapp.generated.resources.telegram
 import betterorioks.composeapp.generated.resources.web
+import handlers.UrlHandler
 import model.NewsScreen
+import model.NotificationsScreen
 import model.user.UserInfo
 import model.user.UserInfoState
 import org.jetbrains.compose.resources.painterResource
@@ -48,7 +46,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ui.common.AttentionAlert
 import ui.common.CardButton
-import ui.common.DefaultPullToRefresh
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.GradientIcon
 import ui.common.HorizontalIconTextButton
@@ -56,8 +53,8 @@ import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.SimpleIconButton
 import ui.common.SmallSpacer
+import ui.common.SwipeRefreshBox
 import ui.common.XLargeSpacer
-import utils.UrlHandler
 import utils.UsefulUrls
 
 @Composable
@@ -118,8 +115,7 @@ fun NavigationItemsRow(
         SimpleIconButton(
             icon = painterResource(Res.drawable.notifications),
             text = stringResource(Res.string.notifications),
-            onClick = { },
-            enabled = false,
+            onClick = { navController.navigate(NotificationsScreen) },
             modifier = Modifier.weight(1f)
         )
         SimpleIconButton(
@@ -168,7 +164,6 @@ fun TextButtonColumn(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuScreen(
     navController: NavController,
@@ -176,29 +171,21 @@ fun MenuScreen(
     modifier: Modifier = Modifier
 ) {
     var isExitAlertVisible by remember { mutableStateOf(false) }
-    val pullToRefreshState = rememberPullToRefreshState()
 
     LaunchedEffect(Unit) {
         viewModel.getScreenData()
     }
 
-    LaunchedEffect(pullToRefreshState.isRefreshing) {
-        if (pullToRefreshState.isRefreshing) {
-            viewModel.getScreenData(true)
-            pullToRefreshState.endRefresh()
-        }
-    }
-
-    Box(
-        modifier = modifier.nestedScroll(pullToRefreshState.nestedScrollConnection)
+    SwipeRefreshBox(
+        isRefreshing = false,
+        onSwipeRefresh = { viewModel.getScreenData(true) },
+        modifier = modifier
     ) {
         MenuScreenContent(
             viewModel = viewModel,
             navController = navController,
             onExitButtonClick = { isExitAlertVisible = true }
         )
-
-        DefaultPullToRefresh(pullToRefreshState)
 
         AttentionAlert(
             isVisible = isExitAlertVisible,

@@ -39,6 +39,7 @@ import betterorioks.composeapp.generated.resources.telegram_filled
 import betterorioks.composeapp.generated.resources.visibility
 import betterorioks.composeapp.generated.resources.visibility_off
 import betterorioks.composeapp.generated.resources.visibility_on
+import handlers.UrlHandler
 import model.login.LoginState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -48,7 +49,6 @@ import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
 import ui.common.XLargeSpacer
-import utils.UrlHandler
 import utils.UsefulUrls
 
 @Composable
@@ -62,7 +62,7 @@ fun StaticLogo(
         Image(
             painter = painterResource(Res.drawable.logo),
             contentDescription = null,
-            modifier = Modifier.size(128.dp)
+            modifier = Modifier.size(150.dp)
         )
         Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.displaySmall)
     }

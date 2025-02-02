@@ -62,6 +62,8 @@ import betterorioks.composeapp.generated.resources.resources
 import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.teacher
 import betterorioks.composeapp.generated.resources.teachers
+import handlers.BufferHandler
+import handlers.UrlHandler
 import model.NewsScreen
 import model.ResourcesScreen
 import model.request.ResponseState
@@ -87,8 +89,6 @@ import ui.common.SwipeRefreshBox
 import ui.common.XLargeSpacer
 import ui.resourcesScreen.ResourcesPopup
 import ui.subjectsScreen.PointsDisplay
-import utils.BufferHandler
-import utils.UrlHandler
 import utils.disabled
 
 @Composable
