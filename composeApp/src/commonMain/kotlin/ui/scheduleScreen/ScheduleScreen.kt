@@ -35,7 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -49,28 +49,34 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Refresh
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_drop_down
+import betterorioks.composeapp.generated.resources.cat
 import betterorioks.composeapp.generated.resources.change_lesson_time
+import betterorioks.composeapp.generated.resources.clouds
 import betterorioks.composeapp.generated.resources.drop_down_menu
 import betterorioks.composeapp.generated.resources.free_day
 import betterorioks.composeapp.generated.resources.gap_minutes
-import betterorioks.composeapp.generated.resources.happy_flame
+import betterorioks.composeapp.generated.resources.gold_star
 import betterorioks.composeapp.generated.resources.loading_schedule
 import betterorioks.composeapp.generated.resources.loading_schedule_from_web
 import betterorioks.composeapp.generated.resources.no_schedule
 import betterorioks.composeapp.generated.resources.no_schedule_full
 import betterorioks.composeapp.generated.resources.refresh_alert_text
 import betterorioks.composeapp.generated.resources.room_number
+import betterorioks.composeapp.generated.resources.schedule_loading_failed_string
+import betterorioks.composeapp.generated.resources.schedule_loading_success_string
 import betterorioks.composeapp.generated.resources.schedule_scroll_to_today
 import betterorioks.composeapp.generated.resources.scheldule
+import betterorioks.composeapp.generated.resources.semester_end
 import betterorioks.composeapp.generated.resources.swap_vert
 import betterorioks.composeapp.generated.resources.today
 import betterorioks.composeapp.generated.resources.week_number
+import handlers.ToastHandler
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import model.schedule.ScheduleClass
@@ -79,11 +85,12 @@ import model.schedule.ScheduleElement
 import model.schedule.ScheduleGap
 import model.schedule.ScheduleState
 import model.schedule.ScheduleWeek
+import model.schedule.ToastState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import ui.common.AttentionAlert
-import ui.common.DefaultPullToRefresh
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
@@ -345,6 +352,7 @@ fun SchedulePager(
             modifier = modifier
         ) { page ->
             ScheduleColumn(
+                isLastPage = page == schedule.size - 1,
                 scheduleList = schedule[page].scheduleList,
                 recalculateWindows = recalculateWindows,
                 modifier = Modifier.fillMaxSize()
@@ -357,6 +365,7 @@ fun SchedulePager(
 
 @Composable
 fun ScheduleColumn(
+    isLastPage: Boolean,
     scheduleList: List<ScheduleElement>,
     recalculateWindows: (element: ScheduleClass) -> Unit,
     modifier: Modifier = Modifier,
@@ -370,24 +379,36 @@ fun ScheduleColumn(
                 )
             }
         } else {
-            item { EmptyScheduleItem(modifier = Modifier.fillParentMaxHeight()) }
+            item { EmptyScheduleItem(isLastPage = isLastPage, modifier = Modifier.fillParentMaxHeight()) }
         }
     }
 }
 
 @Composable
 fun EmptyScheduleItem(
+    isLastPage: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.padding(16.dp)
     ) {
+        val string: String
+        val image: Painter
+
+        if (isLastPage) {
+            string = stringResource(Res.string.semester_end)
+            image = painterResource(Res.drawable.cat)
+        } else {
+            string = stringResource(Res.string.free_day)
+            image = painterResource(Res.drawable.gold_star)
+        }
+
         Spacer(Modifier.weight(1F))
-        Image(painterResource(Res.drawable.happy_flame), contentDescription = null)
+        Image(image, contentDescription = null, modifier = Modifier.size(150.dp))
         LargeSpacer()
         Text(
-            stringResource(Res.string.free_day),
+            string,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
         )
@@ -587,7 +608,7 @@ fun LaunchedTracker(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleBox(
     viewModel: ScheduleScreenViewModel,
@@ -598,19 +619,13 @@ fun ScheduleBox(
     var isSwitchOptionsAlertVisible by remember { mutableStateOf(false) }
     val dayPagerState = rememberPagerState(initialPage = uiState.value.selectedDayIndex) { uiState.value.days.size }
     val weekPagerState = rememberPagerState(initialPage = uiState.value.selectedWeekIndex) { uiState.value.weeks.size }
-    val pullToRefreshState = rememberPullToRefreshState()
 
     LaunchedTracker(viewModel, uiState, dayPagerState, weekPagerState)
 
-    LaunchedEffect(pullToRefreshState.isRefreshing) {
-        if (pullToRefreshState.isRefreshing) {
-            isRefreshAlertVisible = true
-            pullToRefreshState.endRefresh()
-        }
-    }
-
-    Box(
-        modifier = modifier.nestedScroll(pullToRefreshState.nestedScrollConnection)
+    PullToRefreshBox(
+        isRefreshing = false,
+        onRefresh = { isRefreshAlertVisible = true },
+        modifier = modifier
     ) {
         Column {
             MediumSpacer()
@@ -644,8 +659,6 @@ fun ScheduleBox(
             LargeSpacer()
         }
 
-        DefaultPullToRefresh(pullToRefreshState)
-
         AttentionAlert(
             isVisible = isRefreshAlertVisible,
             text = stringResource(Res.string.refresh_alert_text),
@@ -663,7 +676,6 @@ fun ScheduleBox(
     }
 }
 
-// TODO доделать
 @Composable
 fun EmptySchedule(modifier: Modifier = Modifier) {
     LazyColumn(
@@ -672,6 +684,12 @@ fun EmptySchedule(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
+            Image(
+                painterResource(Res.drawable.clouds),
+                contentDescription = null,
+                modifier = Modifier.size(150.dp)
+            )
+            LargeSpacer()
             Text(
                 stringResource(Res.string.no_schedule_full),
                 style = MaterialTheme.typography.titleMedium,
@@ -683,7 +701,8 @@ fun EmptySchedule(modifier: Modifier = Modifier) {
 
 @Composable
 fun ScheduleScreen(
-    viewModel: ScheduleScreenViewModel
+    viewModel: ScheduleScreenViewModel,
+    toastHandler: ToastHandler = koinInject()
 ) {
     val scheduleState by viewModel.scheduleState.collectAsState()
     when (scheduleState) {
@@ -701,7 +720,15 @@ fun ScheduleScreen(
                 onClick = { viewModel.loadSchedule(refresh = true) },
                 modifier = Modifier.fillMaxSize()
             )
-        is ScheduleState.Success ->
+        is ScheduleState.Success -> {
+            when ((scheduleState as ScheduleState.Success).toastState) {
+                ToastState.FAIL_TOAST ->
+                    toastHandler.makeToast(stringResource(Res.string.schedule_loading_failed_string))
+                ToastState.SUCCESS_TOAST ->
+                    toastHandler.makeShortToast(stringResource(Res.string.schedule_loading_success_string))
+                else -> { }
+            }
             ScheduleBox(viewModel)
+        }
     }
 }

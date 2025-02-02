@@ -6,6 +6,7 @@ import data.MietWebRepository
 import data.OrioksWebRepository
 import data.ScheduleDatabaseRepository
 import data.UserPreferencesRepository
+import handlers.ToastHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +22,7 @@ import model.schedule.ScheduleClass
 import model.schedule.ScheduleState
 import model.schedule.SemesterDates
 import model.schedule.SwitchOptions
+import model.schedule.ToastState
 import model.user.UserInfo
 import utils.toSemesterLocalDate
 
@@ -28,7 +30,8 @@ class ScheduleScreenViewModel(
     private val scheduleDatabaseRepository: ScheduleDatabaseRepository,
     private val mietWebRepository: MietWebRepository,
     private val orioksWebRepository: OrioksWebRepository,
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val userPreferencesRepository: UserPreferencesRepository,
+    private val toastHandler: ToastHandler
 ) : ViewModel() {
     private lateinit var _uiState: MutableStateFlow<ScheduleScreenUiState>
     private val _scheduleState: MutableStateFlow<ScheduleState> = MutableStateFlow(ScheduleState.Loading)
@@ -135,15 +138,18 @@ class ScheduleScreenViewModel(
                 _uiState = MutableStateFlow(uiStateValue)
                 uiState = _uiState.asStateFlow()
 
-                _scheduleState.update { ScheduleState.Success }
+                _scheduleState.update {
+                    ScheduleState.Success(
+                        if (refresh) ToastState.SUCCESS_TOAST else ToastState.NO_TOAST
+                    )
+                }
                 selectToday()
             } catch (e: Exception) {
                 println(e.stackTraceToString())
                 if (!scheduleDatabaseRepository.isScheduleStored()) {
                     _scheduleState.update { ScheduleState.Error(e) }
                 } else {
-                    // TODO добавить TOAST с текстом о том, что не удалось подключиться к интернету!
-                    _scheduleState.update { ScheduleState.Success }
+                    _scheduleState.update { ScheduleState.Success(toastState = ToastState.FAIL_TOAST) }
                     selectToday()
                 }
             }

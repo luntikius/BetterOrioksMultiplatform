@@ -32,6 +32,7 @@ import betterorioks.composeapp.generated.resources.news_view
 import betterorioks.composeapp.generated.resources.social_orioks
 import betterorioks.composeapp.generated.resources.web
 import data.OrioksWebRepository
+import handlers.UrlHandler
 import model.news.newsViewScreen.NewsViewContent
 import model.news.newsViewScreen.NewsViewState
 import org.jetbrains.compose.resources.painterResource
@@ -47,7 +48,6 @@ import ui.common.MediumSpacer
 import ui.common.SmallSpacer
 import ui.common.XLargeSpacer
 import utils.BetterOrioksFormats
-import utils.UrlHandler
 
 @Composable
 fun FileItem(

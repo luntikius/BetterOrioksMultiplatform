@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -16,20 +17,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Res
-import betterorioks.composeapp.generated.resources.done_img
-import betterorioks.composeapp.generated.resources.error_img
+import betterorioks.composeapp.generated.resources.done
 import betterorioks.composeapp.generated.resources.incomplete_poll_button
 import betterorioks.composeapp.generated.resources.incomplete_poll_completed
 import betterorioks.composeapp.generated.resources.incomplete_poll_subtitle
 import betterorioks.composeapp.generated.resources.incomplete_poll_text
 import betterorioks.composeapp.generated.resources.loading_failed
 import betterorioks.composeapp.generated.resources.reload
+import betterorioks.composeapp.generated.resources.warning
+import handlers.BufferHandler
+import handlers.UrlHandler
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import utils.BufferHandler
 import utils.RedirectToPollException
-import utils.UrlHandler
 
 @Composable
 @Suppress("UseIfInsteadOfWhen")
@@ -73,8 +74,9 @@ private fun PollErrorScreenWithReloadButton(
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(Res.drawable.done_img),
-            contentDescription = null
+            painter = painterResource(Res.drawable.done),
+            contentDescription = null,
+            modifier = Modifier.size(150.dp)
         )
         LargeSpacer()
         Text(
@@ -111,8 +113,9 @@ private fun BaseErrorScreenWithReloadButton(
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(Res.drawable.error_img),
-            contentDescription = null
+            painter = painterResource(Res.drawable.warning),
+            contentDescription = null,
+            modifier = Modifier.size(150.dp)
         )
         LargeSpacer()
         Text(

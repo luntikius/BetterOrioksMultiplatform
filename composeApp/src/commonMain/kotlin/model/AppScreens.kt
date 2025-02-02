@@ -24,8 +24,12 @@ data class ResourcesScreen(
 @Serializable
 data object MenuScreen
 
-//    SettingsScreen,
-//    NotificationsScreen,
+@Serializable
+data object SettingsScreen
+
+@Serializable
+data object NotificationsScreen
+
 @Serializable
 data class NewsScreen(
     val subjectId: String?

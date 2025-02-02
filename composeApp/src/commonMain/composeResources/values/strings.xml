@@ -129,6 +129,8 @@
 
     <string name="week_number">%1$d - неделя</string>
     <string name="schedule_scroll_to_today">выбрать сегодняшний день в расписании</string>
+    <string name="schedule_loading_failed_string">Не удалось загрузить новое расписание. Используется расписание из памяти</string>
+    <string name="schedule_loading_success_string">Расписание успешно обновлено!</string>
     <string name="drop_down_menu">открыть выпадающее меню</string>
     <string name="loading_news">загружаем новости</string>
     <string name="loading_schedule">загружаем расписание</string>
@@ -157,6 +159,9 @@
     <string name="exam_info_exam">Экзамен</string>
     <string name="exam_info_consultation">Консультация</string>
     <string name="abount_subject">О предмете</string>
+    <string name="no_news">Новостей еще нет</string>
+    <string name="under_construction">Сейчас этот раздел в разработке, но совсем скоро тут будет что-то крутое!</string>
+    <string name="semester_end">Ура – конец семестра! Самое время закрыть все долги и отдохнуть</string>
 
     <string name="social_telegram">Telegram канал приложения</string>
     <string name="social_github">GitHub репозиторий приложения</string>

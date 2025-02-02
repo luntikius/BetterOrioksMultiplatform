@@ -1,19 +1,18 @@
 package ui.common
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.PullToRefreshState
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -21,16 +20,43 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_left
 import betterorioks.composeapp.generated.resources.back_button
+import betterorioks.composeapp.generated.resources.helmet
+import betterorioks.composeapp.generated.resources.under_construction
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ui.theme.gradientColor1
 import ui.theme.gradientColor2
 import ui.theme.gradientColor3
+
+@Composable
+fun ConstructionScreen(
+    onBackButtonClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        DefaultHeader("", onBackButtonClick)
+        Spacer(Modifier.weight(1f))
+        Image(
+            painter = painterResource(Res.drawable.helmet),
+            contentDescription = null,
+            modifier = Modifier.size(150.dp)
+        )
+        LargeSpacer()
+        Text(
+            stringResource(Res.string.under_construction),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.titleMedium
+        )
+        Spacer(Modifier.weight(1f))
+    }
+}
 
 @Composable
 fun DefaultHeader(
@@ -56,20 +82,6 @@ fun DefaultHeader(
             modifier = Modifier.weight(1f)
         )
         buttons()
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BoxScope.DefaultPullToRefresh(pullToRefreshState: PullToRefreshState) {
-    // TODO fix this in newer version of Material3
-    if (pullToRefreshState.progress > 0.5F) {
-        PullToRefreshContainer(
-            modifier = Modifier.align(Alignment.TopCenter),
-            state = pullToRefreshState,
-            contentColor = MaterialTheme.colorScheme.primary,
-            containerColor = MaterialTheme.colorScheme.surfaceTint
-        )
     }
 }
 
@@ -109,24 +121,11 @@ fun SwipeRefreshBox(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    val pullToRefreshState = rememberPullToRefreshState()
-
-    LaunchedEffect(pullToRefreshState.isRefreshing) {
-        if (pullToRefreshState.isRefreshing) {
-            onSwipeRefresh.invoke()
-        }
-    }
-
-    LaunchedEffect(isRefreshing, pullToRefreshState.isRefreshing) {
-        if (!isRefreshing && pullToRefreshState.isRefreshing) {
-            pullToRefreshState.endRefresh()
-        }
-    }
-
-    Box(
-        modifier = modifier.nestedScroll(pullToRefreshState.nestedScrollConnection)
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = onSwipeRefresh,
+        modifier = modifier
     ) {
         content()
-        DefaultPullToRefresh(pullToRefreshState)
     }
 }

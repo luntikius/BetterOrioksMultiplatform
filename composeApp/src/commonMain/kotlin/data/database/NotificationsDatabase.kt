@@ -14,12 +14,12 @@ import model.database.notifications.NotificationsSubjectEntity
         NotificationsSubjectEntity::class
     ],
     version = 1,
-    exportSchema = true
+    exportSchema = true,
 )
-@ConstructedBy(ScheduleDatabaseConstructor::class)
+@ConstructedBy(NotificationsDatabaseConstructor::class)
 abstract class NotificationsDatabase : RoomDatabase() {
 
-    abstract fun getDao(): ScheduleDao
+    abstract fun getDao(): NotificationsDao
 
     companion object {
 
@@ -38,4 +38,4 @@ abstract class NotificationsDatabase : RoomDatabase() {
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT", "EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-expect object NotificationsDatabaseConstructor : RoomDatabaseConstructor<ScheduleDatabase>
+expect object NotificationsDatabaseConstructor : RoomDatabaseConstructor<NotificationsDatabase>

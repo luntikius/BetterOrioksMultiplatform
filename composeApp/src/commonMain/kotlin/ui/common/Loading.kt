@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -19,12 +20,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import ui.theme.gradientColor1
+import ui.theme.gradientColor2
+import ui.theme.gradientColor3
 
 @Composable
 fun LoadingScreen(
@@ -57,6 +64,14 @@ fun LoadingAnimation(
     spaceBetween: Dp = 10.dp,
     travelDistance: Dp = 20.dp
 ) {
+    val horizontalGradientBrush = Brush.horizontalGradient(
+        colors = listOf(
+            gradientColor1,
+            gradientColor2,
+            gradientColor3
+        )
+    )
+
     val circles = listOf(
         remember { Animatable(initialValue = 0f) },
         remember { Animatable(initialValue = 0f) },
@@ -86,8 +101,20 @@ fun LoadingAnimation(
     val distance = with(LocalDensity.current) { travelDistance.toPx() }
 
     Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(spaceBetween)
+        modifier = modifier
+            .height(circleSize + travelDistance)
+            .graphicsLayer(alpha = 0.99f)
+            .drawWithCache {
+                onDrawWithContent {
+                    drawContent()
+                    drawRect(
+                        brush = horizontalGradientBrush,
+                        blendMode = BlendMode.SrcAtop
+                    )
+                }
+            },
+        horizontalArrangement = Arrangement.spacedBy(spaceBetween),
+        verticalAlignment = Alignment.Bottom
     ) {
         circleValues.forEach { value ->
             Box(
