@@ -60,7 +60,6 @@ import betterorioks.composeapp.generated.resources.change_lesson_time
 import betterorioks.composeapp.generated.resources.clouds
 import betterorioks.composeapp.generated.resources.drop_down_menu
 import betterorioks.composeapp.generated.resources.free_day
-import betterorioks.composeapp.generated.resources.gap_minutes
 import betterorioks.composeapp.generated.resources.gold_star
 import betterorioks.composeapp.generated.resources.loading_schedule
 import betterorioks.composeapp.generated.resources.loading_schedule_from_web
@@ -87,7 +86,6 @@ import model.schedule.ScheduleState
 import model.schedule.ScheduleWeek
 import model.schedule.ToastState
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ui.common.AttentionAlert
@@ -378,6 +376,7 @@ fun ScheduleColumn(
                     recalculateWindows = recalculateWindows
                 )
             }
+            item { LargeSpacer() }
         } else {
             item { EmptyScheduleItem(isLastPage = isLastPage, modifier = Modifier.fillParentMaxHeight()) }
         }
@@ -558,12 +557,11 @@ fun GapItem(
         )
         MediumSpacer()
         Text(
-            pluralStringResource(Res.plurals.gap_minutes, scheduleGap.gapDuration, scheduleGap.gapDuration)
+            scheduleGap.getGapDurationString()
         )
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LaunchedTracker(
     viewModel: ScheduleScreenViewModel,

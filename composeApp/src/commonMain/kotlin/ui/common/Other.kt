@@ -26,6 +26,7 @@ import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_left
 import betterorioks.composeapp.generated.resources.back_button
 import betterorioks.composeapp.generated.resources.helmet
+import betterorioks.composeapp.generated.resources.notifications
 import betterorioks.composeapp.generated.resources.under_construction
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -39,9 +40,10 @@ fun ConstructionScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        DefaultHeader("", onBackButtonClick)
+        DefaultHeader(stringResource(Res.string.notifications), onBackButtonClick)
         Spacer(Modifier.weight(1f))
         Image(
             painter = painterResource(Res.drawable.helmet),

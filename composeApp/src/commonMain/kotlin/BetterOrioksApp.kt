@@ -1,5 +1,8 @@
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -12,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -148,7 +152,8 @@ fun BottomNavigationBar(
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.background,
         tonalElevation = 0.dp,
-        modifier = Modifier.height(80.dp)
+        modifier = Modifier.height(48.dp + getBottomNavBarSize()),
+        windowInsets = WindowInsets.navigationBars
     ) {
         BOTTOM_NAV_SCREENS.forEach { item ->
             NavigationBarItem(
@@ -171,8 +176,12 @@ fun BottomNavigationBar(
                         restoreState = item.restoreState
                     }
                 },
-                modifier = Modifier.padding(0.dp)
+                alwaysShowLabel = false
             )
         }
     }
 }
+
+@Composable
+fun getBottomNavBarSize(): Dp = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
