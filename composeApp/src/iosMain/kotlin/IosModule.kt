@@ -16,6 +16,6 @@ fun platformModule() = module(createdAtStart = true) {
     single(named(NOTIFICATIONS_DATABASE_BUILDER_NAME)) { getNotificationsDatabaseBuilder() }
     single { createDataStore() }
     single<UrlHandler> { IosUrlHandler() }
-    single<BufferHandler> { IosBufferHandler() }
     single<ToastHandler> { IosToastHandler() }
+    single<BufferHandler> { IosBufferHandler(get()) }
 }
