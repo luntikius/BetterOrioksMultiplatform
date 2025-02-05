@@ -13,14 +13,14 @@ class ScheduleFromSiteSubject(
 ) {
     val formFromString =
         if (name.contains("[")) {
-            name.slice(name.indexOf("[") + 1 until name.indexOf("]"))
+            name.slice(name.indexOfLast { it == '[' } + 1 until name.indexOfLast { it == ']' })
         } else {
             "Н/С"
         }
 
     val nameFromString =
         if (name.contains("[")) {
-            name.slice(0 until name.indexOf("["))
+            name.slice(0 until name.indexOfLast { it == '[' })
         } else {
             name
         }
