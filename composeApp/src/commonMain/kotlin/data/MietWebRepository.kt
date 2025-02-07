@@ -46,7 +46,7 @@ class MietWebRepository {
             val scheduleJsonResponse = client.submitForm(
                 url = SCHEDULE_URL,
                 formParameters = Parameters.build {
-                    append(GROUP_PARAMETER_NAME, "ПИН-21")
+                    append(GROUP_PARAMETER_NAME, group)
                 },
                 encodeInQuery = false
             ).bodyAsText()
