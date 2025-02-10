@@ -1,7 +1,8 @@
+package handlers
+
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import handlers.UrlHandler
 
 class AndroidUrlHandler(private val context: Context) : UrlHandler {
     override fun handleUrl(url: String) {

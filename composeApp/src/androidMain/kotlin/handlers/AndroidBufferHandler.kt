@@ -1,8 +1,8 @@
+package handlers
+
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import handlers.BufferHandler
-import handlers.ToastHandler
 
 class AndroidBufferHandler(
     private val context: Context,
