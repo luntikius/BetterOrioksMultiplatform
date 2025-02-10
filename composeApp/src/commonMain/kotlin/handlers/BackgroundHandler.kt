@@ -7,6 +7,5 @@ interface BackgroundHandler {
     fun scheduleTask(backgroundTask: BackgroundTaskType)
 
     fun removeTask(backgroundTask: BackgroundTaskType)
-
 }
 

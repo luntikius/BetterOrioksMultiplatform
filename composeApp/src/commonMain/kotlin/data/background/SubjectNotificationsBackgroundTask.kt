@@ -40,6 +40,5 @@ class SubjectNotificationsBackgroundTask(
                 subtitle = subtitle
             )
         }
-
     }
 }
