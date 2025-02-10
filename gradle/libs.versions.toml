@@ -17,8 +17,10 @@ ksp = "2.0.20-1.0.24"
 koin = "4.0.0-RC2"
 preferencesDataStore = "1.1.2"
 kSoup = "0.1.9"
+work = "2.7.1"
 
 [libraries]
+androidx-work = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 

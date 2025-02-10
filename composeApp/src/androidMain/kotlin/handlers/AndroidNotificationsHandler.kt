@@ -7,7 +7,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.luntikius.betterorioks.R
 
-class AndroidNotificationHandler(private val context: Context) : NotificationsHandler {
+class AndroidNotificationsHandler(private val context: Context) : NotificationsHandler {
 
     private val channelId = "default_channel"
 

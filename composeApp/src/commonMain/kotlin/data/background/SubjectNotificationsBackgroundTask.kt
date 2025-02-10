@@ -9,7 +9,6 @@ import data.UserPreferencesRepository
 import handlers.NotificationsHandler
 import kotlinx.coroutines.flow.first
 import model.background.BackgroundTask
-import model.background.BackgroundTaskName
 import org.jetbrains.compose.resources.getString
 
 class SubjectNotificationsBackgroundTask(
@@ -18,8 +17,6 @@ class SubjectNotificationsBackgroundTask(
     private val userPreferencesRepository: UserPreferencesRepository,
     private val notificationsHandler: NotificationsHandler,
 ) : BackgroundTask {
-    override val name: BackgroundTaskName = BackgroundTaskName.SubjectNotifications
-    override val intervalMinutes: Int = 15
 
     override suspend fun execute() {
         val authData = userPreferencesRepository.authData.first()
