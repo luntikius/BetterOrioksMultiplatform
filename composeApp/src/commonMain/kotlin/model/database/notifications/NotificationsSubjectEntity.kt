@@ -10,8 +10,8 @@ data class NotificationsSubjectEntity(
     val subjectId: String,
     val subjectName: String,
     val controlEventName: String,
-    val currentScore: String,
-    val maxScore: String,
+    val currentPoints: String,
+    val maxPoints: String,
 ) {
 
     override fun equals(other: Any?): Boolean {
