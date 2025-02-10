@@ -1,12 +1,12 @@
 package handlers
 
-import model.background.BackgroundTaskName
+import model.background.BackgroundTaskType
 
 interface BackgroundHandler {
 
-    fun scheduleTask(backgroundTask: BackgroundTaskName)
+    fun scheduleTask(backgroundTask: BackgroundTaskType)
 
-    fun removeTask(backgroundTask: BackgroundTaskName)
+    fun removeTask(backgroundTask: BackgroundTaskType)
 
 }
 

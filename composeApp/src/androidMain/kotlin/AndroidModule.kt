@@ -1,13 +1,16 @@
 import androidx.activity.ComponentActivity
+import data.background.SubjectNotificationsBackgroundTask
 import database.getNotificationsDatabaseBuilder
 import database.getScheduleDatabaseBuilder
 import di.NOTIFICATIONS_DATABASE_BUILDER_NAME
 import di.SCHEDULE_DATABASE_BUILDER_NAME
+import handlers.AndroidBackgroundHandler
 import handlers.AndroidBufferHandler
-import handlers.AndroidNotificationHandler
+import handlers.AndroidNotificationsHandler
 import handlers.AndroidPermissionRequestHandler
 import handlers.AndroidToastHandler
 import handlers.AndroidUrlHandler
+import handlers.BackgroundHandler
 import handlers.BufferHandler
 import handlers.NotificationsHandler
 import handlers.PermissionRequestHandler
@@ -24,10 +27,16 @@ fun platformModule(): Module = module(createdAtStart = true) {
     single<UrlHandler> { AndroidUrlHandler(get()) }
     single<ToastHandler> { AndroidToastHandler(get()) }
     single<BufferHandler> { AndroidBufferHandler(get(), get()) }
-    single<NotificationsHandler> { AndroidNotificationHandler(get()) }
-
+    single<NotificationsHandler> { AndroidNotificationsHandler(get()) }
+    single<BackgroundHandler> { AndroidBackgroundHandler(get()) }
 }
 
 fun activityModule(activity: ComponentActivity): Module = module(createdAtStart = true) {
     single<PermissionRequestHandler> { AndroidPermissionRequestHandler(activity) }
+}
+
+fun backgroundModule(): Module = module {
+    single<SubjectNotificationsBackgroundTask> {
+        SubjectNotificationsBackgroundTask(get(), get(), get(), get())
+    }
 }
