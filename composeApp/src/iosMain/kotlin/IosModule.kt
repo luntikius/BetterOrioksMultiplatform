@@ -4,8 +4,12 @@ import di.NOTIFICATIONS_DATABASE_BUILDER_NAME
 import di.SCHEDULE_DATABASE_BUILDER_NAME
 import handlers.BufferHandler
 import handlers.IosBufferHandler
+import handlers.IosNotificationsHandler
+import handlers.IosPermissionRequestHandler
 import handlers.IosToastHandler
 import handlers.IosUrlHandler
+import handlers.NotificationsHandler
+import handlers.PermissionRequestHandler
 import handlers.ToastHandler
 import handlers.UrlHandler
 import org.koin.core.qualifier.named
@@ -18,4 +22,6 @@ fun platformModule() = module(createdAtStart = true) {
     single<UrlHandler> { IosUrlHandler() }
     single<ToastHandler> { IosToastHandler() }
     single<BufferHandler> { IosBufferHandler(get()) }
+    single<NotificationsHandler> { IosNotificationsHandler() }
+    single<PermissionRequestHandler> { IosPermissionRequestHandler() }
 }

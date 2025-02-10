@@ -1,6 +1,7 @@
+package handlers
+
 import android.content.Context
 import android.widget.Toast
-import handlers.ToastHandler
 
 class AndroidToastHandler(private val context: Context) : ToastHandler {
     override fun makeToast(message: String) {
