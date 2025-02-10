@@ -1,5 +1,6 @@
 package model.subjects.subjectsJson
 
+import model.database.notifications.NotificationsSubjectEntity
 import model.schedule.SemesterDates
 import model.schedule.scheduleJson.Semester
 import model.subjectPerformance.ControlEventsListItem
@@ -69,6 +70,23 @@ interface SubjectsData {
             add(controlEvent.toControlEventItem(controlForm))
         }
     }.toList()
+
+    fun toNotificationsSubjects(): List<NotificationsSubjectEntity> = buildList {
+        allSubjects.forEach { subject ->
+            subject.controlEvents.forEach { controlEventFromWeb ->
+                val controlEvent = controlEventFromWeb.toControlEventItem(controlForm = subject.formOfControl.name)
+                add(
+                    NotificationsSubjectEntity(
+                        subjectId = subject.id.toString(),
+                        subjectName = subject.name,
+                        controlEventName = controlEvent.fullName,
+                        currentPoints = controlEvent.currentPoints,
+                        maxPoints = controlEvent.maxPoints
+                    )
+                )
+            }
+        }
+    }
 
     companion object {
         const val DEBT_POSTFIX = "DEBT"

@@ -17,7 +17,7 @@ sealed interface ControlEventsListItem {
 
     data class ControlEventItem(
         val id: String,
-        val name: String,
+        private val name: String,
         val description: String?,
         val shortName: String,
         override val currentPoints: String,

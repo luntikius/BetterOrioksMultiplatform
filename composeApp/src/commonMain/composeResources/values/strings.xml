@@ -189,4 +189,7 @@
     <string name="content_description_subject_info">Информация о предмете</string>
 
     <string name="buffer_text_exam">%1$s по "%2$s"\nКогда: %3$s\nАудитория:%4$s</string>
+
+    <string name="notification_subject_title">Изменения оценки по "%1$s"</string>
+    <string name="notification_subject_subtitle">Оценка за "%1$s" изменена: %2$s/%3$s -> %4$s/%5$s</string>
 </resources>

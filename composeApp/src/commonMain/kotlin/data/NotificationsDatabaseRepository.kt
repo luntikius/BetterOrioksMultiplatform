@@ -14,8 +14,8 @@ class NotificationsDatabaseRepository(
         notificationsSubjects.forEach { subject ->
             val savedSubject = savedNotificationsSubjects.firstOrNull { savedSubject -> savedSubject == subject }
             if (savedSubject == null) return@forEach
-            val isDiff = savedSubject.maxScore != subject.maxScore ||
-                savedSubject.currentScore != subject.currentScore
+            val isDiff = savedSubject.maxPoints != subject.maxPoints ||
+                savedSubject.currentPoints != subject.currentPoints
             if (isDiff) add(savedSubject to subject)
         }
         notificationsDao.dumpNotificationSubjects()
