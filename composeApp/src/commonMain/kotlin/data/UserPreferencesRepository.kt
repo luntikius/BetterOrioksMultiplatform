@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import model.NotificationSettings
 import model.login.AuthData
 import model.schedule.SemesterDates
 import model.user.UserInfo
@@ -48,6 +49,13 @@ class UserPreferencesRepository(
 
     val isSubjectsGroupingEnabled: Flow<Boolean> = dataStore.data.map { preferences ->
         preferences[IS_SUBJECTS_GROUPING_ENABLED] ?: false
+    }
+
+    val notificationSettings: Flow<NotificationSettings> = dataStore.data.map { preferences ->
+        NotificationSettings(
+            isSubjectNotificationEnabled = preferences[IS_SUBJECT_NOTIFICATION_ENABLED] ?: false,
+            isNewsNotificationsEnabled = preferences[IS_NEWS_NOTIFICATION_ENABLED] ?: false
+        )
     }
 
     suspend fun isSessionInvalidated(): Boolean {
@@ -94,6 +102,13 @@ class UserPreferencesRepository(
         }
     }
 
+    suspend fun changeNotificationSettings(notificationSettings: NotificationSettings) {
+        dataStore.edit { preferences ->
+            preferences[IS_SUBJECT_NOTIFICATION_ENABLED] = notificationSettings.isSubjectNotificationEnabled
+            preferences[IS_NEWS_NOTIFICATION_ENABLED] = notificationSettings.isNewsNotificationsEnabled
+        }
+    }
+
     private companion object {
         private val CSRF = stringPreferencesKey("CSRF")
         private val ORIOKS_IDENTITY = stringPreferencesKey("ORIOKS_IDENTITY")
@@ -106,5 +121,7 @@ class UserPreferencesRepository(
         private val SESSION_START_DATE = stringPreferencesKey("SESSION_START_DATE")
         private val SESSION_END_DATE = stringPreferencesKey("SESSION_END_DATE")
         private val IS_SUBJECTS_GROUPING_ENABLED = booleanPreferencesKey("IS_SUBJECTS_GROUPING_ENABLED")
+        private val IS_SUBJECT_NOTIFICATION_ENABLED = booleanPreferencesKey("IS_SUBJECT_NOTIFICATION_ENABLED")
+        private val IS_NEWS_NOTIFICATION_ENABLED = booleanPreferencesKey("IS_NEWS_NOTIFICATION_ENABLED")
     }
 }
