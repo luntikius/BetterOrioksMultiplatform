@@ -102,10 +102,14 @@ class UserPreferencesRepository(
         }
     }
 
-    suspend fun changeNotificationSettings(notificationSettings: NotificationSettings) {
+    suspend fun enableSubjectNotification(enable: Boolean) {
         dataStore.edit { preferences ->
-            preferences[IS_SUBJECT_NOTIFICATION_ENABLED] = notificationSettings.isSubjectNotificationEnabled
-            preferences[IS_NEWS_NOTIFICATION_ENABLED] = notificationSettings.isNewsNotificationsEnabled
+            preferences[IS_SUBJECT_NOTIFICATION_ENABLED] = enable
+        }
+    }
+    suspend fun enableNewsNotifications(enable: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[IS_NEWS_NOTIFICATION_ENABLED] = enable
         }
     }
 
