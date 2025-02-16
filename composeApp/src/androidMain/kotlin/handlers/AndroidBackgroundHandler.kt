@@ -11,13 +11,11 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import backgroundModule
 import data.background.SubjectNotificationsBackgroundTask
-import di.sharedModule
-import model.background.BackgroundTask
 import model.background.BackgroundTaskType
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.KoinApplication
-import org.koin.core.context.startKoin
-import platformModule
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
 import java.util.concurrent.TimeUnit
 
 class AndroidBackgroundHandler(context: Context) : BackgroundHandler {
@@ -55,28 +53,22 @@ class AndroidBackgroundHandler(context: Context) : BackgroundHandler {
 
     companion object {
         private const val PARAM_NAME = "task_type"
-
-        private fun initKoinForBackground(context: Context): KoinApplication {
-            return startKoin {
-                androidContext(context)
-                modules(platformModule(), sharedModule(), backgroundModule())
-            }
-        }
     }
 
     class DefaultWorker(
-        private val context: Context,
+        context: Context,
         workerParameters: WorkerParameters
-    ) : CoroutineWorker(context, workerParameters) {
+    ) : CoroutineWorker(context, workerParameters), KoinComponent {
         private val taskType = BackgroundTaskType.valueOf(workerParameters.inputData.getString(PARAM_NAME)!!)
 
         override suspend fun doWork(): Result {
-            val application = initKoinForBackground(context)
-            val task: BackgroundTask = when (taskType) {
+            loadKoinModules(backgroundModule())
+            val task: Lazy<SubjectNotificationsBackgroundTask> = when (taskType) {
                 BackgroundTaskType.NewsNotifications,
-                BackgroundTaskType.SubjectNotifications -> application.koin.get<SubjectNotificationsBackgroundTask>()
+                BackgroundTaskType.SubjectNotifications -> inject<SubjectNotificationsBackgroundTask>()
             }
-            task.execute()
+            task.value.execute()
+            unloadKoinModules(backgroundModule())
             return Result.success()
         }
     }

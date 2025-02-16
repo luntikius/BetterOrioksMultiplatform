@@ -2,6 +2,7 @@ package ui.menuScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import data.NotificationsDatabaseRepository
 import data.OrioksWebRepository
 import data.ScheduleDatabaseRepository
 import data.UserPreferencesRepository
@@ -15,7 +16,8 @@ import model.user.UserInfoState
 class MenuScreenViewModel(
     private val userPreferencesRepository: UserPreferencesRepository,
     private val scheduleDatabaseRepository: ScheduleDatabaseRepository,
-    private val orioksWebRepository: OrioksWebRepository
+    private val orioksWebRepository: OrioksWebRepository,
+    private val notificationsDatabaseRepository: NotificationsDatabaseRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MenuScreenUiState())
@@ -45,6 +47,7 @@ class MenuScreenViewModel(
         viewModelScope.launch {
             userPreferencesRepository.logout()
             scheduleDatabaseRepository.dumpAll()
+            notificationsDatabaseRepository.dumpAll()
         }
     }
 }

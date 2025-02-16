@@ -18,6 +18,7 @@ import ui.loginScreen.LoginScreenViewModel
 import ui.menuScreen.MenuScreenViewModel
 import ui.newsScreen.NewsViewModel
 import ui.newsScreen.newsViewScreen.NewsViewViewModel
+import ui.notificationsScreen.NotificationsViewModel
 import ui.resourcesScreen.ResourcesViewModel
 import ui.scheduleScreen.ScheduleScreenViewModel
 import ui.subjectsScreen.SubjectsViewModel
@@ -45,13 +46,14 @@ fun sharedModule() = module {
     // view models
     viewModel { ScheduleScreenViewModel(get(), get(), get(), get(), get()) }
     viewModel { AppViewModel(get()) }
-    viewModel { MenuScreenViewModel(get(), get(), get()) }
+    viewModel { MenuScreenViewModel(get(), get(), get(), get()) }
     viewModel { LoginScreenViewModel(get(), get()) }
     viewModel { parameters -> NewsViewModel(parameters.getOrNull(String::class), get(), get()) }
     viewModel { parameters -> NewsViewViewModel(parameters.get(), parameters.get(), get(), get()) }
     viewModel { SubjectsViewModel(get(), get()) }
     viewModel { parameters -> ControlEventsViewModel(parameters.get(), get()) }
     viewModel { parameters -> ResourcesViewModel(parameters.get(), parameters.get(), get(), get()) }
+    viewModel { NotificationsViewModel(get(), get(), get(), get(), get()) }
 }
 
 const val SCHEDULE_DATABASE_BUILDER_NAME = "schedule_database_builder"

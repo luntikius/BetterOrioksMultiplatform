@@ -1,7 +1,11 @@
 package data
 
 import data.database.NotificationsDao
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import model.database.notifications.NotificationEntity
 import model.database.notifications.NotificationsSubjectEntity
+import utils.now
 
 class NotificationsDatabaseRepository(
     private val notificationsDao: NotificationsDao
@@ -20,6 +24,31 @@ class NotificationsDatabaseRepository(
         }
         notificationsDao.dumpNotificationSubjects()
         notificationsDao.insertNotificationSubjects(notificationsSubjects)
+    }
+
+    suspend fun addNotification(
+        title: String,
+        text: String
+    ) {
+        notificationsDao.insertNotification(
+            NotificationEntity(
+                title = title,
+                text = text,
+                createdAt = now()
+            )
+        )
+    }
+
+    fun getNotificationsFlow(): Flow<List<NotificationEntity>> =
+        notificationsDao.getNotificationsFlow().map { list -> list.sortedByDescending { it.createdAt } }
+
+    suspend fun dumpNotificationsHistory() {
+        notificationsDao.dumpNotifications()
+    }
+
+    suspend fun dumpAll() {
+        notificationsDao.dumpNotifications()
+        notificationsDao.dumpNotificationSubjects()
     }
 
 }

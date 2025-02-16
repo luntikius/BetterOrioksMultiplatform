@@ -1,10 +1,12 @@
 package ui.common
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_left
 import betterorioks.composeapp.generated.resources.back_button
+import betterorioks.composeapp.generated.resources.clouds
 import betterorioks.composeapp.generated.resources.helmet
 import betterorioks.composeapp.generated.resources.notifications
 import betterorioks.composeapp.generated.resources.under_construction
@@ -36,14 +39,14 @@ import ui.theme.gradientColor3
 
 @Composable
 fun ConstructionScreen(
-    onBackButtonClick: () -> Unit,
+    onBackButtonClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        DefaultHeader(stringResource(Res.string.notifications), onBackButtonClick)
+        if (onBackButtonClick != null) DefaultHeader(stringResource(Res.string.notifications), onBackButtonClick)
         Spacer(Modifier.weight(1f))
         Image(
             painter = painterResource(Res.drawable.helmet),
@@ -54,9 +57,34 @@ fun ConstructionScreen(
         Text(
             stringResource(Res.string.under_construction),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(16.dp)
         )
         Spacer(Modifier.weight(1f))
+    }
+}
+
+@Composable
+fun EmptyItem(
+    title: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.clouds),
+            contentDescription = null,
+            modifier = Modifier.size(150.dp)
+        )
+        LargeSpacer()
+        Text(
+            title,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.titleMedium,
+        )
     }
 }
 

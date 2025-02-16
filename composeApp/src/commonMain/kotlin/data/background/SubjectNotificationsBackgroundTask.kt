@@ -35,6 +35,7 @@ class SubjectNotificationsBackgroundTask(
                 now.currentPoints,
                 now.maxPoints
             )
+            notificationsRepository.addNotification(title = title, text = subtitle)
             notificationsHandler.sendNotification(
                 title = title,
                 subtitle = subtitle
