@@ -15,5 +15,4 @@ class OrioksConverter {
     fun stringToLocalDateTime(s: String): LocalDateTime {
         return BetterOrioksFormats.NEWS_DATE_TIME_FORMAT.parse(s)
     }
-
 }

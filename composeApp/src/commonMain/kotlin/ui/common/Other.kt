@@ -4,9 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,41 +25,11 @@ import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_left
 import betterorioks.composeapp.generated.resources.back_button
 import betterorioks.composeapp.generated.resources.clouds
-import betterorioks.composeapp.generated.resources.helmet
-import betterorioks.composeapp.generated.resources.notifications
-import betterorioks.composeapp.generated.resources.under_construction
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ui.theme.gradientColor1
 import ui.theme.gradientColor2
 import ui.theme.gradientColor3
-
-@Composable
-fun ConstructionScreen(
-    onBackButtonClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (onBackButtonClick != null) DefaultHeader(stringResource(Res.string.notifications), onBackButtonClick)
-        Spacer(Modifier.weight(1f))
-        Image(
-            painter = painterResource(Res.drawable.helmet),
-            contentDescription = null,
-            modifier = Modifier.size(150.dp)
-        )
-        LargeSpacer()
-        Text(
-            stringResource(Res.string.under_construction),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(16.dp)
-        )
-        Spacer(Modifier.weight(1f))
-    }
-}
 
 @Composable
 fun EmptyItem(

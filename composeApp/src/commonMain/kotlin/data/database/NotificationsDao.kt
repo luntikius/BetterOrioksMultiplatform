@@ -27,5 +27,4 @@ interface NotificationsDao {
 
     @Query("DELETE FROM notifications")
     suspend fun dumpNotifications()
-
 }

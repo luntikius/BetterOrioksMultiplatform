@@ -50,5 +50,4 @@ class NotificationsDatabaseRepository(
         notificationsDao.dumpNotifications()
         notificationsDao.dumpNotificationSubjects()
     }
-
 }
