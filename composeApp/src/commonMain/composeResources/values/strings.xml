@@ -92,7 +92,8 @@
     <string name="settings">Настройки</string>
     <string name="notifications_text">Уведомления</string>
     <string name="other">Прочее</string>
-    <string name="news_notifications">Уведомления о выходе новостей</string>
+    <string name="news_notifications">О новостях</string>
+    <string name="subjects_notifications">Об оценках</string>
     <string name="change_lesson_time">изменить время пары</string>
     <string name="Refresh">Перезагрузить</string>
     <string name="refresh_alert_text">Если вы перезагрузите расписание все ваши заметки и изменения в расписании будут удалены. Вы уверены, что хотите перезагрузить расписание?</string>
@@ -172,9 +173,11 @@
     <string name="exam_info_consultation">Консультация</string>
     <string name="abount_subject">О предмете</string>
     <string name="no_news">Новостей еще нет</string>
+    <string name="no_notifications">В истории уведомлений ничего нет</string>
     <string name="under_construction">Сейчас этот раздел в разработке, но совсем скоро тут будет что-то крутое!</string>
     <string name="semester_end">Ура – конец семестра! Самое время закрыть все долги и отдохнуть</string>
-
+    <string name="notifications_history">История уведомлений</string>
+    <string name="notifications_settings">Настройки уведомлений</string>
     <string name="social_telegram">Telegram канал приложения</string>
     <string name="social_github">GitHub репозиторий приложения</string>
     <string name="social_orioks">Открыть Web версию</string>
@@ -187,6 +190,9 @@
     <string name="content_description_group_subjects">Группировать предметы</string>
     <string name="content_description_select_semester">Выбрать семестр</string>
     <string name="content_description_subject_info">Информация о предмете</string>
+    <string name="content_description_enabled">Включено</string>
+    <string name="content_description_disabled">Выключено</string>
+    <string name="content_description_clear">Очистить</string>
 
     <string name="buffer_text_exam">%1$s по "%2$s"\nКогда: %3$s\nАудитория:%4$s</string>
 

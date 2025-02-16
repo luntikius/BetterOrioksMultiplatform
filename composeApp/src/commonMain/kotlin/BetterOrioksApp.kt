@@ -35,13 +35,13 @@ import model.SubjectsScreen
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.core.component.getScopeName
-import ui.common.ConstructionScreen
 import ui.controlEventsScreen.ControlEventsScreen
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
 import ui.menuScreen.MenuScreenViewModel
 import ui.newsScreen.NewsScreen
 import ui.newsScreen.newsViewScreen.NewsViewScreen
+import ui.notificationsScreen.NotificationsScreen
 import ui.resourcesScreen.ResourcesScreen
 import ui.scheduleScreen.ScheduleScreen
 import ui.scheduleScreen.ScheduleScreenViewModel
@@ -137,7 +137,7 @@ fun AppNavigation(
         }
 
         composable<NotificationsScreen> {
-            ConstructionScreen(onBackButtonClick = navController::navigateUp)
+            NotificationsScreen(navController)
         }
     }
 }

@@ -32,12 +32,15 @@ import betterorioks.composeapp.generated.resources.may_short
 import betterorioks.composeapp.generated.resources.november_short
 import betterorioks.composeapp.generated.resources.october_short
 import betterorioks.composeapp.generated.resources.september_short
+import kotlinx.datetime.Clock
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
 import model.schedule.SemesterDates.Companion.DATE_FORMAT
 import org.jetbrains.compose.resources.StringResource
 
@@ -86,6 +89,8 @@ fun LocalDate.getShortMonthStringRes(): StringResource {
         else -> Res.string.december_short
     }
 }
+
+fun now(): LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
 object BetterOrioksFormats {
     private val monthNames = MonthNames(
