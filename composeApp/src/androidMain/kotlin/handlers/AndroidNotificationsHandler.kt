@@ -1,5 +1,6 @@
 package handlers
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -9,17 +10,19 @@ import com.luntikius.betterorioks.R
 
 class AndroidNotificationsHandler(private val context: Context) : NotificationsHandler {
 
-    private val channelId = "default_channel"
+    private val channelId = "orioks_channeldfx"
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                "Default Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
+                "Уведомления о событиях ORIOKS",
+                NotificationManager.IMPORTANCE_HIGH
             )
             val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
+            notificationManager.apply {
+                createNotificationChannel(channel)
+            }
         }
     }
 
@@ -30,6 +33,7 @@ class AndroidNotificationsHandler(private val context: Context) : NotificationsH
             .setContentTitle(title)
             .setContentText(subtitle)
             .setAutoCancel(true)
+            .setDefaults(Notification.DEFAULT_ALL)
             .build()
 
         val notificationManager = context.getSystemService(NotificationManager::class.java)
