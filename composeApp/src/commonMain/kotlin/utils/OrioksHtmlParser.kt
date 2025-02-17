@@ -55,7 +55,7 @@ class OrioksHtmlParser {
                 val date = dateTimeFormat.parse(elements[0].ownText())
                 val title = elements[1].ownText()
                 val id = elements[2].getElementsByTag("a").first()!!
-                    .attr("href").substringAfter("=")
+                    .attr("href").substringAfter("=") + "1"
                 add(News(id, title, date))
             }
         }

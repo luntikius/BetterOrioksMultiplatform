@@ -9,14 +9,16 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import model.database.notifications.NotificationEntity
+import model.database.notifications.NotificationsNewsEntity
 import model.database.notifications.NotificationsSubjectEntity
 
 @Database(
     entities = [
         NotificationsSubjectEntity::class,
-        NotificationEntity::class
+        NotificationsNewsEntity::class,
+        NotificationEntity::class,
     ],
-    version = 2,
+    version = 3,
     exportSchema = true,
 )
 @TypeConverters(OrioksConverter::class)
@@ -35,7 +37,7 @@ abstract class NotificationsDatabase : RoomDatabase() {
                 .setDriver(BundledSQLiteDriver())
                 .setQueryCoroutineContext(Dispatchers.IO)
                 .fallbackToDestructiveMigrationOnDowngrade(true)
-                .fallbackToDestructiveMigrationFrom(true, 1)
+                .fallbackToDestructiveMigrationFrom(true, 1, 2)
                 .build()
                 .also { Instance = it }
         }

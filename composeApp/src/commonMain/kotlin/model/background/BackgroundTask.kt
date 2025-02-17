@@ -2,5 +2,5 @@ package model.background
 
 interface BackgroundTask {
 
-    suspend fun execute()
+    suspend fun execute(silently: Boolean)
 }
