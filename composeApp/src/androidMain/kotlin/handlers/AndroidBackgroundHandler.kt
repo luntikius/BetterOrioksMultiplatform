@@ -9,13 +9,12 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import backgroundModule
+import data.background.NewsNotificationsBackgroundTask
 import data.background.SubjectNotificationsBackgroundTask
+import model.background.BackgroundTask
 import model.background.BackgroundTaskType
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.unloadKoinModules
 import java.util.concurrent.TimeUnit
 
 class AndroidBackgroundHandler(context: Context) : BackgroundHandler {
@@ -62,13 +61,11 @@ class AndroidBackgroundHandler(context: Context) : BackgroundHandler {
         private val taskType = BackgroundTaskType.valueOf(workerParameters.inputData.getString(PARAM_NAME)!!)
 
         override suspend fun doWork(): Result {
-            loadKoinModules(backgroundModule())
-            val task: Lazy<SubjectNotificationsBackgroundTask> = when (taskType) {
-                BackgroundTaskType.NewsNotifications,
+            val task: Lazy<BackgroundTask> = when (taskType) {
+                BackgroundTaskType.NewsNotifications -> inject<NewsNotificationsBackgroundTask>()
                 BackgroundTaskType.SubjectNotifications -> inject<SubjectNotificationsBackgroundTask>()
             }
-            task.value.execute()
-            unloadKoinModules(backgroundModule())
+            task.value.execute(silently = false)
             return Result.success()
         }
     }

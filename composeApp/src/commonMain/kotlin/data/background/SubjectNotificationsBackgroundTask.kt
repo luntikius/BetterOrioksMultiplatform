@@ -18,7 +18,7 @@ class SubjectNotificationsBackgroundTask(
     private val notificationsHandler: NotificationsHandler,
 ) : BackgroundTask {
 
-    override suspend fun execute() {
+    override suspend fun execute(silently: Boolean) {
         val authData = userPreferencesRepository.authData.first()
         val subjects = subjectsWebRepository.getSubjects(authData)
         val notificationSubjects = subjects.toNotificationsSubjects()
@@ -36,10 +36,12 @@ class SubjectNotificationsBackgroundTask(
                 now.maxPoints
             )
             notificationsRepository.addNotification(title = title, text = subtitle)
-            notificationsHandler.sendNotification(
-                title = title,
-                subtitle = subtitle
-            )
+            if (!silently) {
+                notificationsHandler.sendNotification(
+                    title = title,
+                    subtitle = subtitle
+                )
+            }
         }
     }
 }

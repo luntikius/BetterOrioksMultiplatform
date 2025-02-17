@@ -4,6 +4,7 @@ import data.database.NotificationsDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import model.database.notifications.NotificationEntity
+import model.database.notifications.NotificationsNewsEntity
 import model.database.notifications.NotificationsSubjectEntity
 import utils.now
 
@@ -24,6 +25,15 @@ class NotificationsDatabaseRepository(
         }
         notificationsDao.dumpNotificationSubjects()
         notificationsDao.insertNotificationSubjects(notificationsSubjects)
+    }
+
+    suspend fun updateNewsAndGetDiff(
+        newsId: String
+    ): Boolean {
+        val savedNewsId = notificationsDao.getNotificationNews()?.id
+        notificationsDao.dumpNotificationNews()
+        notificationsDao.insertNotificationNews(NotificationsNewsEntity(newsId))
+        return newsId != savedNewsId
     }
 
     suspend fun addNotification(
@@ -49,5 +59,6 @@ class NotificationsDatabaseRepository(
     suspend fun dumpAll() {
         notificationsDao.dumpNotifications()
         notificationsDao.dumpNotificationSubjects()
+        notificationsDao.dumpNotificationNews()
     }
 }

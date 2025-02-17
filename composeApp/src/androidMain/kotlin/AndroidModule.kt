@@ -1,4 +1,5 @@
 import androidx.activity.ComponentActivity
+import data.background.NewsNotificationsBackgroundTask
 import data.background.SubjectNotificationsBackgroundTask
 import database.getNotificationsDatabaseBuilder
 import database.getScheduleDatabaseBuilder
@@ -36,7 +37,8 @@ fun activityModule(activity: ComponentActivity): Module = module(createdAtStart 
 }
 
 fun backgroundModule(): Module = module {
-    single<SubjectNotificationsBackgroundTask> {
-        SubjectNotificationsBackgroundTask(get(), get(), get(), get())
-    }
+
+    single { SubjectNotificationsBackgroundTask(get(), get(), get(), get()) }
+
+    single { NewsNotificationsBackgroundTask(get(), get(), get(), get()) }
 }
