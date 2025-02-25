@@ -7,6 +7,7 @@ import platform.UIKit.UIViewController
 import platform.darwin.DISPATCH_TIME_NOW
 import platform.darwin.NSEC_PER_SEC
 import platform.darwin.dispatch_after
+import platform.darwin.dispatch_async
 import platform.darwin.dispatch_get_main_queue
 import platform.darwin.dispatch_time
 
@@ -20,20 +21,22 @@ class IosToastHandler : ToastHandler {
     }
 
     private fun showToast(message: String, duration: Double) {
-        val alert = UIAlertController.alertControllerWithTitle(
-            title = null,
-            message = message,
-            preferredStyle = UIAlertControllerStyleAlert
-        )
+        dispatch_async(dispatch_get_main_queue()) {
+            val alert = UIAlertController.alertControllerWithTitle(
+                title = null,
+                message = message,
+                preferredStyle = UIAlertControllerStyleAlert
+            )
 
-        val viewController = getRootViewController()
-        viewController.presentViewController(alert, animated = true, completion = null)
+            val viewController = getRootViewController()
+            viewController.presentViewController(alert, animated = true, completion = null)
 
-        dispatch_after(
-            dispatch_time(DISPATCH_TIME_NOW, (duration * NSEC_PER_SEC.toLong()).toLong()),
-            dispatch_get_main_queue()
-        ) {
-            alert.dismissViewControllerAnimated(true, null)
+            dispatch_after(
+                dispatch_time(DISPATCH_TIME_NOW, (duration * NSEC_PER_SEC.toLong()).toLong()),
+                dispatch_get_main_queue()
+            ) {
+                alert.dismissViewControllerAnimated(true, null)
+            }
         }
     }
 
