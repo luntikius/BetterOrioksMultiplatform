@@ -161,9 +161,9 @@ class ScheduleScreenViewModel(
 
     private suspend fun makeToast(success: Boolean) {
         if (success) {
-            toastHandler.makeToast(getString(Res.string.schedule_loading_failed_string))
-        } else {
             toastHandler.makeShortToast(getString(Res.string.schedule_loading_success_string))
+        } else {
+            toastHandler.makeToast(getString(Res.string.schedule_loading_failed_string))
         }
     }
 
