@@ -67,15 +67,12 @@ import betterorioks.composeapp.generated.resources.no_schedule
 import betterorioks.composeapp.generated.resources.no_schedule_full
 import betterorioks.composeapp.generated.resources.refresh_alert_text
 import betterorioks.composeapp.generated.resources.room_number
-import betterorioks.composeapp.generated.resources.schedule_loading_failed_string
-import betterorioks.composeapp.generated.resources.schedule_loading_success_string
 import betterorioks.composeapp.generated.resources.schedule_scroll_to_today
 import betterorioks.composeapp.generated.resources.scheldule
 import betterorioks.composeapp.generated.resources.semester_end
 import betterorioks.composeapp.generated.resources.swap_vert
 import betterorioks.composeapp.generated.resources.today
 import betterorioks.composeapp.generated.resources.week_number
-import handlers.ToastHandler
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import model.schedule.ScheduleClass
@@ -84,10 +81,8 @@ import model.schedule.ScheduleElement
 import model.schedule.ScheduleGap
 import model.schedule.ScheduleState
 import model.schedule.ScheduleWeek
-import model.schedule.ToastState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import ui.common.AttentionAlert
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
@@ -700,7 +695,6 @@ fun EmptySchedule(modifier: Modifier = Modifier) {
 @Composable
 fun ScheduleScreen(
     viewModel: ScheduleScreenViewModel,
-    toastHandler: ToastHandler = koinInject()
 ) {
     val scheduleState by viewModel.scheduleState.collectAsState()
     when (scheduleState) {
@@ -719,13 +713,6 @@ fun ScheduleScreen(
                 modifier = Modifier.fillMaxSize()
             )
         is ScheduleState.Success -> {
-            when ((scheduleState as ScheduleState.Success).toastState) {
-                ToastState.FAIL_TOAST ->
-                    toastHandler.makeToast(stringResource(Res.string.schedule_loading_failed_string))
-                ToastState.SUCCESS_TOAST ->
-                    toastHandler.makeShortToast(stringResource(Res.string.schedule_loading_success_string))
-                else -> { }
-            }
             ScheduleBox(viewModel)
         }
     }

@@ -2,6 +2,9 @@ package ui.scheduleScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import betterorioks.composeapp.generated.resources.Res
+import betterorioks.composeapp.generated.resources.schedule_loading_failed_string
+import betterorioks.composeapp.generated.resources.schedule_loading_success_string
 import data.MietWebRepository
 import data.OrioksWebRepository
 import data.ScheduleDatabaseRepository
@@ -22,8 +25,8 @@ import model.schedule.ScheduleClass
 import model.schedule.ScheduleState
 import model.schedule.SemesterDates
 import model.schedule.SwitchOptions
-import model.schedule.ToastState
 import model.user.UserInfo
+import org.jetbrains.compose.resources.getString
 import utils.toSemesterLocalDate
 
 class ScheduleScreenViewModel(
@@ -138,10 +141,9 @@ class ScheduleScreenViewModel(
                 _uiState = MutableStateFlow(uiStateValue)
                 uiState = _uiState.asStateFlow()
 
+                if (refresh) makeToast(true)
                 _scheduleState.update {
-                    ScheduleState.Success(
-                        if (refresh) ToastState.SUCCESS_TOAST else ToastState.NO_TOAST
-                    )
+                    ScheduleState.Success
                 }
                 selectToday()
             } catch (e: Exception) {
@@ -149,10 +151,19 @@ class ScheduleScreenViewModel(
                 if (!scheduleDatabaseRepository.isScheduleStored()) {
                     _scheduleState.update { ScheduleState.Error(e) }
                 } else {
-                    _scheduleState.update { ScheduleState.Success(toastState = ToastState.FAIL_TOAST) }
+                    makeToast(false)
+                    _scheduleState.update { ScheduleState.Success }
                     selectToday()
                 }
             }
+        }
+    }
+
+    private suspend fun makeToast(success: Boolean) {
+        if (success) {
+            toastHandler.makeToast(getString(Res.string.schedule_loading_failed_string))
+        } else {
+            toastHandler.makeShortToast(getString(Res.string.schedule_loading_success_string))
         }
     }
 
