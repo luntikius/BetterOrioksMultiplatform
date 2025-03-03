@@ -1,5 +1,6 @@
 package ui.menuScreen
 
+import PlatformOs
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import betterorioks.composeapp.generated.resources.social_orioks
 import betterorioks.composeapp.generated.resources.social_telegram
 import betterorioks.composeapp.generated.resources.telegram
 import betterorioks.composeapp.generated.resources.web
+import getPlatform
 import handlers.UrlHandler
 import model.NewsScreen
 import model.NotificationsScreen
@@ -112,12 +114,14 @@ fun NavigationItemsRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        SimpleIconButton(
-            icon = painterResource(Res.drawable.notifications),
-            text = stringResource(Res.string.notifications),
-            onClick = { navController.navigate(NotificationsScreen) },
-            modifier = Modifier.weight(1f)
-        )
+        if (getPlatform().os == PlatformOs.Android) { // TODO add IOS support
+            SimpleIconButton(
+                icon = painterResource(Res.drawable.notifications),
+                text = stringResource(Res.string.notifications),
+                onClick = { navController.navigate(NotificationsScreen) },
+                modifier = Modifier.weight(1f)
+            )
+        }
         SimpleIconButton(
             icon = painterResource(Res.drawable.news),
             text = stringResource(Res.string.news),

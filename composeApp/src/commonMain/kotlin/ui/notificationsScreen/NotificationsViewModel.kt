@@ -78,12 +78,18 @@ class NotificationsViewModel(
     }
 
     private fun applySettings(notificationSettings: NotificationSettings) {
-        if (notificationSettings.isSubjectNotificationEnabled) {
+        if (
+            notificationSettings.isSubjectNotificationEnabled &&
+            !uiState.value.notificationSettings.isSubjectNotificationEnabled
+        ) {
             backgroundHandler.scheduleTask(BackgroundTaskType.SubjectNotifications)
         } else {
             backgroundHandler.removeTask(BackgroundTaskType.SubjectNotifications)
         }
-        if (notificationSettings.isNewsNotificationsEnabled) {
+        if (
+            notificationSettings.isNewsNotificationsEnabled &&
+            !uiState.value.notificationSettings.isNewsNotificationsEnabled
+        ) {
             backgroundHandler.scheduleTask(BackgroundTaskType.NewsNotifications)
         } else {
             backgroundHandler.removeTask(BackgroundTaskType.NewsNotifications)

@@ -8,11 +8,5 @@ sealed interface ScheduleState {
 
     data class Error(val exception: Exception) : ScheduleState
 
-    data class Success(val toastState: ToastState = ToastState.NO_TOAST) : ScheduleState
-}
-
-enum class ToastState {
-    NO_TOAST,
-    FAIL_TOAST,
-    SUCCESS_TOAST,
+    data object Success : ScheduleState
 }
