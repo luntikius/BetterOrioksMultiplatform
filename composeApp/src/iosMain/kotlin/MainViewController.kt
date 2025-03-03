@@ -6,6 +6,6 @@ fun MainViewController() = ComposeUIViewController { App() }
 
 fun startKoin() {
     startKoin {
-        modules(platformModule(), sharedModule())
+        modules(platformModule(), backgroundModule(), sharedModule())
     }
 }

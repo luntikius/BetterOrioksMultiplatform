@@ -1,6 +1,5 @@
 package ui.scheduleScreen
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -228,7 +227,6 @@ fun WeekInfoRow(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DatePicker(
     viewModel: ScheduleScreenViewModel,
@@ -329,7 +327,6 @@ fun DatePickerElement(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SchedulePager(
     schedule: List<ScheduleDay>,
@@ -385,7 +382,7 @@ fun EmptyScheduleItem(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(16.dp)
+        modifier = modifier.padding(16.dp).fillMaxWidth()
     ) {
         val string: String
         val image: Painter
