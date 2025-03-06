@@ -6,13 +6,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -27,7 +30,12 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.arrow_right
+import betterorioks.composeapp.generated.resources.checked_circle
+import betterorioks.composeapp.generated.resources.content_description_disabled
+import betterorioks.composeapp.generated.resources.content_description_enabled
+import betterorioks.composeapp.generated.resources.unchecked_circle
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import ui.theme.gradientColor1
 import ui.theme.gradientColor2
 import ui.theme.gradientColor3
@@ -172,6 +180,60 @@ fun GradientButton(
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.White.copy(alpha = alpha),
                 modifier = Modifier.padding(10.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun ToggleButton(
+    isChecked: Boolean,
+    iconPainter: Painter,
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val (checkboxPainter, checkboxDescription, checkboxTint) = if (isChecked) {
+        Triple(
+            painterResource(Res.drawable.checked_circle),
+            stringResource(Res.string.content_description_enabled),
+            MaterialTheme.colorScheme.primary
+        )
+    } else {
+        Triple(
+            painterResource(Res.drawable.unchecked_circle),
+            stringResource(Res.string.content_description_disabled),
+            MaterialTheme.colorScheme.background
+        )
+    }
+
+    Card(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier.padding(vertical = 16.dp).align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    painter = iconPainter,
+                    contentDescription = null,
+                    modifier = Modifier.size(36.dp),
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+                Text(text)
+            }
+            Icon(
+                painter = checkboxPainter,
+                contentDescription = checkboxDescription,
+                tint = checkboxTint,
+                modifier = Modifier
+                    .size(32.dp)
+                    .align(Alignment.TopEnd)
+                    .offset(x = (-8).dp, y = 8.dp)
             )
         }
     }

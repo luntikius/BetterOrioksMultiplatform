@@ -41,6 +41,7 @@ import getPlatform
 import handlers.UrlHandler
 import model.NewsScreen
 import model.NotificationsScreen
+import model.SettingsScreen
 import model.user.UserInfo
 import model.user.UserInfoState
 import org.jetbrains.compose.resources.painterResource
@@ -131,8 +132,7 @@ fun NavigationItemsRow(
         SimpleIconButton(
             icon = painterResource(Res.drawable.settings),
             text = stringResource(Res.string.settings),
-            onClick = { },
-            enabled = false,
+            onClick = { navController.navigate(SettingsScreen) },
             modifier = Modifier.weight(1f)
         )
     }

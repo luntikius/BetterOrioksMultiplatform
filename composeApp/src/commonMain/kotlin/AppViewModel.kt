@@ -5,4 +5,5 @@ class AppViewModel(
     preferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
     val isAuthorized = preferencesRepository.isAuthorized
+    val theme = preferencesRepository.themeFlow
 }

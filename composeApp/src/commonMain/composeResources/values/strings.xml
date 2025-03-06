@@ -199,4 +199,8 @@
     <string name="notification_subject_title">Изменения оценки по "%1$s"</string>
     <string name="notification_subject_subtitle">Оценка за "%1$s" изменена: %2$s/%3$s -> %4$s/%5$s</string>
     <string name="notification_news_title">В ОРИОКС вышла новость</string>
+
+    <string name="settings_theme_system">Системная</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Темная</string>
 </resources>

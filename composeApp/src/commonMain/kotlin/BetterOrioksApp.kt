@@ -31,7 +31,9 @@ import model.NewsViewScreen
 import model.NotificationsScreen
 import model.ResourcesScreen
 import model.ScheduleScreen
+import model.SettingsScreen
 import model.SubjectsScreen
+import model.settings.Theme
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.core.component.getScopeName
@@ -45,8 +47,10 @@ import ui.notificationsScreen.NotificationsScreen
 import ui.resourcesScreen.ResourcesScreen
 import ui.scheduleScreen.ScheduleScreen
 import ui.scheduleScreen.ScheduleScreenViewModel
+import ui.settingsScreen.SettingsScreen
 import ui.subjectsScreen.SubjectsScreen
 import ui.subjectsScreen.SubjectsViewModel
+import ui.theme.BetterOrioksTheme
 
 private val BOTTOM_NAV_SCREENS = listOf(
     BottomNavItem.Schedule,
@@ -59,28 +63,31 @@ fun BetterOrioksApp(
     appViewModel: AppViewModel
 ) {
     val isAuthorized by appViewModel.isAuthorized.collectAsState(false)
+    val theme by appViewModel.theme.collectAsState(Theme.System)
 
-    if (isAuthorized) {
-        val navController = rememberNavController()
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            bottomBar = { if (isAuthorized) BottomNavigationBar(navController) }
-        ) { paddingValues ->
-            AppNavigation(
-                navController = navController,
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-            )
-        }
-    } else {
-        Scaffold(
-            modifier = Modifier.fillMaxSize()
-        ) { paddingValues ->
-            LoginScreen(
-                koinInject(),
-                modifier = Modifier.fillMaxSize().padding(paddingValues)
-            )
+    BetterOrioksTheme(theme) {
+        if (isAuthorized) {
+            val navController = rememberNavController()
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = { if (isAuthorized) BottomNavigationBar(navController) }
+            ) { paddingValues ->
+                AppNavigation(
+                    navController = navController,
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                )
+            }
+        } else {
+            Scaffold(
+                modifier = Modifier.fillMaxSize()
+            ) { paddingValues ->
+                LoginScreen(
+                    koinInject(),
+                    modifier = Modifier.fillMaxSize().padding(paddingValues)
+                )
+            }
         }
     }
 }
@@ -138,6 +145,10 @@ fun AppNavigation(
 
         composable<NotificationsScreen> {
             NotificationsScreen(navController)
+        }
+
+        composable<SettingsScreen> {
+            SettingsScreen(navController)
         }
     }
 }
