@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.map
 import model.NotificationSettings
 import model.login.AuthData
 import model.schedule.SemesterDates
+import model.settings.SettingsState
+import model.settings.Theme
 import model.user.UserInfo
 
 class UserPreferencesRepository(
@@ -55,6 +57,16 @@ class UserPreferencesRepository(
         NotificationSettings(
             isSubjectNotificationEnabled = preferences[IS_SUBJECT_NOTIFICATION_ENABLED] ?: false,
             isNewsNotificationsEnabled = preferences[IS_NEWS_NOTIFICATION_ENABLED] ?: false
+        )
+    }
+
+    val themeFlow: Flow<Theme> = dataStore.data.map { preferences ->
+        preferences[SETTINGS_THEME]?.let { Theme.valueOf(it) } ?: Theme.System
+    }
+
+    val settings: Flow<SettingsState> = dataStore.data.map { preferences ->
+        SettingsState(
+            theme = preferences[SETTINGS_THEME]?.let { Theme.valueOf(it) } ?: Theme.System
         )
     }
 
@@ -113,6 +125,12 @@ class UserPreferencesRepository(
         }
     }
 
+    suspend fun setTheme(theme: Theme) {
+        dataStore.edit { preferences ->
+            preferences[SETTINGS_THEME] = theme.name
+        }
+    }
+
     private companion object {
         private val CSRF = stringPreferencesKey("CSRF")
         private val ORIOKS_IDENTITY = stringPreferencesKey("ORIOKS_IDENTITY")
@@ -127,5 +145,7 @@ class UserPreferencesRepository(
         private val IS_SUBJECTS_GROUPING_ENABLED = booleanPreferencesKey("IS_SUBJECTS_GROUPING_ENABLED")
         private val IS_SUBJECT_NOTIFICATION_ENABLED = booleanPreferencesKey("IS_SUBJECT_NOTIFICATION_ENABLED")
         private val IS_NEWS_NOTIFICATION_ENABLED = booleanPreferencesKey("IS_NEWS_NOTIFICATION_ENABLED")
+
+        private val SETTINGS_THEME = stringPreferencesKey("SETTINGS_THEME")
     }
 }
