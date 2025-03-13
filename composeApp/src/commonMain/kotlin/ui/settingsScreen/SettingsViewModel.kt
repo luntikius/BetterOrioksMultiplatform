@@ -49,7 +49,7 @@ class SettingsViewModel(
     }
 
     fun onBuildNumberClick() {
-        if (counter < 5) {
+        if (counter < 4) {
             counter++
         } else {
             _uiState.update { uis -> uis.copy(showFunSettings = true) }
