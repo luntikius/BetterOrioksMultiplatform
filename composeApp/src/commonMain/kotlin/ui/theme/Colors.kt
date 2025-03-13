@@ -5,6 +5,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 val black = Color(0xFF000000)
+val almostBlack = Color(0xFF121214)
 val white = Color(0xFFFFFFFF)
 
 val gray100 = Color(0xFFEDEEF0)
@@ -21,15 +22,19 @@ val gradientColor2 = Color(77, 178, 253, 255)
 val gradientColor3 = Color(136, 216, 222, 255)
 
 val primary_light_theme = Color(0xFF0088FF)
+val primary_light_theme_w = Color(0xFFFF6EC7)
 val primary_dark_theme = Color(0xFF72BDFF)
+val primary_dark_theme_w = Color(0xFFFC8EAC)
 
 val excellent_mark_color = Color(0xFF00DF4E)
 val good_mark_color = Color(0xFF72A043)
 val ok_mark_color = Color(0xFFF8CC1B)
 val bad_mark_color = Color(0xFFD12729)
 
-val lightColorScheme = lightColorScheme(
-    primary = primary_light_theme,
+fun lightColorScheme(
+    womenMode: Boolean
+) = lightColorScheme(
+    primary = if (womenMode) primary_light_theme_w else primary_light_theme,
     background = gray100,
     surface = white,
     surfaceContainer = white,
@@ -44,9 +49,12 @@ val lightColorScheme = lightColorScheme(
     error = error_light_theme
 )
 
-val darkColorScheme = darkColorScheme(
-    primary = primary_dark_theme,
-    background = black,
+fun darkColorScheme(
+    soften: Boolean,
+    womenMode: Boolean
+) = darkColorScheme(
+    primary = if(womenMode) primary_dark_theme_w else primary_dark_theme,
+    background = if (soften) almostBlack else black,
     surface = gray600,
     surfaceContainerLow = gray600,
     surfaceContainerHigh = gray600,
