@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import ui.theme.gradientColor1
-import ui.theme.gradientColor2
 import ui.theme.gradientColor3
 
 @Composable
@@ -67,7 +66,7 @@ fun LoadingAnimation(
     val horizontalGradientBrush = Brush.horizontalGradient(
         colors = listOf(
             gradientColor1,
-            gradientColor2,
+            gradientColor2(),
             gradientColor3
         )
     )

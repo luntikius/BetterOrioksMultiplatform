@@ -4,7 +4,7 @@ android-minSdk = "24"
 android-targetSdk = "35"
 
 agp = "8.3.2"
-androidx-activityCompose = "1.10.0"
+androidx-activityCompose = "1.10.1"
 compose-plugin = "1.7.3"
 kotlin = "2.0.20"
 navigationCompose = "2.8.0-alpha12"
@@ -17,8 +17,8 @@ ksp = "2.0.20-1.0.24"
 koin = "4.0.0-RC2"
 preferencesDataStore = "1.1.2"
 kSoup = "0.1.9"
-work = "2.7.1"
-splash = "1.0.0"
+work = "2.10.0"
+splash = "1.0.1"
 
 [libraries]
 androidx-work = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }

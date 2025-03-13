@@ -19,13 +19,13 @@ fun BetterOrioksTheme(
     val colorScheme = when (theme) {
         Theme.System -> {
             if (isSystemInDarkTheme()) {
-                darkColorScheme(softenDarkTheme, womenMode)
+                darkColorScheme(softenDarkTheme, pinkMode)
             } else {
-                lightColorScheme(womenMode)
+                lightColorScheme(pinkMode)
             }
         }
-        Theme.Dark -> darkColorScheme(softenDarkTheme, womenMode)
-        Theme.Light -> lightColorScheme(womenMode)
+        Theme.Dark -> darkColorScheme(softenDarkTheme, pinkMode)
+        Theme.Light -> lightColorScheme(pinkMode)
     }
 
     val themeHandler: ThemeHandler = koinInject()

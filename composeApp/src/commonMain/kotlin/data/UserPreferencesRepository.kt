@@ -64,7 +64,7 @@ class UserPreferencesRepository(
         SettingsState(
             theme = preferences[SETTINGS_THEME]?.let { Theme.valueOf(it) } ?: Theme.System,
             softenDarkTheme = preferences[SETTINGS_SOFTEN_DARK_THEME] ?: false,
-            womenMode = preferences[SETTINGS_WOMEN_MODE] ?: false,
+            pinkMode = preferences[SETTINGS_PINK_MODE] ?: false,
         )
     }
 
@@ -135,9 +135,9 @@ class UserPreferencesRepository(
         }
     }
 
-    suspend fun setWomenMode(enabled: Boolean) {
+    suspend fun setPinkMode(enabled: Boolean) {
         dataStore.edit { preferences ->
-            preferences[SETTINGS_WOMEN_MODE] = enabled
+            preferences[SETTINGS_PINK_MODE] = enabled
         }
     }
 
@@ -158,6 +158,6 @@ class UserPreferencesRepository(
 
         private val SETTINGS_THEME = stringPreferencesKey("SETTINGS_THEME")
         private val SETTINGS_SOFTEN_DARK_THEME = booleanPreferencesKey("SETTINGS_SOFTEN_DARK_MODE")
-        private val SETTINGS_WOMEN_MODE = booleanPreferencesKey("SETTINGS_WOMEN_MODE")
+        private val SETTINGS_PINK_MODE = booleanPreferencesKey("SETTINGS_PINK_MODE")
     }
 }
