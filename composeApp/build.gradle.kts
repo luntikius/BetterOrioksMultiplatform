@@ -39,6 +39,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
             implementation(libs.androidx.work)
+            implementation(libs.androidx.splash)
         }
 
         iosMain.dependencies {

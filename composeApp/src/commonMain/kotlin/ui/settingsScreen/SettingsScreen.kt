@@ -1,16 +1,28 @@
 package ui.settingsScreen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
@@ -18,10 +30,16 @@ import betterorioks.composeapp.generated.resources.adaptive_mode
 import betterorioks.composeapp.generated.resources.dark_mode
 import betterorioks.composeapp.generated.resources.light_mode
 import betterorioks.composeapp.generated.resources.settings
+import betterorioks.composeapp.generated.resources.settings_soften_dark_theme_subtitle
+import betterorioks.composeapp.generated.resources.settings_soften_dark_theme_title
 import betterorioks.composeapp.generated.resources.settings_theme_dark
 import betterorioks.composeapp.generated.resources.settings_theme_light
 import betterorioks.composeapp.generated.resources.settings_theme_system
+import betterorioks.composeapp.generated.resources.settings_title_fun
+import betterorioks.composeapp.generated.resources.settings_women_mode
 import betterorioks.composeapp.generated.resources.theme
+import getPlatform
+import model.AppInfo
 import model.settings.Theme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -29,7 +47,9 @@ import org.koin.compose.viewmodel.koinViewModel
 import ui.common.DefaultHeader
 import ui.common.LargeSpacer
 import ui.common.MediumSpacer
+import ui.common.SmallSpacer
 import ui.common.ToggleButton
+import ui.common.XLargeSpacer
 
 @Composable
 fun SettingsScreen(
@@ -37,7 +57,8 @@ fun SettingsScreen(
     modifier: Modifier = Modifier
 ) {
     val viewModel = koinViewModel<SettingsViewModel>()
-
+    val uiState by viewModel.uiState.collectAsState()
+    val selectedTheme = uiState.selectedTheme
     LazyColumn(
         modifier = modifier.padding(8.dp)
     ) {
@@ -46,9 +67,14 @@ fun SettingsScreen(
                 text = stringResource(Res.string.settings),
                 onBackButtonClick = { navController.popBackStack() },
             )
-            LargeSpacer()
+            MediumSpacer()
             SettingsTitle(stringResource(Res.string.theme))
             ThemeButtons(viewModel)
+            FunSettings(viewModel)
+            XLargeSpacer()
+            BuildInfo(
+                onClick = viewModel::onBuildNumberClick
+            )
         }
     }
 }
@@ -101,4 +127,114 @@ fun ThemeButtons(
         )
         MediumSpacer()
     }
+    LargeSpacer()
+    AnimatedVisibilitySettingsItem(
+        isVisible = uiState.showSoftenDarkThemeSwitch,
+        isChecked = uiState.softenDarkTheme,
+        title = stringResource(Res.string.settings_soften_dark_theme_title),
+        subtitle = stringResource(Res.string.settings_soften_dark_theme_subtitle),
+        onClick = { viewModel.setSoftenDarkTheme(it) }
+    )
+}
+
+@Composable
+fun FunSettings(
+    viewModel: SettingsViewModel,
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val isVisible = uiState.showFunSettings
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = slideInVertically() + fadeIn(),
+        exit = slideOutVertically() + fadeOut()
+    ) {
+        Column {
+            LargeSpacer()
+            SettingsTitle(
+                text = stringResource(Res.string.settings_title_fun)
+            )
+            SettingsItem(
+                isChecked = uiState.womenMode,
+                onClick = viewModel::setWomenMode,
+                title = stringResource(Res.string.settings_women_mode)
+            )
+        }
+    }
+}
+
+@Composable
+fun AnimatedVisibilitySettingsItem(
+    isVisible: Boolean,
+    isChecked: Boolean,
+    title: String,
+    onClick: (Boolean) -> Unit,
+    subtitle: String? = null,
+    modifier: Modifier = Modifier
+) {
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = slideInVertically() + fadeIn(),
+        exit = slideOutVertically() + fadeOut()
+    ) {
+        SettingsItem(
+            isChecked = isChecked,
+            title = title,
+            onClick = onClick,
+            subtitle = subtitle,
+            modifier = modifier
+        )
+    }
+}
+
+@Composable
+fun SettingsItem(
+    isChecked: Boolean,
+    title: String,
+    onClick: (Boolean) -> Unit,
+    subtitle: String? = null,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.clickable(onClick = { onClick(!isChecked) }).padding(vertical = 4.dp)
+    ) {
+        LargeSpacer()
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = modifier.weight(1f)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            SmallSpacer()
+            subtitle?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
+        }
+        MediumSpacer()
+        Switch(
+            checked = isChecked,
+            onCheckedChange = { onClick(!isChecked) },
+        )
+        LargeSpacer()
+    }
+}
+
+@Composable
+fun BuildInfo(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Text(
+        text = "BetterOrioks ${AppInfo.VERSION} for ${getPlatform().name}",
+        modifier = modifier.fillMaxWidth().clickable(
+            onClick = onClick
+        ),
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.labelSmall
+    )
 }

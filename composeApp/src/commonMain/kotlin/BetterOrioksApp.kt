@@ -33,7 +33,6 @@ import model.ResourcesScreen
 import model.ScheduleScreen
 import model.SettingsScreen
 import model.SubjectsScreen
-import model.settings.Theme
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.core.component.getScopeName
@@ -62,15 +61,14 @@ private val BOTTOM_NAV_SCREENS = listOf(
 fun BetterOrioksApp(
     appViewModel: AppViewModel
 ) {
-    val isAuthorized by appViewModel.isAuthorized.collectAsState(false)
-    val theme by appViewModel.theme.collectAsState(Theme.System)
+    val state by appViewModel.state.collectAsState()
 
-    BetterOrioksTheme(theme) {
-        if (isAuthorized) {
+    BetterOrioksTheme(state.settings) {
+        if (state.isAuthorized) {
             val navController = rememberNavController()
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
-                bottomBar = { if (isAuthorized) BottomNavigationBar(navController) }
+                bottomBar = { if (state.isAuthorized) BottomNavigationBar(navController) }
             ) { paddingValues ->
                 AppNavigation(
                     navController = navController,

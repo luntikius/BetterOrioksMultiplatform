@@ -203,4 +203,8 @@
     <string name="settings_theme_system">Системная</string>
     <string name="settings_theme_light">Светлая</string>
     <string name="settings_theme_dark">Темная</string>
+    <string name="settings_soften_dark_theme_title">Смягчать цвета темной темы</string>
+    <string name="settings_soften_dark_theme_subtitle">Делает цвет фона в темной теме светлее, снижая нагрузку на глаза</string>
+    <string name="settings_title_fun">Fun</string>
+    <string name="settings_women_mode">🌸Женский режим🌸</string>
 </resources>

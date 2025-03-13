@@ -12,6 +12,7 @@ import model.settings.Theme
 class SettingsViewModel(
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
+    private var counter = 0
     private val _uiState: MutableStateFlow<SettingsUiState> = MutableStateFlow(SettingsUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -20,7 +21,9 @@ class SettingsViewModel(
             userPreferencesRepository.settings.collect { settings ->
                 _uiState.update { uis ->
                     uis.copy(
-                        selectedTheme = settings.theme
+                        selectedTheme = settings.theme,
+                        softenDarkTheme = settings.softenDarkTheme,
+                        womenMode = settings.womenMode
                     )
                 }
             }
@@ -30,6 +33,26 @@ class SettingsViewModel(
     fun setTheme(theme: Theme) {
         viewModelScope.launch {
             userPreferencesRepository.setTheme(theme)
+        }
+    }
+
+    fun setSoftenDarkTheme(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setSoftenDarkTheme(enabled)
+        }
+    }
+
+    fun setWomenMode(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setWomenMode(enabled)
+        }
+    }
+
+    fun onBuildNumberClick() {
+        if (counter < 5) {
+            counter++
+        } else {
+            _uiState.update { uis -> uis.copy(showFunSettings = true) }
         }
     }
 }
