@@ -22,9 +22,9 @@ val gradientColor2 = Color(77, 178, 253, 255)
 val gradientColor3 = Color(136, 216, 222, 255)
 
 val primary_light_theme = Color(0xFF0088FF)
-val primary_light_theme_w = Color(0xFFFF6EC7)
+val primary_light_theme_w = Color(0xFFFF1493)
 val primary_dark_theme = Color(0xFF72BDFF)
-val primary_dark_theme_w = Color(0xFFFC8EAC)
+val primary_dark_theme_w = Color(0xFFFF6EC7)
 
 val excellent_mark_color = Color(0xFF00DF4E)
 val good_mark_color = Color(0xFF72A043)

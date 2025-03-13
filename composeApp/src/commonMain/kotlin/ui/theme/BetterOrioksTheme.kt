@@ -6,13 +6,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import handlers.ThemeHandler
 import model.settings.SettingsState
 import model.settings.Theme
+import org.koin.compose.koinInject
 
 @Composable
 fun BetterOrioksTheme(
     settings: SettingsState,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) = settings.run {
     val colorScheme = when (theme) {
         Theme.System -> {
@@ -25,6 +27,9 @@ fun BetterOrioksTheme(
         Theme.Dark -> darkColorScheme(softenDarkTheme, womenMode)
         Theme.Light -> lightColorScheme(womenMode)
     }
+
+    val themeHandler: ThemeHandler = koinInject()
+    themeHandler.setStatusBarTheme(theme == Theme.Dark || (theme == Theme.System && isSystemInDarkTheme()))
 
     val shapes = Shapes(
         extraSmall = RoundedCornerShape(16.dp),
