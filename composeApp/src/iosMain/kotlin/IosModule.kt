@@ -10,10 +10,12 @@ import handlers.IosBackgroundHandler
 import handlers.IosBufferHandler
 import handlers.IosNotificationsHandler
 import handlers.IosPermissionRequestHandler
+import handlers.IosThemeHandler
 import handlers.IosToastHandler
 import handlers.IosUrlHandler
 import handlers.NotificationsHandler
 import handlers.PermissionRequestHandler
+import handlers.ThemeHandler
 import handlers.ToastHandler
 import handlers.UrlHandler
 import org.koin.core.module.Module
@@ -30,6 +32,7 @@ fun platformModule() = module(createdAtStart = true) {
     single<NotificationsHandler> { IosNotificationsHandler() }
     single<PermissionRequestHandler> { IosPermissionRequestHandler() }
     single<BackgroundHandler> { IosBackgroundHandler() }
+    single<ThemeHandler> { IosThemeHandler() }
 }
 
 fun backgroundModule(): Module = module {
