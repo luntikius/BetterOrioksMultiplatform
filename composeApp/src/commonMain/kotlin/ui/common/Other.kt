@@ -11,7 +11,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -118,12 +124,25 @@ fun SwipeRefreshBox(
     onSwipeRefresh: () -> Unit,
     isRefreshing: Boolean,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
+    val state = rememberPullToRefreshState()
+    var shouldAnimateToHidden by remember { mutableStateOf(false) }
+
+    LaunchedEffect(shouldAnimateToHidden) {
+        if (shouldAnimateToHidden) {
+            state.animateToHidden()
+            shouldAnimateToHidden = false
+        }
+    }
     PullToRefreshBox(
         isRefreshing = isRefreshing,
-        onRefresh = onSwipeRefresh,
-        modifier = modifier
+        onRefresh = {
+            onSwipeRefresh()
+            shouldAnimateToHidden = true
+        },
+        modifier = modifier,
+        state = state
     ) {
         content()
     }
