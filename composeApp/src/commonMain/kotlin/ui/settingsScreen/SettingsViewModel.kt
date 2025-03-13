@@ -23,7 +23,7 @@ class SettingsViewModel(
                     uis.copy(
                         selectedTheme = settings.theme,
                         softenDarkTheme = settings.softenDarkTheme,
-                        womenMode = settings.womenMode
+                        pinkMode = settings.pinkMode
                     )
                 }
             }
@@ -42,9 +42,9 @@ class SettingsViewModel(
         }
     }
 
-    fun setWomenMode(enabled: Boolean) {
+    fun setPinkMode(enabled: Boolean) {
         viewModelScope.launch {
-            userPreferencesRepository.setWomenMode(enabled)
+            userPreferencesRepository.setPinkMode(enabled)
         }
     }
 

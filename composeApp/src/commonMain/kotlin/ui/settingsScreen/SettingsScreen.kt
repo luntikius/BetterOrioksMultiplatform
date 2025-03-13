@@ -1,12 +1,9 @@
 package ui.settingsScreen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
@@ -30,13 +26,13 @@ import betterorioks.composeapp.generated.resources.adaptive_mode
 import betterorioks.composeapp.generated.resources.dark_mode
 import betterorioks.composeapp.generated.resources.light_mode
 import betterorioks.composeapp.generated.resources.settings
+import betterorioks.composeapp.generated.resources.settings_pink_mode
 import betterorioks.composeapp.generated.resources.settings_soften_dark_theme_subtitle
 import betterorioks.composeapp.generated.resources.settings_soften_dark_theme_title
 import betterorioks.composeapp.generated.resources.settings_theme_dark
 import betterorioks.composeapp.generated.resources.settings_theme_light
 import betterorioks.composeapp.generated.resources.settings_theme_system
 import betterorioks.composeapp.generated.resources.settings_title_fun
-import betterorioks.composeapp.generated.resources.settings_women_mode
 import betterorioks.composeapp.generated.resources.theme
 import getPlatform
 import model.AppInfo
@@ -142,21 +138,18 @@ fun FunSettings(
     viewModel: SettingsViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val isVisible = uiState.showFunSettings
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = slideInVertically() + fadeIn(),
-        exit = slideOutVertically() + fadeOut()
+    Column(
+        modifier = Modifier.animateContentSize().fillMaxWidth()
     ) {
-        Column {
+        if (uiState.showFunSettings) {
             LargeSpacer()
             SettingsTitle(
                 text = stringResource(Res.string.settings_title_fun)
             )
             SettingsItem(
-                isChecked = uiState.womenMode,
-                onClick = viewModel::setWomenMode,
-                title = stringResource(Res.string.settings_women_mode)
+                isChecked = uiState.pinkMode,
+                onClick = viewModel::setPinkMode,
+                title = stringResource(Res.string.settings_pink_mode)
             )
         }
     }
@@ -171,18 +164,18 @@ fun AnimatedVisibilitySettingsItem(
     subtitle: String? = null,
     modifier: Modifier = Modifier
 ) {
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = slideInVertically() + fadeIn(),
-        exit = slideOutVertically() + fadeOut()
+    Box(
+        modifier = Modifier.animateContentSize().fillMaxWidth()
     ) {
-        SettingsItem(
-            isChecked = isChecked,
-            title = title,
-            onClick = onClick,
-            subtitle = subtitle,
-            modifier = modifier
-        )
+        if (isVisible) {
+            SettingsItem(
+                isChecked = isChecked,
+                title = title,
+                onClick = onClick,
+                subtitle = subtitle,
+                modifier = modifier
+            )
+        }
     }
 }
 
@@ -229,12 +222,14 @@ fun BuildInfo(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Text(
-        text = "BetterOrioks ${AppInfo.VERSION} for ${getPlatform().name}",
-        modifier = modifier.fillMaxWidth().clickable(
-            onClick = onClick
-        ),
-        textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.labelSmall
-    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "BetterOrioks ${AppInfo.VERSION} for ${getPlatform().name}",
+            modifier = modifier.clickable(onClick = onClick),
+            style = MaterialTheme.typography.labelSmall
+        )
+    }
 }

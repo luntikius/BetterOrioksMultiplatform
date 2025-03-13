@@ -37,7 +37,6 @@ import betterorioks.composeapp.generated.resources.unchecked_circle
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ui.theme.gradientColor1
-import ui.theme.gradientColor2
 import ui.theme.gradientColor3
 
 @Composable
@@ -155,7 +154,7 @@ fun GradientButton(
     val horizontalGradientBrush = Brush.horizontalGradient(
         colors = listOf(
             gradientColor1,
-            gradientColor2,
+            gradientColor2(),
             gradientColor3
         )
     )

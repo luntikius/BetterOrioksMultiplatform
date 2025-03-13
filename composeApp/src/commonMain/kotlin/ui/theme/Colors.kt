@@ -32,9 +32,9 @@ val ok_mark_color = Color(0xFFF8CC1B)
 val bad_mark_color = Color(0xFFD12729)
 
 fun lightColorScheme(
-    womenMode: Boolean
+    pinkMode: Boolean
 ) = lightColorScheme(
-    primary = if (womenMode) primary_light_theme_w else primary_light_theme,
+    primary = if (pinkMode) primary_light_theme_w else primary_light_theme,
     background = gray100,
     surface = white,
     surfaceContainer = white,
@@ -51,9 +51,9 @@ fun lightColorScheme(
 
 fun darkColorScheme(
     soften: Boolean,
-    womenMode: Boolean
+    pinkMode: Boolean
 ) = darkColorScheme(
-    primary = if(womenMode) primary_dark_theme_w else primary_dark_theme,
+    primary = if(pinkMode) primary_dark_theme_w else primary_dark_theme,
     background = if (soften) almostBlack else black,
     surface = gray600,
     surfaceContainerLow = gray600,
