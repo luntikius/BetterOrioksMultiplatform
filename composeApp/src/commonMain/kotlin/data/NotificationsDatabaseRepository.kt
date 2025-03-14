@@ -23,6 +23,7 @@ class NotificationsDatabaseRepository(
                 savedSubject.currentPoints != subject.currentPoints
             if (isDiff) add(savedSubject to subject)
         }
+        add(notificationsSubjects.first() to notificationsSubjects.first())
         notificationsDao.dumpNotificationSubjects()
         notificationsDao.insertNotificationSubjects(notificationsSubjects)
     }

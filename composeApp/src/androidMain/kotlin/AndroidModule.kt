@@ -35,8 +35,8 @@ fun platformModule(): Module = module(createdAtStart = true) {
 }
 
 fun activityModule(activity: ComponentActivity): Module = module(createdAtStart = true) {
-    single<PermissionRequestHandler> { AndroidPermissionRequestHandler(activity) }
-    single<ThemeHandler> { AndroidThemeHandler(activity) }
+    single<PermissionRequestHandler>(createdAtStart = true) { AndroidPermissionRequestHandler(activity) }
+    single<ThemeHandler>(createdAtStart = true) { AndroidThemeHandler(activity) }
 }
 
 fun backgroundModule(): Module = module {

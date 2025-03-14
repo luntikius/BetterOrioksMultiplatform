@@ -8,6 +8,7 @@ import data.SubjectsWebRepository
 import data.UserPreferencesRepository
 import handlers.NotificationsHandler
 import kotlinx.coroutines.flow.first
+import model.BetterOrioksScreen
 import model.background.BackgroundTask
 import org.jetbrains.compose.resources.getString
 
@@ -39,7 +40,10 @@ class SubjectNotificationsBackgroundTask(
             if (!silently) {
                 notificationsHandler.sendNotification(
                     title = title,
-                    subtitle = subtitle
+                    subtitle = subtitle,
+                    screenOpenAction = BetterOrioksScreen.ControlEventsScreen(
+                        subjectId = it.first.subjectId
+                    )
                 )
             }
         }

@@ -7,6 +7,7 @@ import data.OrioksWebRepository
 import data.UserPreferencesRepository
 import handlers.NotificationsHandler
 import kotlinx.coroutines.flow.first
+import model.BetterOrioksScreen
 import model.background.BackgroundTask
 import org.jetbrains.compose.resources.getString
 
@@ -25,7 +26,11 @@ class NewsNotificationsBackgroundTask(
         if (diff) {
             val title = getString(Res.string.notification_news_title)
             val subtitle = lastNews.title
-            notificationsHandler.sendNotification(title, subtitle)
+            notificationsHandler.sendNotification(
+                title = title,
+                subtitle = subtitle,
+                screenOpenAction = BetterOrioksScreen.NewsViewScreen(id = lastNews.id, type = "Main")
+            )
             notificationsRepository.addNotification(title, subtitle)
         }
     }

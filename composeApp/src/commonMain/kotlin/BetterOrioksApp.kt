@@ -12,6 +12,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -51,13 +52,17 @@ private val BOTTOM_NAV_SCREENS = listOf(
 
 @Composable
 fun BetterOrioksApp(
-    appViewModel: AppViewModel
+    appViewModel: AppViewModel,
+    openScreenAction: BetterOrioksScreen?
 ) {
     val state by appViewModel.state.collectAsState()
+    val navController = rememberNavController()
+    LaunchedEffect(Unit) {
+        if (state.isAuthorized && openScreenAction != null) navController.navigate(openScreenAction)
+    }
 
     BetterOrioksTheme(state.settings) {
         if (state.isAuthorized) {
-            val navController = rememberNavController()
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = { if (state.isAuthorized) BottomNavigationBar(navController) }

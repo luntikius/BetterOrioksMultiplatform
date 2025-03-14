@@ -55,7 +55,7 @@ fun sharedModule() = module {
     viewModel { parameters -> ControlEventsViewModel(parameters.get(), get()) }
     viewModel { parameters -> ResourcesViewModel(parameters.get(), parameters.get(), get(), get()) }
     viewModel { NotificationsViewModel(get(), get(), get(), get(), get()) }
-    viewModel { SettingsViewModel(get()) }
+    viewModel { SettingsViewModel(get(), get()) }
 }
 
 const val SCHEDULE_DATABASE_BUILDER_NAME = "schedule_database_builder"
