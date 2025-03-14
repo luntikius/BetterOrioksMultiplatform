@@ -511,7 +511,7 @@ fun SwitchButton(
 }
 
 @Composable
-fun CircleText(text: String, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.surfaceTint) {
+fun CircleText(text: String, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.background) {
     Surface(
         shape = CircleShape,
         modifier = modifier,
