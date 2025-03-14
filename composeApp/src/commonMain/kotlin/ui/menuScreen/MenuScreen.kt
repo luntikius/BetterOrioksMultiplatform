@@ -39,9 +39,7 @@ import betterorioks.composeapp.generated.resources.telegram
 import betterorioks.composeapp.generated.resources.web
 import getPlatform
 import handlers.UrlHandler
-import model.NewsScreen
-import model.NotificationsScreen
-import model.SettingsScreen
+import model.BetterOrioksScreen
 import model.user.UserInfo
 import model.user.UserInfoState
 import org.jetbrains.compose.resources.painterResource
@@ -119,20 +117,20 @@ fun NavigationItemsRow(
             SimpleIconButton(
                 icon = painterResource(Res.drawable.notifications),
                 text = stringResource(Res.string.notifications),
-                onClick = { navController.navigate(NotificationsScreen) },
+                onClick = { navController.navigate(BetterOrioksScreen.NotificationsScreen) },
                 modifier = Modifier.weight(1f)
             )
         }
         SimpleIconButton(
             icon = painterResource(Res.drawable.news),
             text = stringResource(Res.string.news),
-            onClick = { navController.navigate(NewsScreen(null)) },
+            onClick = { navController.navigate(BetterOrioksScreen.NewsScreen(null)) },
             modifier = Modifier.weight(1f)
         )
         SimpleIconButton(
             icon = painterResource(Res.drawable.settings),
             text = stringResource(Res.string.settings),
-            onClick = { navController.navigate(SettingsScreen) },
+            onClick = { navController.navigate(BetterOrioksScreen.SettingsScreen) },
             modifier = Modifier.weight(1f)
         )
     }

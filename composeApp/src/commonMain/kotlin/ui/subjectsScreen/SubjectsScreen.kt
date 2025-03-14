@@ -48,7 +48,7 @@ import betterorioks.composeapp.generated.resources.content_description_group_sub
 import betterorioks.composeapp.generated.resources.content_description_select_semester
 import betterorioks.composeapp.generated.resources.loading_subjects
 import betterorioks.composeapp.generated.resources.sort
-import model.ControlEventsScreen
+import model.BetterOrioksScreen
 import model.schedule.scheduleJson.Semester
 import model.subjects.SubjectListItem
 import model.subjects.SubjectsGroup
@@ -378,7 +378,7 @@ fun SubjectsScreenContent(
 ) {
     val isGroupingEnabled by subjectsViewModel.isSubjectsGroupingEnabled.collectAsState(false)
     val onNavigateToSubject = { subjectId: String ->
-        navController.navigate(ControlEventsScreen(subjectId))
+        navController.navigate(BetterOrioksScreen.ControlEventsScreen(subjectId))
     }
 
     when (subjectsState) {

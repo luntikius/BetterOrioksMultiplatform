@@ -25,7 +25,7 @@ import betterorioks.composeapp.generated.resources.news_date
 import betterorioks.composeapp.generated.resources.no_news
 import betterorioks.composeapp.generated.resources.subject_news
 import data.OrioksWebRepository
-import model.NewsViewScreen
+import model.BetterOrioksScreen
 import model.news.News
 import model.news.NewsState
 import org.jetbrains.compose.resources.stringResource
@@ -128,7 +128,7 @@ fun NewsScreen(
 
             is NewsState.Success -> NewsContent(
                 news = (uiState.newsState as NewsState.Success).news,
-                onNewsClick = { navController.navigate(NewsViewScreen(it, uiState.newsType.name)) },
+                onNewsClick = { navController.navigate(BetterOrioksScreen.NewsViewScreen(it, uiState.newsType.name)) },
                 modifier = Modifier.fillMaxSize()
             )
 
