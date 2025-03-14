@@ -64,8 +64,7 @@ import betterorioks.composeapp.generated.resources.teacher
 import betterorioks.composeapp.generated.resources.teachers
 import handlers.BufferHandler
 import handlers.UrlHandler
-import model.NewsScreen
-import model.ResourcesScreen
+import model.BetterOrioksScreen
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
 import model.subjectPerformance.DisplaySubjectPerformance
@@ -499,10 +498,10 @@ fun ControlEventsList(
                     LargeSpacer()
                     NavigationItemsRow(
                         onNewsButtonClick = {
-                            navController.navigate(NewsScreen(id))
+                            navController.navigate(BetterOrioksScreen.NewsScreen(id))
                         },
                         onResourcesButtonClick = {
-                            navController.navigate(ResourcesScreen(id, scienceId, name))
+                            navController.navigate(BetterOrioksScreen.ResourcesScreen(id, scienceId, name))
                         },
                         onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl
                             ?.let { { urlHandler.handleUrl(it) } },

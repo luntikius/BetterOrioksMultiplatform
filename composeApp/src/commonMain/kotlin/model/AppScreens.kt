@@ -4,41 +4,47 @@ import data.OrioksWebRepository
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object ScheduleScreen
+sealed interface BetterOrioksScreen {
 
-@Serializable
-data object SubjectsScreen
+    @Serializable
+    data object ScheduleScreen : BetterOrioksScreen
 
-@Serializable
-data class ControlEventsScreen(
-    val subjectId: String
-)
+    @Serializable
+    data object SubjectsScreen : BetterOrioksScreen
 
-@Serializable
-data class ResourcesScreen(
-    val subjectId: String,
-    val scienceId: String,
-    val subjectName: String
-)
+    @Serializable
+    data class ControlEventsScreen(
+        val subjectId: String
+    ) : BetterOrioksScreen
 
-@Serializable
-data object MenuScreen
+    @Serializable
+    data class ResourcesScreen(
+        val subjectId: String,
+        val scienceId: String,
+        val subjectName: String
+    ) : BetterOrioksScreen
 
-@Serializable
-data object SettingsScreen
+    @Serializable
+    data object MenuScreen : BetterOrioksScreen
 
-@Serializable
-data object NotificationsScreen
+    @Serializable
+    data object SettingsScreen : BetterOrioksScreen
 
-@Serializable
-data class NewsScreen(
-    val subjectId: String?
-)
+    @Serializable
+    data object NotificationsScreen : BetterOrioksScreen
 
-@Serializable
-data class NewsViewScreen(
-    val id: String,
-    val type: String
-) {
-    fun getType() = OrioksWebRepository.NewsType.valueOf(type)
+    @Serializable
+    data class NewsScreen(
+        val subjectId: String?
+    ) : BetterOrioksScreen
+
+    @Serializable
+    data class NewsViewScreen(
+        val id: String,
+        val type: String
+    ) : BetterOrioksScreen {
+
+        fun getType() = OrioksWebRepository.NewsType.valueOf(type)
+    }
+
 }

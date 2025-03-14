@@ -23,16 +23,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import model.BetterOrioksScreen
 import model.BottomNavItem
-import model.ControlEventsScreen
-import model.MenuScreen
-import model.NewsScreen
-import model.NewsViewScreen
-import model.NotificationsScreen
-import model.ResourcesScreen
-import model.ScheduleScreen
-import model.SettingsScreen
-import model.SubjectsScreen
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.core.component.getScopeName
@@ -101,24 +93,24 @@ fun AppNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = ScheduleScreen,
+        startDestination = BetterOrioksScreen.ScheduleScreen,
         modifier = modifier
     ) {
-        composable<ScheduleScreen> {
+        composable<BetterOrioksScreen.ScheduleScreen> {
             ScheduleScreen(scheduleScreenViewModel)
         }
 
-        composable<SubjectsScreen> {
+        composable<BetterOrioksScreen.SubjectsScreen> {
             SubjectsScreen(navController, subjectsViewModel)
         }
 
-        composable<ControlEventsScreen> { backStackEntry ->
-            val route = backStackEntry.toRoute<ControlEventsScreen>()
+        composable<BetterOrioksScreen.ControlEventsScreen> { backStackEntry ->
+            val route = backStackEntry.toRoute<BetterOrioksScreen.ControlEventsScreen>()
             ControlEventsScreen(route.subjectId, navController)
         }
 
-        composable<ResourcesScreen> { backStackEntry ->
-            val route = backStackEntry.toRoute<ResourcesScreen>()
+        composable<BetterOrioksScreen.ResourcesScreen> { backStackEntry ->
+            val route = backStackEntry.toRoute<BetterOrioksScreen.ResourcesScreen>()
             ResourcesScreen(
                 subjectName = route.subjectName,
                 disciplineId = route.subjectId,
@@ -127,25 +119,25 @@ fun AppNavigation(
             )
         }
 
-        composable<MenuScreen> {
+        composable<BetterOrioksScreen.MenuScreen> {
             MenuScreen(navController, menuScreenViewModel)
         }
 
-        composable<NewsScreen> { backstackEntry ->
-            val route = backstackEntry.toRoute<NewsScreen>()
+        composable<BetterOrioksScreen.NewsScreen> { backstackEntry ->
+            val route = backstackEntry.toRoute<BetterOrioksScreen.NewsScreen>()
             NewsScreen(route.subjectId, navController)
         }
 
-        composable<NewsViewScreen> { backStackEntry ->
-            val route = backStackEntry.toRoute<NewsViewScreen>()
+        composable<BetterOrioksScreen.NewsViewScreen> { backStackEntry ->
+            val route = backStackEntry.toRoute<BetterOrioksScreen.NewsViewScreen>()
             NewsViewScreen(route.id, route.getType(), navController)
         }
 
-        composable<NotificationsScreen> {
+        composable<BetterOrioksScreen.NotificationsScreen> {
             NotificationsScreen(navController)
         }
 
-        composable<SettingsScreen> {
+        composable<BetterOrioksScreen.SettingsScreen> {
             SettingsScreen(navController)
         }
     }
@@ -178,7 +170,7 @@ fun BottomNavigationBar(
                     unselectedIconColor = MaterialTheme.colorScheme.primary.copy(0.5f),
                     indicatorColor = MaterialTheme.colorScheme.primary.copy(0.0f)
                 ),
-                selected = currentRoute == item.screen.getScopeName().toString(),
+                selected = currentRoute == item.screen.getScopeName().value.replace("$", "."),
                 onClick = {
                     navController.navigate(item.screen) {
                         launchSingleTop = true

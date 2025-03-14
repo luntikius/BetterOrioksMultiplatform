@@ -1,5 +1,9 @@
 package handlers
 
+
 interface NotificationsHandler {
-    fun sendNotification(title: String, subtitle: String)
+    fun sendNotification(
+        title: String,
+        subtitle: String,
+    )
 }
