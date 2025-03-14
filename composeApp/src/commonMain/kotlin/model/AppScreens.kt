@@ -1,6 +1,7 @@
 package model
 
 import data.OrioksWebRepository
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -41,6 +42,7 @@ sealed interface BetterOrioksScreen {
     @Serializable
     data class NewsViewScreen(
         val id: String,
+        @SerialName("news_type")
         val type: String
     ) : BetterOrioksScreen {
 
