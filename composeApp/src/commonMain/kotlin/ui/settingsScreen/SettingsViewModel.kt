@@ -3,7 +3,6 @@ package ui.settingsScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.UserPreferencesRepository
-import handlers.NotificationsHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -12,7 +11,6 @@ import model.settings.Theme
 
 class SettingsViewModel(
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val notificationsHandler: NotificationsHandler,
 ) : ViewModel() {
     private var counter = 0
     private val _uiState: MutableStateFlow<SettingsUiState> = MutableStateFlow(SettingsUiState())

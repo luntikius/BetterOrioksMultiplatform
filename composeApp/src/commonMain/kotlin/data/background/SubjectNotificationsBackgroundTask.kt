@@ -10,6 +10,7 @@ import handlers.NotificationsHandler
 import kotlinx.coroutines.flow.first
 import model.BetterOrioksScreen
 import model.background.BackgroundTask
+import model.subjects.subjectsJson.SubjectsData
 import org.jetbrains.compose.resources.getString
 
 class SubjectNotificationsBackgroundTask(
@@ -19,12 +20,14 @@ class SubjectNotificationsBackgroundTask(
     private val notificationsHandler: NotificationsHandler,
 ) : BackgroundTask {
 
-    override suspend fun execute(silently: Boolean) {
-        val authData = userPreferencesRepository.authData.first()
-        val subjects = subjectsWebRepository.getSubjects(authData)
+    suspend fun executeWithData(
+        subjects: SubjectsData,
+        silently: Boolean
+    ) {
         val notificationSubjects = subjects.toNotificationsSubjects()
         val diff = notificationsRepository.updateSubjectsAndGetDiff(notificationSubjects)
         diff.forEach {
+            it.first.id
             val was = it.first
             val now = it.second
             val title = getString(Res.string.notification_subject_title, was.subjectName)
@@ -47,5 +50,11 @@ class SubjectNotificationsBackgroundTask(
                 )
             }
         }
+    }
+
+    override suspend fun execute() {
+        val authData = userPreferencesRepository.authData.first()
+        val subjects = subjectsWebRepository.getSubjects(authData)
+        executeWithData(subjects, false)
     }
 }

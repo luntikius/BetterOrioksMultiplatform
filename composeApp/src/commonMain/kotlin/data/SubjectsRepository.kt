@@ -1,5 +1,6 @@
 package data
 
+import data.background.SubjectNotificationsBackgroundTask
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -8,7 +9,8 @@ import model.subjects.SubjectsState
 
 class SubjectsRepository(
     private val subjectsWebRepository: SubjectsWebRepository,
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val userPreferencesRepository: UserPreferencesRepository,
+    private val subjectNotificationsBackgroundTask: SubjectNotificationsBackgroundTask
 ) {
     private var semesterId: String? = null
 
@@ -30,6 +32,7 @@ class SubjectsRepository(
                         semesters = subjects.semesters
                     )
                 }
+                runCatching { subjectNotificationsBackgroundTask.executeWithData(subjects, true) }
             } catch (e: Exception) {
                 _subjectsState.update { SubjectsState.Error(e) }
             }
