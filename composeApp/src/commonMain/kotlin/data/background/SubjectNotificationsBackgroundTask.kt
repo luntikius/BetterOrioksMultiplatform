@@ -45,7 +45,7 @@ class SubjectNotificationsBackgroundTask(
                     title = title,
                     subtitle = subtitle,
                     screenOpenAction = BetterOrioksScreen.ControlEventsScreen(
-                        subjectId = it.first.subjectId
+                        subjectId = now.subjectId
                     )
                 )
             }

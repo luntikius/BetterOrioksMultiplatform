@@ -8,8 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import com.luntikius.betterorioks.MainActivity
-import com.luntikius.betterorioks.R
+import com.studentapp.betterorioks.MainActivity
+import com.studentapp.betterorioks.R
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import model.BetterOrioksScreen
