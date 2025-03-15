@@ -178,7 +178,7 @@ fun BottomNavigationBar(
                 ),
                 selected = isSelected,
                 onClick = {
-                    if(!isSelected) {
+                    if (!isSelected) {
                         navController.navigate(item.screen) {
                             launchSingleTop = true
                             restoreState = item.restoreState
