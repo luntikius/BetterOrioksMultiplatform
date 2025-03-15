@@ -162,6 +162,7 @@ fun BottomNavigationBar(
         windowInsets = WindowInsets.navigationBars
     ) {
         BOTTOM_NAV_SCREENS.forEach { item ->
+            val isSelected = currentRoute == item.screen.getScopeName().value.replace("$", ".")
             NavigationBarItem(
                 icon = {
                     Icon(
@@ -175,11 +176,13 @@ fun BottomNavigationBar(
                     unselectedIconColor = MaterialTheme.colorScheme.primary.copy(0.5f),
                     indicatorColor = MaterialTheme.colorScheme.primary.copy(0.0f)
                 ),
-                selected = currentRoute == item.screen.getScopeName().value.replace("$", "."),
+                selected = isSelected,
                 onClick = {
-                    navController.navigate(item.screen) {
-                        launchSingleTop = true
-                        restoreState = item.restoreState
+                    if(!isSelected) {
+                        navController.navigate(item.screen) {
+                            launchSingleTop = true
+                            restoreState = item.restoreState
+                        }
                     }
                 },
                 alwaysShowLabel = false
