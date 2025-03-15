@@ -34,6 +34,7 @@ class NotificationsDatabaseRepository(
         val savedNewsId = notificationsDao.getNotificationNews()?.id
         notificationsDao.dumpNotificationNews()
         notificationsDao.insertNotificationNews(NotificationsNewsEntity(newsId))
+        if (savedNewsId == null) return false
         return newsId != savedNewsId
     }
 
