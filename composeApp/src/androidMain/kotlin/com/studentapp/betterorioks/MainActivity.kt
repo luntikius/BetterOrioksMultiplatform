@@ -1,4 +1,4 @@
-package com.luntikius.betterorioks
+package com.studentapp.betterorioks
 
 import App
 import activityModule
