@@ -498,10 +498,10 @@ fun ControlEventsList(
                     LargeSpacer()
                     NavigationItemsRow(
                         onNewsButtonClick = {
-                            navController.navigate(BetterOrioksScreen.NewsScreen(id))
+                            navController.navigate(BetterOrioksScreen.NewsScreen(id)) { launchSingleTop = true }
                         },
                         onResourcesButtonClick = {
-                            navController.navigate(BetterOrioksScreen.ResourcesScreen(id, scienceId, name))
+                            navController.navigate(BetterOrioksScreen.ResourcesScreen(id, scienceId, name)) { launchSingleTop = true }
                         },
                         onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl
                             ?.let { { urlHandler.handleUrl(it) } },

@@ -48,5 +48,4 @@ sealed interface BetterOrioksScreen {
 
         fun getType() = OrioksWebRepository.NewsType.valueOf(type)
     }
-
 }
