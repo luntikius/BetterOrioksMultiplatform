@@ -28,7 +28,6 @@ import model.BetterOrioksScreen
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
-import org.koin.core.component.getScopeName
 import ui.controlEventsScreen.ControlEventsScreen
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
@@ -162,7 +161,7 @@ fun BottomNavigationBar(
         windowInsets = WindowInsets.navigationBars
     ) {
         BOTTOM_NAV_SCREENS.forEach { item ->
-            val isSelected = currentRoute == item.screen.getScopeName().value.replace("$", ".")
+            val isSelected = currentRoute?.split(".")?.last() == item.screen.name
             NavigationBarItem(
                 icon = {
                     Icon(
