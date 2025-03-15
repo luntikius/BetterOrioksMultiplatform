@@ -117,20 +117,20 @@ fun NavigationItemsRow(
             SimpleIconButton(
                 icon = painterResource(Res.drawable.notifications),
                 text = stringResource(Res.string.notifications),
-                onClick = { navController.navigate(BetterOrioksScreen.NotificationsScreen) },
+                onClick = { navController.navigate(BetterOrioksScreen.NotificationsScreen) { launchSingleTop = true } },
                 modifier = Modifier.weight(1f)
             )
         }
         SimpleIconButton(
             icon = painterResource(Res.drawable.news),
             text = stringResource(Res.string.news),
-            onClick = { navController.navigate(BetterOrioksScreen.NewsScreen(null)) },
+            onClick = { navController.navigate(BetterOrioksScreen.NewsScreen(null)) { launchSingleTop = true } },
             modifier = Modifier.weight(1f)
         )
         SimpleIconButton(
             icon = painterResource(Res.drawable.settings),
             text = stringResource(Res.string.settings),
-            onClick = { navController.navigate(BetterOrioksScreen.SettingsScreen) },
+            onClick = { navController.navigate(BetterOrioksScreen.SettingsScreen) { launchSingleTop = true } },
             modifier = Modifier.weight(1f)
         )
     }

@@ -1,7 +1,11 @@
 package ui.loginScreen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,6 +57,7 @@ import utils.UsefulUrls
 
 @Composable
 fun StaticLogo(
+    showSubtitle: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -64,7 +69,7 @@ fun StaticLogo(
             contentDescription = null,
             modifier = Modifier.size(150.dp)
         )
-        Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.displaySmall)
+        if (showSubtitle) Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.displaySmall)
     }
 }
 
@@ -200,6 +205,42 @@ fun LoginScreen(
                 loginScreenViewModel = loginScreenViewModel,
                 modifier = modifier.fillMaxSize().padding(horizontal = 32.dp)
             )
+        is LoginState.IntroductionRequired ->
+            IntroductionContent(
+                loginScreenViewModel,
+            )
+    }
+}
+
+@Composable
+fun IntroductionContent(
+    loginScreenViewModel: LoginScreenViewModel
+) {
+    val uiState by loginScreenViewModel.uiState.collectAsState()
+    Box(
+        modifier = Modifier.padding(32.dp)
+    ) {
+        AnimatedVisibility(
+            visible = uiState.introductionSlide == 0,
+            enter = slideInHorizontally { it },
+            exit = slideOutHorizontally { -it }
+        ) {
+            Slide1(loginScreenViewModel::onIntroductionNextClick)
+        }
+        AnimatedVisibility(
+            visible = uiState.introductionSlide == 1,
+            enter = slideInHorizontally { it },
+            exit = slideOutHorizontally { -it }
+        ) {
+            Slide2(loginScreenViewModel::onIntroductionNextClick)
+        }
+        AnimatedVisibility(
+            visible = uiState.introductionSlide == 2,
+            enter = slideInHorizontally { it },
+            exit = slideOutHorizontally { -it }
+        ) {
+            Slide3(loginScreenViewModel::onIntroductionNextClick)
+        }
     }
 }
 

@@ -378,7 +378,7 @@ fun SubjectsScreenContent(
 ) {
     val isGroupingEnabled by subjectsViewModel.isSubjectsGroupingEnabled.collectAsState(false)
     val onNavigateToSubject = { subjectId: String ->
-        navController.navigate(BetterOrioksScreen.ControlEventsScreen(subjectId))
+        navController.navigate(BetterOrioksScreen.ControlEventsScreen(subjectId)) { launchSingleTop = true }
     }
 
     when (subjectsState) {

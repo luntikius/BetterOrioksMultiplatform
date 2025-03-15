@@ -128,7 +128,11 @@ fun NewsScreen(
 
             is NewsState.Success -> NewsContent(
                 news = (uiState.newsState as NewsState.Success).news,
-                onNewsClick = { navController.navigate(BetterOrioksScreen.NewsViewScreen(it, uiState.newsType.name)) },
+                onNewsClick = {
+                    navController.navigate(BetterOrioksScreen.NewsViewScreen(it, uiState.newsType.name)) {
+                        launchSingleTop = true
+                    }
+                },
                 modifier = Modifier.fillMaxSize()
             )
 

@@ -37,6 +37,39 @@ import ui.theme.gradientColor1
 import ui.theme.gradientColor3
 
 @Composable
+fun Bullet(
+    title: String,
+    subtitle: String,
+    image: Painter,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+    ) {
+        Icon(
+            painter = image,
+            contentDescription = null,
+            modifier = Modifier.size(32.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        LargeSpacer()
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.labelMedium
+            )
+        }
+    }
+}
+
+@Composable
 fun EmptyItem(
     title: String,
     modifier: Modifier = Modifier
