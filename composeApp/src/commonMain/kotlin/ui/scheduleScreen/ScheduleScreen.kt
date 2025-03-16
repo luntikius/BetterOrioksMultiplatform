@@ -64,8 +64,8 @@ import betterorioks.composeapp.generated.resources.no_schedule
 import betterorioks.composeapp.generated.resources.no_schedule_full
 import betterorioks.composeapp.generated.resources.refresh_alert_text
 import betterorioks.composeapp.generated.resources.room_number
+import betterorioks.composeapp.generated.resources.schedule
 import betterorioks.composeapp.generated.resources.schedule_scroll_to_today
-import betterorioks.composeapp.generated.resources.scheldule
 import betterorioks.composeapp.generated.resources.semester_end
 import betterorioks.composeapp.generated.resources.swap_vert
 import betterorioks.composeapp.generated.resources.today
@@ -541,7 +541,7 @@ fun GapItem(
         horizontalArrangement = Arrangement.Center
     ) {
         Icon(
-            painter = painterResource(Res.drawable.scheldule),
+            painter = painterResource(Res.drawable.schedule),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(32.dp)
