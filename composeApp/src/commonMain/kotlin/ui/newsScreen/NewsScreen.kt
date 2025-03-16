@@ -37,6 +37,7 @@ import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
+import ui.common.SwipeRefreshBox
 import utils.BetterOrioksFormats.NEWS_DATE_TIME_FORMAT
 
 @Composable
@@ -71,6 +72,7 @@ fun NewsItem(
 fun NewsContent(
     news: List<News>,
     onNewsClick: (String) -> Unit,
+    viewModel: NewsViewModel,
     modifier: Modifier = Modifier
 ) {
     if (news.isEmpty()) {
@@ -79,15 +81,20 @@ fun NewsContent(
             Modifier.fillMaxSize()
         )
     } else {
-        LazyColumn(
-            modifier = modifier
+        SwipeRefreshBox(
+            onSwipeRefresh = { viewModel.getNews() },
+            isRefreshing = false
         ) {
-            item {
-                MediumSpacer()
-            }
-            items(news) {
-                NewsItem(news = it, onNewsClick, modifier = Modifier.fillMaxWidth())
-                HorizontalDivider()
+            LazyColumn(
+                modifier = modifier
+            ) {
+                item {
+                    MediumSpacer()
+                }
+                items(news) {
+                    NewsItem(news = it, onNewsClick, modifier = Modifier.fillMaxWidth())
+                    HorizontalDivider()
+                }
             }
         }
     }
@@ -133,6 +140,7 @@ fun NewsScreen(
                         launchSingleTop = true
                     }
                 },
+                viewModel = newsViewModel,
                 modifier = Modifier.fillMaxSize()
             )
 

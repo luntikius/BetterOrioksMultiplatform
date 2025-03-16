@@ -35,7 +35,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,7 +61,9 @@ import betterorioks.composeapp.generated.resources.loading_schedule
 import betterorioks.composeapp.generated.resources.loading_schedule_from_web
 import betterorioks.composeapp.generated.resources.no_schedule
 import betterorioks.composeapp.generated.resources.no_schedule_full
+import betterorioks.composeapp.generated.resources.refresh
 import betterorioks.composeapp.generated.resources.refresh_alert_text
+import betterorioks.composeapp.generated.resources.reload
 import betterorioks.composeapp.generated.resources.room_number
 import betterorioks.composeapp.generated.resources.schedule
 import betterorioks.composeapp.generated.resources.schedule_scroll_to_today
@@ -178,6 +179,17 @@ fun MonthInfoRow(
             )
         }
         Spacer(Modifier.weight(1f))
+        IconButton(
+            onClick = { viewModel.setRefreshPopupVisibility(true) },
+        ) {
+            Icon(
+                painterResource(Res.drawable.refresh),
+                contentDescription = stringResource(Res.string.reload),
+                modifier = Modifier.size(28.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+        SmallSpacer()
         IconButton(
             onClick = { viewModel.selectToday() },
             enabled = !isEmptySchedule
@@ -556,22 +568,22 @@ fun GapItem(
 @Composable
 fun LaunchedTracker(
     viewModel: ScheduleScreenViewModel,
-    uiState: State<ScheduleScreenUiState>,
+    uiState: ScheduleScreenUiState,
     dayPagerState: PagerState,
     weekPagerState: PagerState
 ) {
-    val selectedIndex = uiState.value.selectedDayIndex
-    val selectedWeekIndex = uiState.value.selectedWeekIndex
+    val selectedIndex = uiState.selectedDayIndex
+    val selectedWeekIndex = uiState.selectedWeekIndex
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(dayPagerState.currentPage) {
-        if (dayPagerState.currentPage != selectedIndex && !uiState.value.isDayAutoScrollInProgress) {
+        if (dayPagerState.currentPage != selectedIndex && !uiState.isDayAutoScrollInProgress) {
             viewModel.selectDayByIndex(dayPagerState.currentPage)
         }
     }
 
     LaunchedEffect(weekPagerState.currentPage) {
-        if (weekPagerState.currentPage != selectedWeekIndex && !uiState.value.isWeekAutoScrollInProgress) {
+        if (weekPagerState.currentPage != selectedWeekIndex && !uiState.isWeekAutoScrollInProgress) {
             viewModel.selectWeekByIndex(weekPagerState.currentPage)
         }
     }
@@ -602,41 +614,40 @@ fun ScheduleBox(
     viewModel: ScheduleScreenViewModel,
     modifier: Modifier = Modifier
 ) {
-    val uiState = viewModel.uiState.collectAsState()
-    var isRefreshAlertVisible by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsState()
     var isSwitchOptionsAlertVisible by remember { mutableStateOf(false) }
-    val dayPagerState = rememberPagerState(initialPage = uiState.value.selectedDayIndex) { uiState.value.days.size }
-    val weekPagerState = rememberPagerState(initialPage = uiState.value.selectedWeekIndex) { uiState.value.weeks.size }
+    val dayPagerState = rememberPagerState(initialPage = uiState.selectedDayIndex) { uiState.days.size }
+    val weekPagerState = rememberPagerState(initialPage = uiState.selectedWeekIndex) { uiState.weeks.size }
 
     LaunchedTracker(viewModel, uiState, dayPagerState, weekPagerState)
 
     SwipeRefreshBox(
         isRefreshing = false,
-        onSwipeRefresh = { isRefreshAlertVisible = true },
+        onSwipeRefresh = { viewModel.setRefreshPopupVisibility(true) },
         modifier = modifier
     ) {
         Column {
             MediumSpacer()
             MonthInfoRow(
                 viewModel,
-                uiState.value,
+                uiState,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             MediumSpacer()
             WeekInfoRow(
-                uiState.value,
+                uiState,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             DatePicker(
                 viewModel,
-                uiState.value,
+                uiState,
                 weekPagerState,
                 modifier = Modifier.fillMaxWidth()
             )
             SmallSpacer()
             SchedulePager(
-                uiState.value.days,
-                !uiState.value.isDayAutoScrollInProgress,
+                uiState.days,
+                !uiState.isDayAutoScrollInProgress,
                 dayPagerState,
                 { element ->
                     viewModel.setSwitchElement(element)
@@ -648,16 +659,16 @@ fun ScheduleBox(
         }
 
         AttentionAlert(
-            isVisible = isRefreshAlertVisible,
+            isVisible = uiState.isRefreshAlertVisible,
             text = stringResource(Res.string.refresh_alert_text),
             actionButtonText = stringResource(Res.string.Refresh),
             onAction = { viewModel.loadSchedule(refresh = true) },
-            onDismiss = { isRefreshAlertVisible = false },
+            onDismiss = { viewModel.setRefreshPopupVisibility(false) },
         )
 
         SwitchAlert(
             isVisible = isSwitchOptionsAlertVisible,
-            scheduleScreenUiState = uiState.value,
+            scheduleScreenUiState = uiState,
             onSelectOption = { switchOptions -> viewModel.recalculateWindows(switchOptions) },
             onDismiss = { isSwitchOptionsAlertVisible = false },
         )

@@ -180,4 +180,8 @@ class ScheduleScreenViewModel(
             updateSchedule(schedule)
         }
     }
+
+    fun setRefreshPopupVisibility(isVisible: Boolean) {
+        _uiState.update { uis -> uis.copy(isRefreshAlertVisible = isVisible) }
+    }
 }

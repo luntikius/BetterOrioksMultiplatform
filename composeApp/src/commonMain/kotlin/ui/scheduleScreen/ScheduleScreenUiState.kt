@@ -13,5 +13,6 @@ data class ScheduleScreenUiState(
     val selectedWeekIndex: Int = 0,
     val isDayAutoScrollInProgress: Boolean = false,
     val isWeekAutoScrollInProgress: Boolean = false,
-    val switchElement: ScheduleClass = ScheduleClass()
+    val switchElement: ScheduleClass = ScheduleClass(),
+    val isRefreshAlertVisible: Boolean = false
 )
