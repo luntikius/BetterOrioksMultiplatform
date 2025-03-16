@@ -501,7 +501,9 @@ fun ControlEventsList(
                             navController.navigate(BetterOrioksScreen.NewsScreen(id)) { launchSingleTop = true }
                         },
                         onResourcesButtonClick = {
-                            navController.navigate(BetterOrioksScreen.ResourcesScreen(id, scienceId, name)) { launchSingleTop = true }
+                            navController.navigate(BetterOrioksScreen.ResourcesScreen(id, scienceId, name)) {
+                                launchSingleTop = true
+                            }
                         },
                         onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl
                             ?.let { { urlHandler.handleUrl(it) } },
