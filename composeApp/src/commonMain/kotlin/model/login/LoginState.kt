@@ -33,6 +33,8 @@ sealed interface LoginState {
 
     data object Loading : LoginState
 
+    data object IntroductionRequired : LoginState
+
     data class LoginRequired(val reason: LoginRequiredReason) : LoginState
 
     data object Success : LoginState

@@ -31,7 +31,7 @@ class LoginScreenViewModel(
                 }
             } else {
                 _uiState.update { uis ->
-                    uis.copy(loginState = LoginState.LoginRequired(LoginRequiredReason.WAS_NOT_LOGGED_IN))
+                    uis.copy(loginState = LoginState.IntroductionRequired)
                 }
             }
         }
@@ -74,5 +74,20 @@ class LoginScreenViewModel(
                 }
             }
         }
+    }
+
+    fun onIntroductionNextClick() {
+        val slide = uiState.value.introductionSlide
+        if (slide < NUMBER_OF_SLIDES - 1) {
+            _uiState.update { uis -> uis.copy(introductionSlide = slide + 1) }
+        } else {
+            _uiState.update { uis ->
+                uis.copy(loginState = LoginState.LoginRequired(LoginRequiredReason.WAS_NOT_LOGGED_IN))
+            }
+        }
+    }
+
+    companion object {
+        private const val NUMBER_OF_SLIDES = 3
     }
 }

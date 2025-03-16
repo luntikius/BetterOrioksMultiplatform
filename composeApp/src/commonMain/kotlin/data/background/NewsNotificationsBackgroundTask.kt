@@ -7,7 +7,9 @@ import data.OrioksWebRepository
 import data.UserPreferencesRepository
 import handlers.NotificationsHandler
 import kotlinx.coroutines.flow.first
+import model.BetterOrioksScreen
 import model.background.BackgroundTask
+import model.news.News
 import org.jetbrains.compose.resources.getString
 
 class NewsNotificationsBackgroundTask(
@@ -17,17 +19,26 @@ class NewsNotificationsBackgroundTask(
     private val notificationsHandler: NotificationsHandler,
 ) : BackgroundTask {
 
-    override suspend fun execute(silently: Boolean) {
-        val authData = userPreferencesRepository.authData.first()
-        val news = orioksWebRepository.getNews(authData, OrioksWebRepository.NewsType.Main, null)
+    suspend fun executeWithData(news: List<News>, silently: Boolean) {
         val lastNews = news.firstOrNull() ?: return
         val diff = notificationsRepository.updateNewsAndGetDiff(lastNews.id)
         if (diff) {
             val title = getString(Res.string.notification_news_title)
             val subtitle = lastNews.title
-            notificationsHandler.sendNotification(title, subtitle)
+            if (!silently) {
+                notificationsHandler.sendNotification(
+                    title = title,
+                    subtitle = subtitle,
+                    screenOpenAction = BetterOrioksScreen.NewsViewScreen(id = lastNews.id, type = "Main")
+                )
+            }
             notificationsRepository.addNotification(title, subtitle)
         }
     }
 
+    override suspend fun execute() {
+        val authData = userPreferencesRepository.authData.first()
+        val news = orioksWebRepository.getNews(authData, OrioksWebRepository.NewsType.Main, null)
+        executeWithData(news, false)
+    }
 }

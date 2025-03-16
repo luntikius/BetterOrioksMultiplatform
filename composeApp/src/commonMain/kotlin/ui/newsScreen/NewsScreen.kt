@@ -25,7 +25,7 @@ import betterorioks.composeapp.generated.resources.news_date
 import betterorioks.composeapp.generated.resources.no_news
 import betterorioks.composeapp.generated.resources.subject_news
 import data.OrioksWebRepository
-import model.NewsViewScreen
+import model.BetterOrioksScreen
 import model.news.News
 import model.news.NewsState
 import org.jetbrains.compose.resources.stringResource
@@ -37,6 +37,7 @@ import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
 import ui.common.MediumSpacer
+import ui.common.SwipeRefreshBox
 import utils.BetterOrioksFormats.NEWS_DATE_TIME_FORMAT
 
 @Composable
@@ -71,6 +72,7 @@ fun NewsItem(
 fun NewsContent(
     news: List<News>,
     onNewsClick: (String) -> Unit,
+    viewModel: NewsViewModel,
     modifier: Modifier = Modifier
 ) {
     if (news.isEmpty()) {
@@ -79,15 +81,20 @@ fun NewsContent(
             Modifier.fillMaxSize()
         )
     } else {
-        LazyColumn(
-            modifier = modifier
+        SwipeRefreshBox(
+            onSwipeRefresh = { viewModel.getNews() },
+            isRefreshing = false
         ) {
-            item {
-                MediumSpacer()
-            }
-            items(news) {
-                NewsItem(news = it, onNewsClick, modifier = Modifier.fillMaxWidth())
-                HorizontalDivider()
+            LazyColumn(
+                modifier = modifier
+            ) {
+                item {
+                    MediumSpacer()
+                }
+                items(news) {
+                    NewsItem(news = it, onNewsClick, modifier = Modifier.fillMaxWidth())
+                    HorizontalDivider()
+                }
             }
         }
     }
@@ -128,7 +135,12 @@ fun NewsScreen(
 
             is NewsState.Success -> NewsContent(
                 news = (uiState.newsState as NewsState.Success).news,
-                onNewsClick = { navController.navigate(NewsViewScreen(it, uiState.newsType.name)) },
+                onNewsClick = {
+                    navController.navigate(BetterOrioksScreen.NewsViewScreen(it, uiState.newsType.name)) {
+                        launchSingleTop = true
+                    }
+                },
+                viewModel = newsViewModel,
                 modifier = Modifier.fillMaxSize()
             )
 

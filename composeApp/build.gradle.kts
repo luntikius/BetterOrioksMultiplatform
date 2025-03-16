@@ -80,7 +80,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.luntikius.betterorioks"
+    namespace = "com.studentapp.betterorioks"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -88,11 +88,11 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "com.luntikius.betterorioks"
+        applicationId = "com.studentapp.betterorioks"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 3
-        versionName = "alpha-2.1"
+        versionCode = 104
+        versionName = "1.0"
     }
     packaging {
         resources {
@@ -101,7 +101,13 @@ android {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            ndk.debugSymbolLevel = "FULL"
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs.getByName("debug")
         }
     }

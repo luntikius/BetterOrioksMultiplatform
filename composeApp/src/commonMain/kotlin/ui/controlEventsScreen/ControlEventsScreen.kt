@@ -64,8 +64,7 @@ import betterorioks.composeapp.generated.resources.teacher
 import betterorioks.composeapp.generated.resources.teachers
 import handlers.BufferHandler
 import handlers.UrlHandler
-import model.NewsScreen
-import model.ResourcesScreen
+import model.BetterOrioksScreen
 import model.request.ResponseState
 import model.subjectPerformance.ControlEventsListItem
 import model.subjectPerformance.DisplaySubjectPerformance
@@ -161,8 +160,8 @@ fun TeacherItem(
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 2.dp)
                         .clip(RoundedCornerShape(8.dp))
+                        .padding(horizontal = 2.dp)
                         .clickable { bufferHandler.copyToClipboard(teacher.name) }
                 )
                 Text(
@@ -170,8 +169,8 @@ fun TeacherItem(
                     style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 2.dp)
                         .clip(RoundedCornerShape(8.dp))
+                        .padding(horizontal = 2.dp)
                         .clickable { bufferHandler.copyToClipboard(teacher.email) }
                 )
             }
@@ -499,10 +498,12 @@ fun ControlEventsList(
                     LargeSpacer()
                     NavigationItemsRow(
                         onNewsButtonClick = {
-                            navController.navigate(NewsScreen(id))
+                            navController.navigate(BetterOrioksScreen.NewsScreen(id)) { launchSingleTop = true }
                         },
                         onResourcesButtonClick = {
-                            navController.navigate(ResourcesScreen(id, scienceId, name))
+                            navController.navigate(BetterOrioksScreen.ResourcesScreen(id, scienceId, name)) {
+                                launchSingleTop = true
+                            }
                         },
                         onMoodleButtonClick = subjectPerformance.subject.moodleCourseUrl
                             ?.let { { urlHandler.handleUrl(it) } },

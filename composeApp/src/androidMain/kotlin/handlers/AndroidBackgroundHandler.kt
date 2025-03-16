@@ -24,7 +24,7 @@ class AndroidBackgroundHandler(context: Context) : BackgroundHandler {
     override fun scheduleTask(backgroundTask: BackgroundTaskType) {
         workManager.enqueueUniquePeriodicWork(
             backgroundTask.name,
-            ExistingPeriodicWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.UPDATE,
             getPeriodicWorkRequest(backgroundTask)
         )
     }
@@ -65,7 +65,7 @@ class AndroidBackgroundHandler(context: Context) : BackgroundHandler {
                 BackgroundTaskType.NewsNotifications -> inject<NewsNotificationsBackgroundTask>()
                 BackgroundTaskType.SubjectNotifications -> inject<SubjectNotificationsBackgroundTask>()
             }
-            task.value.execute(silently = false)
+            task.value.execute()
             return Result.success()
         }
     }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import model.settings.Theme
 
 class SettingsViewModel(
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
     private var counter = 0
     private val _uiState: MutableStateFlow<SettingsUiState> = MutableStateFlow(SettingsUiState())

@@ -33,7 +33,7 @@ fun sharedModule() = module {
     single { MietWebRepository() }
     single { OrioksWebRepository(get(), get()) }
     single { SubjectsWebRepository(get(), get()) }
-    single { SubjectsRepository(get(), get()) }
+    single { SubjectsRepository(get(), get(), get()) }
 
     // db
     single { ScheduleDatabase.getRoomDatabase(get(named(SCHEDULE_DATABASE_BUILDER_NAME))) }
@@ -49,7 +49,7 @@ fun sharedModule() = module {
     viewModel { AppViewModel(get()) }
     viewModel { MenuScreenViewModel(get(), get(), get(), get()) }
     viewModel { LoginScreenViewModel(get(), get()) }
-    viewModel { parameters -> NewsViewModel(parameters.getOrNull(String::class), get(), get()) }
+    viewModel { parameters -> NewsViewModel(parameters.getOrNull(String::class), get(), get(), get()) }
     viewModel { parameters -> NewsViewViewModel(parameters.get(), parameters.get(), get(), get()) }
     viewModel { SubjectsViewModel(get(), get()) }
     viewModel { parameters -> ControlEventsViewModel(parameters.get(), get()) }

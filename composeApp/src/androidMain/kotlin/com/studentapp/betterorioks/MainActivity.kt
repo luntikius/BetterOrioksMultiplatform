@@ -1,14 +1,18 @@
-package com.luntikius.betterorioks
+package com.studentapp.betterorioks
 
 import App
 import activityModule
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import handlers.PermissionRequestHandler
+import handlers.ThemeHandler
+import kotlinx.serialization.json.Json
+import model.BetterOrioksScreen
 import org.koin.android.ext.android.inject
 import java.util.Locale
 
@@ -17,6 +21,7 @@ class MainActivity : ComponentActivity() {
     private fun initActivityModule() {
         org.koin.core.context.loadKoinModules(activityModule(this))
         inject<PermissionRequestHandler>().value
+        inject<ThemeHandler>().value
     }
 
     private fun setRussianLocale() {
@@ -29,24 +34,40 @@ class MainActivity : ComponentActivity() {
         this.applicationContext.createConfigurationContext(config)
     }
 
+    private fun getOpenScreenAction(): BetterOrioksScreen? {
+        val screenJson = intent.getStringExtra(EXTRA_SCREEN)
+        return screenJson?.let {
+            try {
+                Json.decodeFromString(it)
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
+        initActivityModule()
 
         super.onCreate(savedInstanceState)
-
-        initActivityModule()
 
         setRussianLocale()
 
         enableEdgeToEdge()
 
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
+
         setContent {
-            App()
+            App(
+                openScreenAction = getOpenScreenAction()
+            )
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        org.koin.core.context.unloadKoinModules(activityModule(this))
+    companion object {
+        const val EXTRA_SCREEN = "screen"
     }
 }

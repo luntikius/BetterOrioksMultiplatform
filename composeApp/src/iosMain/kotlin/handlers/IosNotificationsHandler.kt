@@ -1,6 +1,7 @@
 package handlers
 
 import kotlinx.datetime.Clock
+import model.BetterOrioksScreen
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationRequest
 import platform.UserNotifications.UNTimeIntervalNotificationTrigger
@@ -8,7 +9,11 @@ import platform.UserNotifications.UNUserNotificationCenter
 
 class IosNotificationsHandler : NotificationsHandler {
 
-    override fun sendNotification(title: String, subtitle: String) {
+    override fun sendNotification(
+        title: String,
+        subtitle: String,
+        screenOpenAction: BetterOrioksScreen?
+    ) {
         val content = UNMutableNotificationContent().apply {
             setTitle(title)
             setBody(subtitle)

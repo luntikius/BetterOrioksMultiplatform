@@ -12,6 +12,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -23,19 +24,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import model.BetterOrioksScreen
 import model.BottomNavItem
-import model.ControlEventsScreen
-import model.MenuScreen
-import model.NewsScreen
-import model.NewsViewScreen
-import model.NotificationsScreen
-import model.ResourcesScreen
-import model.ScheduleScreen
-import model.SettingsScreen
-import model.SubjectsScreen
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
-import org.koin.core.component.getScopeName
 import ui.controlEventsScreen.ControlEventsScreen
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
@@ -59,13 +51,17 @@ private val BOTTOM_NAV_SCREENS = listOf(
 
 @Composable
 fun BetterOrioksApp(
-    appViewModel: AppViewModel
+    appViewModel: AppViewModel,
+    openScreenAction: BetterOrioksScreen?
 ) {
     val state by appViewModel.state.collectAsState()
+    val navController = rememberNavController()
+    LaunchedEffect(Unit) {
+        if (state.isAuthorized && openScreenAction != null) navController.navigate(openScreenAction)
+    }
 
     BetterOrioksTheme(state.settings) {
         if (state.isAuthorized) {
-            val navController = rememberNavController()
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = { if (state.isAuthorized) BottomNavigationBar(navController) }
@@ -101,24 +97,24 @@ fun AppNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = ScheduleScreen,
+        startDestination = BetterOrioksScreen.ScheduleScreen,
         modifier = modifier
     ) {
-        composable<ScheduleScreen> {
+        composable<BetterOrioksScreen.ScheduleScreen> {
             ScheduleScreen(scheduleScreenViewModel)
         }
 
-        composable<SubjectsScreen> {
+        composable<BetterOrioksScreen.SubjectsScreen> {
             SubjectsScreen(navController, subjectsViewModel)
         }
 
-        composable<ControlEventsScreen> { backStackEntry ->
-            val route = backStackEntry.toRoute<ControlEventsScreen>()
+        composable<BetterOrioksScreen.ControlEventsScreen> { backStackEntry ->
+            val route = backStackEntry.toRoute<BetterOrioksScreen.ControlEventsScreen>()
             ControlEventsScreen(route.subjectId, navController)
         }
 
-        composable<ResourcesScreen> { backStackEntry ->
-            val route = backStackEntry.toRoute<ResourcesScreen>()
+        composable<BetterOrioksScreen.ResourcesScreen> { backStackEntry ->
+            val route = backStackEntry.toRoute<BetterOrioksScreen.ResourcesScreen>()
             ResourcesScreen(
                 subjectName = route.subjectName,
                 disciplineId = route.subjectId,
@@ -127,25 +123,25 @@ fun AppNavigation(
             )
         }
 
-        composable<MenuScreen> {
+        composable<BetterOrioksScreen.MenuScreen> {
             MenuScreen(navController, menuScreenViewModel)
         }
 
-        composable<NewsScreen> { backstackEntry ->
-            val route = backstackEntry.toRoute<NewsScreen>()
+        composable<BetterOrioksScreen.NewsScreen> { backstackEntry ->
+            val route = backstackEntry.toRoute<BetterOrioksScreen.NewsScreen>()
             NewsScreen(route.subjectId, navController)
         }
 
-        composable<NewsViewScreen> { backStackEntry ->
-            val route = backStackEntry.toRoute<NewsViewScreen>()
+        composable<BetterOrioksScreen.NewsViewScreen> { backStackEntry ->
+            val route = backStackEntry.toRoute<BetterOrioksScreen.NewsViewScreen>()
             NewsViewScreen(route.id, route.getType(), navController)
         }
 
-        composable<NotificationsScreen> {
+        composable<BetterOrioksScreen.NotificationsScreen> {
             NotificationsScreen(navController)
         }
 
-        composable<SettingsScreen> {
+        composable<BetterOrioksScreen.SettingsScreen> {
             SettingsScreen(navController)
         }
     }
@@ -165,6 +161,7 @@ fun BottomNavigationBar(
         windowInsets = WindowInsets.navigationBars
     ) {
         BOTTOM_NAV_SCREENS.forEach { item ->
+            val isSelected = currentRoute?.split(".")?.last() == item.screen.name
             NavigationBarItem(
                 icon = {
                     Icon(
@@ -178,11 +175,14 @@ fun BottomNavigationBar(
                     unselectedIconColor = MaterialTheme.colorScheme.primary.copy(0.5f),
                     indicatorColor = MaterialTheme.colorScheme.primary.copy(0.0f)
                 ),
-                selected = currentRoute == item.screen.getScopeName().toString(),
+                selected = isSelected,
                 onClick = {
-                    navController.navigate(item.screen) {
-                        launchSingleTop = true
-                        restoreState = item.restoreState
+                    if (!isSelected) {
+                        navController.navigate(item.screen) {
+                            popUpTo(0)
+                            launchSingleTop = true
+                            restoreState = item.restoreState
+                        }
                     }
                 },
                 alwaysShowLabel = false
