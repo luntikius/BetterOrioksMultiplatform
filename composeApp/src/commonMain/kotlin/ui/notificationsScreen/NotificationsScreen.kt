@@ -23,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import betterorioks.composeapp.generated.resources.Res
-import betterorioks.composeapp.generated.resources.academic_performance
 import betterorioks.composeapp.generated.resources.content_description_clear
 import betterorioks.composeapp.generated.resources.logo
 import betterorioks.composeapp.generated.resources.news
@@ -32,6 +31,7 @@ import betterorioks.composeapp.generated.resources.no_notifications
 import betterorioks.composeapp.generated.resources.notifications
 import betterorioks.composeapp.generated.resources.notifications_history
 import betterorioks.composeapp.generated.resources.notifications_settings
+import betterorioks.composeapp.generated.resources.subjects
 import betterorioks.composeapp.generated.resources.subjects_notifications
 import betterorioks.composeapp.generated.resources.trash_can
 import model.database.notifications.NotificationEntity
@@ -182,7 +182,7 @@ fun NotificationButtonsRow(
         LargeSpacer()
         ToggleButton(
             isChecked = uiState.notificationSettings.isSubjectNotificationEnabled,
-            iconPainter = painterResource(Res.drawable.academic_performance),
+            iconPainter = painterResource(Res.drawable.subjects),
             text = stringResource(Res.string.subjects_notifications),
             onClick = { viewModel.toggleSubjectNotifications() },
             modifier = Modifier.weight(1f)

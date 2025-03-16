@@ -7,7 +7,7 @@ class AndroidThemeHandler(private val activity: Activity) : ThemeHandler {
     override fun setStatusBarTheme(isSystemInDarkTheme: Boolean): Unit = activity.run {
         WindowCompat.getInsetsController(window, window.decorView).apply {
             isAppearanceLightStatusBars = !isSystemInDarkTheme
+            isAppearanceLightNavigationBars = !isSystemInDarkTheme
         }
-
     }
 }

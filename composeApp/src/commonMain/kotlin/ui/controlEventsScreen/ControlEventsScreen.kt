@@ -160,8 +160,8 @@ fun TeacherItem(
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 2.dp)
                         .clip(RoundedCornerShape(8.dp))
+                        .padding(horizontal = 2.dp)
                         .clickable { bufferHandler.copyToClipboard(teacher.name) }
                 )
                 Text(
@@ -169,8 +169,8 @@ fun TeacherItem(
                     style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 2.dp)
                         .clip(RoundedCornerShape(8.dp))
+                        .padding(horizontal = 2.dp)
                         .clickable { bufferHandler.copyToClipboard(teacher.email) }
                 )
             }
