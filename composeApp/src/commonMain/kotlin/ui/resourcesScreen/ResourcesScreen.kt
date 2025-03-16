@@ -3,6 +3,7 @@ package ui.resourcesScreen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -133,6 +135,7 @@ fun ResourcesContent(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ResourcesScreen(
     subjectName: String,
@@ -148,7 +151,9 @@ fun ResourcesScreen(
     ResourcesPopup(
         resourcePopupVisibilityState = uiState.resourcePopupVisibility,
         onDismiss = resourcesViewViewModel::hideResourcePopup,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxWidth()
+            .fillMaxHeight(0.85f)
+            .padding(horizontal = 16.dp)
     )
 
     Column(

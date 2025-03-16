@@ -179,6 +179,7 @@ fun BottomNavigationBar(
                 onClick = {
                     if (!isSelected) {
                         navController.navigate(item.screen) {
+                            popUpTo(BetterOrioksScreen.ScheduleScreen) { inclusive = true }
                             launchSingleTop = true
                             restoreState = item.restoreState
                         }
