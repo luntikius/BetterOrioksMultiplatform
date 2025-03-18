@@ -1,6 +1,9 @@
 package ui.subjectsScreen
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,6 +50,7 @@ import betterorioks.composeapp.generated.resources.change_semester
 import betterorioks.composeapp.generated.resources.content_description_group_subjects
 import betterorioks.composeapp.generated.resources.content_description_select_semester
 import betterorioks.composeapp.generated.resources.loading_subjects
+import betterorioks.composeapp.generated.resources.no_subjects
 import betterorioks.composeapp.generated.resources.sort
 import model.BetterOrioksScreen
 import model.schedule.scheduleJson.Semester
@@ -56,6 +60,7 @@ import model.subjects.SubjectsState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ui.common.BetterOrioksPopup
+import ui.common.EmptyItem
 import ui.common.ErrorScreenWithReloadButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
@@ -241,31 +246,33 @@ fun SubjectItem(
 @Composable
 fun SubjectsColumn(
     subjectsState: SubjectsState.Success,
-    subjectsViewModel: SubjectsViewModel,
     isGroupingEnabled: Boolean,
     onNavigateToSubject: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val allSubjects = subjectsState.subjectListItems + subjectsState.debtSubjectListItems
 
-    SubcomposeLayout { constraints ->
-        val composables: List<@Composable () -> Unit> = allSubjects.map { @Composable { PointsDisplay(it) } }
-        val placeables = composables.mapIndexed { index, composable ->
-            val placeable = subcompose(index) {
-                composable()
-            }.first().measure(constraints)
-            placeable
-        }
+    if (allSubjects.isEmpty()) {
+        EmptyItem(
+            title = stringResource(Res.string.no_subjects),
+            modifier = modifier.fillMaxSize().scrollable(rememberScrollableState { 0f }, Orientation.Vertical)
+        )
+    } else {
+        SubcomposeLayout { constraints ->
+            val composables: List<@Composable () -> Unit> = allSubjects.map { @Composable { PointsDisplay(it) } }
+            val placeables = composables.mapIndexed { index, composable ->
+                val placeable = subcompose(index) {
+                    composable()
+                }.first().measure(constraints)
+                placeable
+            }
 
-        val width = placeables.maxBy { it.measuredWidth }.measuredWidth.toDp()
+            val width = placeables.maxBy { it.measuredWidth }.measuredWidth.toDp()
 
-        val mainPlaceable = subcompose(composables.size + 1) {
-            SwipeRefreshBox(
-                onSwipeRefresh = { subjectsViewModel.getSubjects(true) },
-                isRefreshing = false,
-                modifier = modifier
-            ) {
-                LazyColumn {
+            val mainPlaceable = subcompose(composables.size + 1) {
+                LazyColumn(
+                    modifier = modifier
+                ) {
                     item {
                         if (isGroupingEnabled) {
                             GroupedSubjects(
@@ -295,11 +302,11 @@ fun SubjectsColumn(
                         }
                     }
                 }
-            }
-        }.first().measure(constraints)
+            }.first().measure(constraints)
 
-        layout(constraints.maxWidth, constraints.maxHeight) {
-            mainPlaceable.place(0, 0)
+            layout(constraints.maxWidth, constraints.maxHeight) {
+                mainPlaceable.place(0, 0)
+            }
         }
     }
 }
@@ -383,13 +390,18 @@ fun SubjectsScreenContent(
 
     when (subjectsState) {
         is SubjectsState.Success -> {
-            SubjectsColumn(
-                subjectsState,
-                subjectsViewModel = subjectsViewModel,
-                isGroupingEnabled = isGroupingEnabled,
-                onNavigateToSubject = onNavigateToSubject,
-                modifier = modifier,
-            )
+            SwipeRefreshBox(
+                onSwipeRefresh = { subjectsViewModel.getSubjects(true) },
+                isRefreshing = false,
+                modifier = modifier
+            ) {
+                SubjectsColumn(
+                    subjectsState,
+                    isGroupingEnabled = isGroupingEnabled,
+                    onNavigateToSubject = onNavigateToSubject,
+                    modifier = modifier,
+                )
+            }
         }
         is SubjectsState.Error -> {
             ErrorScreenWithReloadButton(
