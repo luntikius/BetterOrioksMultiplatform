@@ -51,7 +51,7 @@ class SubjectFromWeb(
     val controlEvents: List<ControlEvent> = segments.map { it.allControlEvents }.flatten()
 
     val currentPoints: String =
-        controlEvents.sumOf { it.grade.currentPoints.toIntOrNull() ?: 0 }
+        controlEvents.sumOf { it.grade.currentPoints.toDoubleOrNull() ?: 0.0 }
             .toString().takeIf { it != "0" } ?: grade.fullPoints
 
     val maxPoints: Double

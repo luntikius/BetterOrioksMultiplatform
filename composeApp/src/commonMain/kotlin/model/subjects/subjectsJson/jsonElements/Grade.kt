@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 @kotlinx.serialization.Serializable
 data class Grade(
     @SerialName("b")
-    val currentPoints: String = "",
+    val currentPoints: String = "-",
     @SerialName("f")
     val fullPoints: String = "-",
     @SerialName("p")
