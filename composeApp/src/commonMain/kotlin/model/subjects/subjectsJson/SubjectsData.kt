@@ -32,27 +32,27 @@ interface SubjectsData {
     val allSubjects: List<SubjectFromWeb>
         get() = currentSubjects + debts
 
-    val displaySubjectPerformance: Map<String, DisplaySubjectPerformance>
-        get() = buildMap {
-            allSubjects.forEach { subject ->
-                val id = subject.id.toString() + if (subject.isDebt) DEBT_POSTFIX else NO_DEBT_POSTFIX
-                val weeksPassedSinceSemesterStart = getLastSemesterDates().weeksPassedSinceSemesterStart
-                val controlEventsList = buildControlEventsList(
-                    subject.controlEvents,
-                    weeksPassedSinceSemesterStart,
-                    subject.formOfControl.name
-                )
-                val displaySubjectPerformance = DisplaySubjectPerformance(
-                    subject = subject.toSubjectListItem(subjectsWithMoodleIds),
-                    controlEvents = controlEventsList,
-                    controlForm = subject.formOfControl.name.ifBlank { null },
-                    teachers = subject.teachers,
-                )
-                put(
-                    id, displaySubjectPerformance
-                )
-            }
+    fun getDisplaySubjectPerformance(shouldAddWeeksLeftItem: Boolean): Map<String, DisplaySubjectPerformance> = buildMap {
+        allSubjects.forEach { subject ->
+            val id = subject.id.toString() + if (subject.isDebt) DEBT_POSTFIX else NO_DEBT_POSTFIX
+            val weeksPassedSinceSemesterStart = getLastSemesterDates().weeksPassedSinceSemesterStart
+            val controlEventsList = buildControlEventsList(
+                subject.controlEvents,
+                weeksPassedSinceSemesterStart,
+                subject.formOfControl.name,
+                shouldAddWeeksLeftItem
+            )
+            val displaySubjectPerformance = DisplaySubjectPerformance(
+                subject = subject.toSubjectListItem(subjectsWithMoodleIds),
+                controlEvents = controlEventsList,
+                controlForm = subject.formOfControl.name.ifBlank { null },
+                teachers = subject.teachers,
+            )
+            put(
+                id, displaySubjectPerformance
+            )
         }
+    }
 
     fun getLastSemesterDates(): SemesterDates {
         return semesters.last { it.startDate != null }.toSemesterDates()
@@ -61,12 +61,13 @@ interface SubjectsData {
     private fun buildControlEventsList(
         controlEvents: List<ControlEvent>,
         weeksPassedSinceSemesterStart: Int,
-        controlForm: String
+        controlForm: String,
+        shouldAddWeeksLeftItem: Boolean,
     ): List<ControlEventsListItem> = buildSet {
         controlEvents.forEach { controlEvent ->
             val weeksBeforeEvent = maxOf(-1, controlEvent.week - weeksPassedSinceSemesterStart - 1)
             val weeksLeftItem = ControlEventsListItem.WeeksLeftItem(weeksBeforeEvent)
-            if (!this.contains(weeksLeftItem)) add(weeksLeftItem)
+            if (!this.contains(weeksLeftItem) && shouldAddWeeksLeftItem) add(weeksLeftItem)
             add(controlEvent.toControlEventItem(controlForm))
         }
     }.toList()

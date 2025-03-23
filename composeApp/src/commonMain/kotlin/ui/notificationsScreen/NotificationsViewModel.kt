@@ -100,4 +100,8 @@ class NotificationsViewModel(
         viewModelScope.launch { notificationRepository.dumpNotificationsHistory() }
     }
 
+    fun setInfoPopupVisibility(visible: Boolean) {
+        _uiState.update { uis -> uis.copy(isInfoPopupVisible = visible) }
+    }
+
 }

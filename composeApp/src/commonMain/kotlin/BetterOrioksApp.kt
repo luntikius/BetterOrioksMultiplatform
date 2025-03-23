@@ -1,3 +1,9 @@
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +17,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,6 +25,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -49,6 +58,8 @@ private val BOTTOM_NAV_SCREENS = listOf(
     BottomNavItem.Menu
 )
 
+const val ANIMATION_DURATION = 500
+
 @Composable
 fun BetterOrioksApp(
     appViewModel: AppViewModel,
@@ -56,8 +67,15 @@ fun BetterOrioksApp(
 ) {
     val state by appViewModel.state.collectAsState()
     val navController = rememberNavController()
-    LaunchedEffect(Unit) {
+    LaunchedEffect(openScreenAction) {
         if (state.isAuthorized && openScreenAction != null) navController.navigate(openScreenAction)
+    }
+    LaunchedEffect(state.isAuthorized) {
+        if (!state.isAuthorized) {
+            navController.navigate(BetterOrioksScreen.ScheduleScreen) {
+                popUpTo(0)
+            }
+        }
     }
 
     BetterOrioksTheme(state.settings) {
@@ -86,6 +104,36 @@ fun BetterOrioksApp(
     }
 }
 
+inline fun <reified T : Any> NavGraphBuilder.betterOrioksFadeable(
+    noinline content: @Composable (AnimatedContentScope.(NavBackStackEntry) -> Unit)
+) {
+    composable<T>(
+        enterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
+        exitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
+        popEnterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
+        popExitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
+        content = content
+    )
+}
+
+inline fun <reified T : Any> NavGraphBuilder.betterOrioksSlidable(
+    noinline content: @Composable (AnimatedContentScope.(NavBackStackEntry) -> Unit)
+) {
+    composable<T>(
+        enterTransition = { slideInHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it } },
+        exitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
+        popEnterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
+        popExitTransition = { slideOutHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it } },
+        content = { scope ->
+            Surface(
+                color = MaterialTheme.colorScheme.background
+            ) {
+                content(scope)
+            }
+        }
+    )
+}
+
 @Composable
 fun AppNavigation(
     navController: NavHostController,
@@ -100,20 +148,20 @@ fun AppNavigation(
         startDestination = BetterOrioksScreen.ScheduleScreen,
         modifier = modifier
     ) {
-        composable<BetterOrioksScreen.ScheduleScreen> {
+        betterOrioksFadeable<BetterOrioksScreen.ScheduleScreen> {
             ScheduleScreen(scheduleScreenViewModel)
         }
 
-        composable<BetterOrioksScreen.SubjectsScreen> {
+        betterOrioksFadeable<BetterOrioksScreen.SubjectsScreen> {
             SubjectsScreen(navController, subjectsViewModel)
         }
 
-        composable<BetterOrioksScreen.ControlEventsScreen> { backStackEntry ->
+        betterOrioksSlidable<BetterOrioksScreen.ControlEventsScreen> { backStackEntry ->
             val route = backStackEntry.toRoute<BetterOrioksScreen.ControlEventsScreen>()
-            ControlEventsScreen(route.subjectId, navController)
+            ControlEventsScreen(route.subjectId, route.semesterId, navController)
         }
 
-        composable<BetterOrioksScreen.ResourcesScreen> { backStackEntry ->
+        betterOrioksSlidable<BetterOrioksScreen.ResourcesScreen> { backStackEntry ->
             val route = backStackEntry.toRoute<BetterOrioksScreen.ResourcesScreen>()
             ResourcesScreen(
                 subjectName = route.subjectName,
@@ -123,25 +171,25 @@ fun AppNavigation(
             )
         }
 
-        composable<BetterOrioksScreen.MenuScreen> {
+        betterOrioksFadeable<BetterOrioksScreen.MenuScreen> {
             MenuScreen(navController, menuScreenViewModel)
         }
 
-        composable<BetterOrioksScreen.NewsScreen> { backstackEntry ->
+        betterOrioksSlidable<BetterOrioksScreen.NewsScreen> { backstackEntry ->
             val route = backstackEntry.toRoute<BetterOrioksScreen.NewsScreen>()
             NewsScreen(route.subjectId, navController)
         }
 
-        composable<BetterOrioksScreen.NewsViewScreen> { backStackEntry ->
+        betterOrioksSlidable<BetterOrioksScreen.NewsViewScreen> { backStackEntry ->
             val route = backStackEntry.toRoute<BetterOrioksScreen.NewsViewScreen>()
             NewsViewScreen(route.id, route.getType(), navController)
         }
 
-        composable<BetterOrioksScreen.NotificationsScreen> {
+        betterOrioksSlidable<BetterOrioksScreen.NotificationsScreen> {
             NotificationsScreen(navController)
         }
 
-        composable<BetterOrioksScreen.SettingsScreen> {
+        betterOrioksSlidable<BetterOrioksScreen.SettingsScreen> {
             SettingsScreen(navController)
         }
     }

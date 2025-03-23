@@ -4,9 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -24,20 +26,30 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.content_description_clear
+import betterorioks.composeapp.generated.resources.content_description_notifications_info
+import betterorioks.composeapp.generated.resources.info
 import betterorioks.composeapp.generated.resources.logo
 import betterorioks.composeapp.generated.resources.news
 import betterorioks.composeapp.generated.resources.news_notifications
 import betterorioks.composeapp.generated.resources.no_notifications
 import betterorioks.composeapp.generated.resources.notifications
 import betterorioks.composeapp.generated.resources.notifications_history
+import betterorioks.composeapp.generated.resources.notifications_info_pt1_subtitle
+import betterorioks.composeapp.generated.resources.notifications_info_pt1_title
+import betterorioks.composeapp.generated.resources.notifications_info_pt2_subtitle
+import betterorioks.composeapp.generated.resources.notifications_info_pt2_title
+import betterorioks.composeapp.generated.resources.notifications_info_title
 import betterorioks.composeapp.generated.resources.notifications_settings
 import betterorioks.composeapp.generated.resources.subjects
 import betterorioks.composeapp.generated.resources.subjects_notifications
 import betterorioks.composeapp.generated.resources.trash_can
+import betterorioks.composeapp.generated.resources.web
 import model.database.notifications.NotificationEntity
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import ui.common.BetterOrioksPopup
+import ui.common.Bullet
 import ui.common.DefaultHeader
 import ui.common.EmptyItem
 import ui.common.LargeSpacer
@@ -56,10 +68,49 @@ fun NotificationsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val notifications by viewModel.notificationsHistoryFlow.collectAsState(listOf())
 
+    if (uiState.isInfoPopupVisible) {
+        BetterOrioksPopup(
+            title = stringResource(Res.string.notifications_info_title),
+            onDismiss = { viewModel.setInfoPopupVisibility(false) },
+            modifier = modifier.fillMaxWidth(0.85f),
+            columnModifier = Modifier.wrapContentHeight(),
+        ) {
+            item {
+                LargeSpacer()
+                Bullet(
+                    title = stringResource(Res.string.notifications_info_pt1_title),
+                    subtitle = stringResource(Res.string.notifications_info_pt1_subtitle),
+                    image = painterResource(Res.drawable.web),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                MediumSpacer()
+                Bullet(
+                    title = stringResource(Res.string.notifications_info_pt2_title),
+                    subtitle = stringResource(Res.string.notifications_info_pt2_subtitle),
+                    image = painterResource(Res.drawable.notifications),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                LargeSpacer()
+            }
+        }
+    }
+
     Column {
         DefaultHeader(
             text = stringResource(Res.string.notifications),
             onBackButtonClick = navController::navigateUp,
+            buttons = {
+                Row {
+                    IconButton(onClick = { viewModel.setInfoPopupVisibility(true) }, modifier = Modifier.size(40.dp)) {
+                        Icon(
+                            painter = painterResource(Res.drawable.info),
+                            contentDescription = stringResource(Res.string.content_description_notifications_info),
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                    MediumSpacer()
+                }
+            }
         )
         MediumSpacer()
         LazyColumn(modifier = modifier.fillMaxSize()) {

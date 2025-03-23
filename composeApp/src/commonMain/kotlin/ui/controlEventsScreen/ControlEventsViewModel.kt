@@ -15,6 +15,7 @@ import model.subjects.SubjectsState
 
 class ControlEventsViewModel(
     private val id: String,
+    private val semesterId: String,
     private val subjectsRepository: SubjectsRepository
 ) : ViewModel() {
     private val subjectsState = subjectsRepository.subjectsState
@@ -24,7 +25,9 @@ class ControlEventsViewModel(
 
     init {
         viewModelScope.launch {
-            subjectsRepository.getSubjects()
+            subjectsRepository.getSubjects(
+                semesterId = semesterId
+            )
         }
         collectSubjectsState()
     }
@@ -54,7 +57,7 @@ class ControlEventsViewModel(
 
     fun reloadSubjects() {
         viewModelScope.launch {
-            subjectsRepository.getSubjects(reload = true)
+            subjectsRepository.getSubjects(semesterId = semesterId, reload = true)
         }
     }
 

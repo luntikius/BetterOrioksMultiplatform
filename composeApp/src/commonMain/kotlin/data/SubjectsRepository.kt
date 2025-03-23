@@ -18,7 +18,7 @@ class SubjectsRepository(
     val subjectsState = _subjectsState.asStateFlow()
 
     suspend fun getSubjects(reload: Boolean = false, semesterId: String? = null) {
-        if (semesterId != null) this.semesterId = semesterId
+        this.semesterId = semesterId
         if (subjectsState.value is SubjectsState.NotStarted || subjectsState.value is SubjectsState.Error || reload) {
             _subjectsState.update { SubjectsState.Loading }
             try {
@@ -28,7 +28,9 @@ class SubjectsRepository(
                     SubjectsState.Success(
                         subjectListItems = subjects.subjectListItems,
                         debtSubjectListItems = subjects.debtSubjectListItems,
-                        displaySubjectPerformance = subjects.displaySubjectPerformance,
+                        displaySubjectPerformance = subjects.getDisplaySubjectPerformance(
+                            shouldAddWeeksLeftItem = semesterId == null
+                        ),
                         semesters = subjects.semesters
                     )
                 }

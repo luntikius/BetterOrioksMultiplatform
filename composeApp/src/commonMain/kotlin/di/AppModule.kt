@@ -52,7 +52,7 @@ fun sharedModule() = module {
     viewModel { parameters -> NewsViewModel(parameters.getOrNull(String::class), get(), get(), get()) }
     viewModel { parameters -> NewsViewViewModel(parameters.get(), parameters.get(), get(), get()) }
     viewModel { SubjectsViewModel(get(), get()) }
-    viewModel { parameters -> ControlEventsViewModel(parameters.get(), get()) }
+    viewModel { parameters -> ControlEventsViewModel(parameters.get(), parameters.get(), get()) }
     viewModel { parameters -> ResourcesViewModel(parameters.get(), parameters.get(), get(), get()) }
     viewModel { NotificationsViewModel(get(), get(), get(), get(), get()) }
     viewModel { SettingsViewModel(get()) }

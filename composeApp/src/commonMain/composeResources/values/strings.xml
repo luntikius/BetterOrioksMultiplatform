@@ -50,15 +50,15 @@
     <string name="DECEMBER">Декабрь</string>
     <string name="january_short">Янв.</string>
     <string name="february_short">Фев.</string>
-    <string name="march_short">Мар.</string>
+    <string name="march_short">Март</string>
     <string name="april_short">Апр.</string>
     <string name="may_short">Май.</string>
-    <string name="june_short">Июн.</string>
-    <string name="july_short">Июл.</string>
+    <string name="june_short">Июнь</string>
+    <string name="july_short">Июль</string>
     <string name="august_short">Авг.</string>
     <string name="september_short">Сен.</string>
     <string name="october_short">Окт.</string>
-    <string name="november_short">Ноя.</string>
+    <string name="november_short">Нояб.</string>
     <string name="december_short">Дек.</string>
     <string name="student_number">Номер студенческого билета: </string>
     <string name="group">Группа: </string>
@@ -153,7 +153,7 @@
     <string name="no_schedule">расписание отсутствует</string>
     <string name="no_subjects">Ой, почему-то тут пусто, возможно этот семестр еще не начался</string>
     <string name="no_schedule_full">Расписание, сохраненное в памяти устройства пустое, попробуйте перезагрузить его, потянув пальцем вниз</string>
-    <string name="reload">перезагрузить</string>
+    <string name="reload">Перезагрузить</string>
     <string name="incomplete_poll_text">У вас есть непройденный опрос в ОРИОКС</string>
     <string name="incomplete_poll_subtitle">Пока опрос не завершен, загрузить страницу не получится</string>
     <string name="incomplete_poll_button">Пройти опрос</string>
@@ -179,10 +179,14 @@
     <string name="semester_end">Ура – конец семестра! Самое время закрыть все долги и отдохнуть</string>
     <string name="notifications_history">История уведомлений</string>
     <string name="notifications_settings">Настройки уведомлений</string>
-    <string name="social_telegram">Telegram канал приложения</string>
-    <string name="social_github">GitHub репозиторий приложения</string>
-    <string name="social_orioks">Открыть Web версию</string>
-
+    <string name="social_telegram">Telegram-канал приложения</string>
+    <string name="social_github">GitHub-репозиторий приложения</string>
+    <string name="social_orioks">Открыть Web-версию</string>
+    <string name="notifications_info_title">Как работают уведомления?</string>
+    <string name="notifications_info_pt1_title">Сбор информации</string>
+    <string name="notifications_info_pt2_title">Отправка уведомлений</string>
+    <string name="notifications_info_pt1_subtitle">BetterOrioks собирает информацию из сети об обновлении оценок/новостей раз в определенный промежуток времени.</string>
+    <string name="notifications_info_pt2_subtitle">Если информация обновилась, то запись об этом появляется в истории уведомлений, а если вы еще не видели обновленную информацию(не заходили на страницу оценок/новостей), то вам отсылается уведомление.</string>
     <string name="login_required_reason_was_not_logged_in">Войдите в свой аккаунт Orioks</string>
     <string name="login_required_reason_session_expired">Ваша сессия истекла, пожалуйста войдите заново</string>
     <string name="login_required_reason_bad_login_or_password">Неверный логин или пароль</string>
@@ -194,6 +198,7 @@
     <string name="content_description_enabled">Включено</string>
     <string name="content_description_disabled">Выключено</string>
     <string name="content_description_clear">Очистить</string>
+    <string name="content_description_notifications_info">Информация об уведомлениях</string>
 
     <string name="buffer_text_exam">%1$s по "%2$s"\nКогда: %3$s\nАудитория:%4$s</string>
 

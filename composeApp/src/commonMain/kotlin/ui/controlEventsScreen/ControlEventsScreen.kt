@@ -571,8 +571,10 @@ fun ControlEventsContent(
 }
 
 @Composable
-fun ControlEventsScreen(id: String, navController: NavController) {
-    val controlEventsViewViewModel = koinViewModel<ControlEventsViewModel>(parameters = { parametersOf(id) })
+fun ControlEventsScreen(id: String, semesterId: String?, navController: NavController) {
+    val controlEventsViewViewModel = koinViewModel<ControlEventsViewModel>(
+        parameters = { parametersOf(id, semesterId) }
+    )
     val controlEventsUiState by controlEventsViewViewModel.controlEventsUiState.collectAsState()
 
     when (val displaySubjectPerformanceState = controlEventsUiState.displaySubjectPerformanceState) {

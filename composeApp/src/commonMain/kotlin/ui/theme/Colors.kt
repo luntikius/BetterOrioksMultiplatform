@@ -28,7 +28,7 @@ val primary_dark_theme = Color(0xFF72BDFF)
 val primary_dark_theme_w = Color(0xFFFF6EC7)
 
 val excellent_mark_color = Color(0xFF00DF4E)
-val good_mark_color = Color(0xFF72A043)
+val good_mark_color = Color(0xFF339A00)
 val ok_mark_color = Color(0xFFF8CC1B)
 val bad_mark_color = Color(0xFFD12729)
 

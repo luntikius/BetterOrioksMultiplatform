@@ -16,7 +16,8 @@ sealed interface BetterOrioksScreen {
 
     @Serializable
     data class ControlEventsScreen(
-        val subjectId: String
+        val subjectId: String,
+        val semesterId: String?,
     ) : BetterOrioksScreen { override val name = "ControlEventsScreen" }
 
     @Serializable

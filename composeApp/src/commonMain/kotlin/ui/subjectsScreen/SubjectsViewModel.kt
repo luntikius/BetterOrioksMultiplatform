@@ -20,7 +20,7 @@ class SubjectsViewModel(
     private val _subjectsScreenUiState = MutableStateFlow(SubjectsScreenUiState())
     val subjectsScreenUiState = _subjectsScreenUiState.asStateFlow()
 
-    fun selectSemester(semesterId: String) {
+    fun selectSemester(semesterId: String?) {
         val shouldReload = semesterId != _subjectsScreenUiState.value.selectedSemesterId
         _subjectsScreenUiState.update { uis -> uis.copy(selectedSemesterId = semesterId) }
         getSubjects(shouldReload)

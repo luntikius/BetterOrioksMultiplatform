@@ -72,13 +72,14 @@ import utils.disabled
 @Composable
 fun ChangeSemesterPopup(
     isVisible: Boolean,
-    onSelected: (semesterId: String) -> Unit,
+    onSelected: (semesterId: String?) -> Unit,
     onDismiss: () -> Unit,
     semesters: List<Semester>,
     currentlySelectedSemesterId: String?,
     modifier: Modifier = Modifier
 ) {
-    val selectedSemesterId = currentlySelectedSemesterId ?: semesters.lastOrNull { it.startDate != null }?.id
+    val currentSemesterId = semesters.lastOrNull { it.startDate != null }?.id
+    val selectedSemesterId = currentlySelectedSemesterId ?: currentSemesterId
 
     if (isVisible) {
         BetterOrioksPopup(
@@ -103,7 +104,7 @@ fun ChangeSemesterPopup(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.clickable {
-                        onSelected(semester.id)
+                        onSelected(if (semester.id != currentSemesterId) semester.id else null)
                         onDismiss()
                     }.fillParentMaxWidth()
                 ) {
@@ -383,9 +384,17 @@ fun SubjectsScreenContent(
     subjectsViewModel: SubjectsViewModel,
     modifier: Modifier = Modifier
 ) {
+    val uiState by subjectsViewModel.subjectsScreenUiState.collectAsState()
     val isGroupingEnabled by subjectsViewModel.isSubjectsGroupingEnabled.collectAsState(false)
     val onNavigateToSubject = { subjectId: String ->
-        navController.navigate(BetterOrioksScreen.ControlEventsScreen(subjectId)) { launchSingleTop = true }
+        navController.navigate(
+            BetterOrioksScreen.ControlEventsScreen(
+                subjectId = subjectId,
+                semesterId = uiState.selectedSemesterId
+            )
+        ) {
+            launchSingleTop = true
+        }
     }
 
     when (subjectsState) {
