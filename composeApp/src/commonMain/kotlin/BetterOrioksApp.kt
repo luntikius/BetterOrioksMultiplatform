@@ -22,6 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -66,20 +69,17 @@ fun BetterOrioksApp(
     openScreenAction: BetterOrioksScreen?
 ) {
     val state by appViewModel.state.collectAsState()
-    val navController = rememberNavController()
-    LaunchedEffect(openScreenAction) {
-        if (state.isAuthorized && openScreenAction != null) navController.navigate(openScreenAction)
-    }
-    LaunchedEffect(state.isAuthorized) {
-        if (!state.isAuthorized) {
-            navController.navigate(BetterOrioksScreen.ScheduleScreen) {
-                popUpTo(0)
-            }
-        }
-    }
+    var action: BetterOrioksScreen? by remember { mutableStateOf(openScreenAction) }
 
     BetterOrioksTheme(state.settings) {
         if (state.isAuthorized) {
+            val navController = rememberNavController()
+            LaunchedEffect(action) {
+                action?.let {
+                    navController.navigate(it)
+                    action = null
+                }
+            }
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = { if (state.isAuthorized) BottomNavigationBar(navController) }
@@ -120,10 +120,14 @@ inline fun <reified T : Any> NavGraphBuilder.betterOrioksSlidable(
     noinline content: @Composable (AnimatedContentScope.(NavBackStackEntry) -> Unit)
 ) {
     composable<T>(
-        enterTransition = { slideInHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it } },
+        enterTransition = {
+            fadeIn(animationSpec = tween(ANIMATION_DURATION)) + slideInHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it / 2 }
+        },
         exitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
         popEnterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
-        popExitTransition = { slideOutHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it } },
+        popExitTransition = {
+            fadeOut(animationSpec = tween(ANIMATION_DURATION)) + slideOutHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it / 2 }
+        },
         content = { scope ->
             Surface(
                 color = MaterialTheme.colorScheme.background
