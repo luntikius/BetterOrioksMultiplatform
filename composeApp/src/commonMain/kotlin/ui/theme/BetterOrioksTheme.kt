@@ -6,10 +6,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import handlers.ThemeHandler
 import model.settings.SettingsState
 import model.settings.Theme
-import org.koin.compose.koinInject
+import ui.common.UpdateEdgeToEdge
 
 @Composable
 fun BetterOrioksTheme(
@@ -27,9 +26,8 @@ fun BetterOrioksTheme(
         Theme.Dark -> darkColorScheme(softenDarkTheme, pinkMode)
         Theme.Light -> lightColorScheme(pinkMode)
     }
-
-    val themeHandler: ThemeHandler = koinInject()
-    themeHandler.setStatusBarTheme(theme == Theme.Dark || (theme == Theme.System && isSystemInDarkTheme()))
+    val shouldBeDark = theme == Theme.Dark || (theme == Theme.System && isSystemInDarkTheme())
+    UpdateEdgeToEdge(shouldBeDark)
 
     val shapes = Shapes(
         extraSmall = RoundedCornerShape(16.dp),

@@ -9,14 +9,12 @@ import handlers.AndroidBackgroundHandler
 import handlers.AndroidBufferHandler
 import handlers.AndroidNotificationsHandler
 import handlers.AndroidPermissionRequestHandler
-import handlers.AndroidThemeHandler
 import handlers.AndroidToastHandler
 import handlers.AndroidUrlHandler
 import handlers.BackgroundHandler
 import handlers.BufferHandler
 import handlers.NotificationsHandler
 import handlers.PermissionRequestHandler
-import handlers.ThemeHandler
 import handlers.ToastHandler
 import handlers.UrlHandler
 import org.koin.core.module.Module
@@ -36,7 +34,6 @@ fun platformModule(): Module = module(createdAtStart = true) {
 
 fun activityModule(activity: ComponentActivity): Module = module(createdAtStart = true) {
     single<PermissionRequestHandler>(createdAtStart = true) { AndroidPermissionRequestHandler(activity) }
-    single<ThemeHandler>(createdAtStart = true) { AndroidThemeHandler(activity) }
 }
 
 fun backgroundModule(): Module = module {

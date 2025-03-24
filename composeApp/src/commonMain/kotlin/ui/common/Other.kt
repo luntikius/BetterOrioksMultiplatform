@@ -180,3 +180,6 @@ fun SwipeRefreshBox(
         content()
     }
 }
+
+@Composable
+expect fun UpdateEdgeToEdge(darkVariant: Boolean)
