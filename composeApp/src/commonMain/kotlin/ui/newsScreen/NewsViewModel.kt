@@ -35,7 +35,9 @@ class NewsViewModel(
                 val authData = userPreferencesRepository.authData.first()
                 val news = orioksWebRepository.getNews(authData, uiState.value.newsType, subjectId)
                 _uiState.update { it.copy(newsState = NewsState.Success(news)) }
-                runCatching { newsNotificationsBackgroundTask.executeWithData(news, true) }
+                if (uiState.value.newsType == OrioksWebRepository.NewsType.Main) {
+                    runCatching { newsNotificationsBackgroundTask.executeWithData(news, true) }
+                }
             } catch (e: Exception) {
                 _uiState.update { it.copy(newsState = NewsState.Error(e)) }
             }
