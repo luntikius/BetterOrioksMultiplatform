@@ -28,6 +28,8 @@ import betterorioks.composeapp.generated.resources.adaptive_mode
 import betterorioks.composeapp.generated.resources.dark_mode
 import betterorioks.composeapp.generated.resources.light_mode
 import betterorioks.composeapp.generated.resources.settings
+import betterorioks.composeapp.generated.resources.settings_enable_colored_borders_theme_subtitle
+import betterorioks.composeapp.generated.resources.settings_enable_colored_borders_theme_title
 import betterorioks.composeapp.generated.resources.settings_pink_mode
 import betterorioks.composeapp.generated.resources.settings_soften_dark_theme_subtitle
 import betterorioks.composeapp.generated.resources.settings_soften_dark_theme_title
@@ -131,6 +133,13 @@ fun ThemeButtons(
         title = stringResource(Res.string.settings_soften_dark_theme_title),
         subtitle = stringResource(Res.string.settings_soften_dark_theme_subtitle),
         onClick = { viewModel.setSoftenDarkTheme(it) }
+    )
+    LargeSpacer()
+    SettingsItem(
+        isChecked = uiState.enableColoredBorders,
+        title = stringResource(Res.string.settings_enable_colored_borders_theme_title),
+        subtitle = stringResource(Res.string.settings_enable_colored_borders_theme_subtitle),
+        onClick = { viewModel.enableColoredBorders(it) }
     )
 }
 

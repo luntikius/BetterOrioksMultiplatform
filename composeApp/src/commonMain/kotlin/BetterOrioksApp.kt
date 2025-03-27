@@ -19,6 +19,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,6 +41,8 @@ import model.BetterOrioksScreen
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
+import ui.common.ColoredBorders
+import ui.common.LocalColoredBorders
 import ui.controlEventsScreen.ControlEventsScreen
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
@@ -71,34 +74,38 @@ fun BetterOrioksApp(
     val state by appViewModel.state.collectAsState()
     var action: BetterOrioksScreen? by remember { mutableStateOf(openScreenAction) }
 
-    BetterOrioksTheme(state.settings) {
-        if (state.isAuthorized) {
-            val navController = rememberNavController()
-            LaunchedEffect(action) {
-                action?.let {
-                    navController.navigate(it)
-                    action = null
+    CompositionLocalProvider(
+        LocalColoredBorders provides ColoredBorders(state.settings.coloredBorders)
+    ) {
+        BetterOrioksTheme(state.settings) {
+            if (state.isAuthorized) {
+                val navController = rememberNavController()
+                LaunchedEffect(action) {
+                    action?.let {
+                        navController.navigate(it)
+                        action = null
+                    }
                 }
-            }
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                bottomBar = { if (state.isAuthorized) BottomNavigationBar(navController) }
-            ) { paddingValues ->
-                AppNavigation(
-                    navController = navController,
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize()
-                )
-            }
-        } else {
-            Scaffold(
-                modifier = Modifier.fillMaxSize()
-            ) { paddingValues ->
-                LoginScreen(
-                    koinInject(),
-                    modifier = Modifier.fillMaxSize().padding(paddingValues)
-                )
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = { if (state.isAuthorized) BottomNavigationBar(navController) }
+                ) { paddingValues ->
+                    AppNavigation(
+                        navController = navController,
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize()
+                    )
+                }
+            } else {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { paddingValues ->
+                    LoginScreen(
+                        koinInject(),
+                        modifier = Modifier.fillMaxSize().padding(paddingValues)
+                    )
+                }
             }
         }
     }

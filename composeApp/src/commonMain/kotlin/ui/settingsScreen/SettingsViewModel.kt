@@ -23,7 +23,8 @@ class SettingsViewModel(
                     uis.copy(
                         selectedTheme = settings.theme,
                         softenDarkTheme = settings.softenDarkTheme,
-                        pinkMode = settings.pinkMode
+                        pinkMode = settings.pinkMode,
+                        enableColoredBorders = settings.coloredBorders
                     )
                 }
             }
@@ -53,6 +54,12 @@ class SettingsViewModel(
             counter++
         } else {
             _uiState.update { uis -> uis.copy(showFunSettings = true) }
+        }
+    }
+
+    fun enableColoredBorders(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setEnableColoredBorders(enabled)
         }
     }
 }

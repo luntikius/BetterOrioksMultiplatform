@@ -434,9 +434,23 @@ fun ControlEventItem(
             LargeSpacer()
         }
         LargeSpacer()
-        Text(
-            controlEventItem.getPointsAnnotatedString(),
-        )
+        Card(
+            shape = CircleShape,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.background
+            ),
+            modifier = modifier,
+            border = controlEventItem.getBorder()
+        ) {
+            Row(
+                modifier = modifier.padding(vertical = 8.dp, horizontal = 12.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    controlEventItem.getPointsAnnotatedString(),
+                )
+            }
+        }
         XLargeSpacer()
     }
     LargeSpacer()

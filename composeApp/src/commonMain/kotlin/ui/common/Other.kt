@@ -14,6 +14,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +36,12 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ui.theme.gradientColor1
 import ui.theme.gradientColor3
+
+data class ColoredBorders(
+    val enabled: Boolean = false
+)
+
+val LocalColoredBorders = compositionLocalOf { ColoredBorders() }
 
 @Composable
 fun Bullet(

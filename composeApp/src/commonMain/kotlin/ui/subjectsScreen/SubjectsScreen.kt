@@ -203,7 +203,8 @@ fun PointsDisplay(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
-        modifier = modifier
+        modifier = modifier,
+        border = subject.getBorder()
     ) {
         Row(
             modifier = modifier.padding(vertical = 8.dp, horizontal = 12.dp),
