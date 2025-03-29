@@ -13,9 +13,9 @@ class IosBackgroundWorker : KoinComponent {
     fun executeTask(taskType: BackgroundTaskType) = runBlocking {
         when (taskType) {
             BackgroundTaskType.NewsNotifications ->
-                inject<NewsNotificationsBackgroundTask>().value.execute(silently = false)
+                inject<NewsNotificationsBackgroundTask>().value.execute()
             BackgroundTaskType.SubjectNotifications ->
-                inject<SubjectNotificationsBackgroundTask>().value.execute(silently = false)
+                inject<SubjectNotificationsBackgroundTask>().value.execute()
         }
         backgroundHandler.value.scheduleTask(backgroundTask = taskType)
     }

@@ -3,11 +3,9 @@ package ui.scheduleScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +21,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -44,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
@@ -294,15 +292,11 @@ fun DatePickerElement(
     onClick: () -> Unit = {},
 ) {
     val dayOfWeekString = stringResource(date.getWeekStringRes())
-    val circleColor = if (isSelected) {
-        CardDefaults.cardColors().copy(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-        )
+    val circleColor = MaterialTheme.colorScheme.primary
+    val textColor = if (isSelected) {
+        MaterialTheme.colorScheme.onPrimary
     } else {
-        CardDefaults.cardColors().copy(
-            containerColor = MaterialTheme.colorScheme.background
-        )
+        MaterialTheme.colorScheme.onBackground
     }
 
     Column(
@@ -311,30 +305,27 @@ fun DatePickerElement(
             .clickable(onClick = onClick, enabled = isEnabled)
             .padding(start = 4.dp, end = 4.dp, bottom = 16.dp, top = 8.dp)
     ) {
-        Text(text = dayOfWeekString)
-
-        SmallSpacer()
-
-        Card(
-            shape = CircleShape,
-            colors = circleColor,
-            modifier = Modifier
-                .fillMaxWidth(0.75f)
-                .aspectRatio(1f)
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Text(
-                    text = date.dayOfMonth.toString(),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .padding(8.dp)
+        val additionalModifier = if (isSelected) {
+            Modifier.drawBehind {
+                drawCircle(
+                    color = circleColor,
+                    radius = 20.dp.toPx()
                 )
             }
+        } else {
+            Modifier
         }
+        Text(text = dayOfWeekString)
+        SmallSpacer()
+        Text(
+            text = date.dayOfMonth.toString(),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyMedium.copy(color = textColor),
+            modifier = Modifier
+                .padding(8.dp)
+                .then(additionalModifier)
+        )
+        SmallSpacer()
     }
 }
 
