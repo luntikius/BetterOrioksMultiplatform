@@ -40,7 +40,7 @@ fun Slide1(
         )
         LargeSpacer()
         Text(
-            "BetterOrioks обновился, сейчас расскажем что к чему",
+            "BetterOrioks обновился, сейчас расскажем, что к чему",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
@@ -72,7 +72,7 @@ fun Slide2(
         XLargeSpacer()
         Bullet(
             title = "Уведомления и их история теперь в отдельной вкладке",
-            subtitle = "А еще, при нажатии на них вы сразу попадаете на нужный экран",
+            subtitle = "А еще при нажатии на них вы сразу попадаете на нужный экран",
             image = painterResource(Res.drawable.notifications)
         )
         XLargeSpacer()
@@ -103,7 +103,7 @@ fun Slide3(
         XLargeSpacer()
         Bullet(
             title = "После обновления необходимо перезайти в аккаунт ОРИОКС",
-            subtitle = "Мы поменяли базу данных и ваши токены потерялись",
+            subtitle = "Мы поменяли базу данных, и ваши токены потерялись",
             image = painterResource(Res.drawable.profile)
         )
         XLargeSpacer()
