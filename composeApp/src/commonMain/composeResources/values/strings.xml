@@ -114,21 +114,21 @@
 
     <!--    new-->
     <plurals name="gap_minutes">
-        <item quantity="one">Окно, %1$d минута</item>
-        <item quantity="few">Окно, %1$d минуты</item>
-        <item quantity="other">Окно, %1$d минут</item>
+        <item quantity="one">Окно %1$d минута</item>
+        <item quantity="few">Окно %1$d минуты</item>
+        <item quantity="other">Окно %1$d минут</item>
     </plurals>
 
     <plurals name="gap_hours">
-        <item quantity="one">Окно, %1$d час</item>
-        <item quantity="few">Окно, %1$d часа</item>
-        <item quantity="other">Окно, %1$d часов</item>
+        <item quantity="one">Окно %1$d час</item>
+        <item quantity="few">Окно %1$d часа</item>
+        <item quantity="other">Окно %1$d часов</item>
     </plurals>
 
     <plurals name="gap_hours_with_minutes">
-        <item quantity="one">Окно, %1$dч %2$d минута</item>
-        <item quantity="few">Окно, %1$dч %2$d минуты</item>
-        <item quantity="other">Окно, %1$dч %2$d минут</item>
+        <item quantity="one">Окно %1$dч %2$d минута</item>
+        <item quantity="few">Окно %1$dч %2$d минуты</item>
+        <item quantity="other">Окно %1$dч %2$d минут</item>
     </plurals>
 
     <plurals name="weeks_before_event">
@@ -209,7 +209,7 @@
     <string name="settings_theme_system">Системная</string>
     <string name="settings_theme_light">Светлая</string>
     <string name="settings_theme_dark">Темная</string>
-    <string name="settings_soften_dark_theme_title">Смягчить цвета темной темы</string>
+    <string name="settings_soften_dark_theme_title">Смягчать цвета темной темы</string>
     <string name="settings_soften_dark_theme_subtitle">Делает цвет фона в темной теме светлее, снижая нагрузку на глаза</string>
     <string name="settings_title_fun">Fun</string>
     <string name="settings_pink_mode">🌸Пинк мод🌸</string>
