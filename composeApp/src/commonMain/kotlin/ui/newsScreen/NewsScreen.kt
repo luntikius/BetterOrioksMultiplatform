@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.loading_news
@@ -29,7 +30,7 @@ import model.BetterOrioksScreen
 import model.news.News
 import model.news.NewsState
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.getKoin
 import org.koin.core.parameter.parametersOf
 import ui.common.DefaultHeader
 import ui.common.EmptyItem
@@ -106,9 +107,12 @@ fun NewsScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val newsViewModel = koinViewModel<NewsViewModel>(
-        parameters = { parametersOf(subjectId) }
-    )
+    val koin = getKoin()
+    val newsViewModel = viewModel {
+        koin.get<NewsViewModel>(
+            parameters = { parametersOf(subjectId) }
+        )
+    }
     val uiState by newsViewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {

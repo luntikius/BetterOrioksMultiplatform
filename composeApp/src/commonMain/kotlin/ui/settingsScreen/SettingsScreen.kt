@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.adaptive_mode
@@ -43,7 +44,7 @@ import model.AppInfo
 import model.settings.Theme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.getKoin
 import ui.common.DefaultHeader
 import ui.common.LargeSpacer
 import ui.common.MediumSpacer
@@ -56,7 +57,10 @@ fun SettingsScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val viewModel = koinViewModel<SettingsViewModel>()
+    val koin = getKoin()
+    val viewModel = viewModel {
+        koin.get<SettingsViewModel>()
+    }
 
     LazyColumn(
         modifier = modifier.padding(8.dp)

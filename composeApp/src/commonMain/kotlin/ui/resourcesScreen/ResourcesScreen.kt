@@ -23,6 +23,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.loading_resources
@@ -33,8 +34,9 @@ import model.resources.DisplayResourceCategory
 import model.resources.ResourcePopupVisibilityState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.getKoin
 import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
+
 import org.koin.core.parameter.parametersOf
 import ui.common.BetterOrioksPopup
 import ui.common.DefaultHeader
@@ -144,8 +146,10 @@ fun ResourcesScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val resourcesViewViewModel =
-        koinViewModel<ResourcesViewModel>(parameters = { parametersOf(disciplineId, scienceId) })
+    val koin = getKoin()
+    val resourcesViewViewModel = viewModel {
+        koin.get<ResourcesViewModel>(parameters = { parametersOf(disciplineId, scienceId) })
+    }
     val uiState by resourcesViewViewModel.resourcesUiState.collectAsState()
 
     ResourcesPopup(

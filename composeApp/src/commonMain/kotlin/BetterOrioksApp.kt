@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -40,6 +41,7 @@ import androidx.navigation.toRoute
 import model.BetterOrioksScreen
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import ui.common.ColoredBorders
 import ui.common.LocalColoredBorders
@@ -150,9 +152,10 @@ fun AppNavigation(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val scheduleScreenViewModel = koinInject<ScheduleScreenViewModel>()
-    val menuScreenViewModel = koinInject<MenuScreenViewModel>()
-    val subjectsViewModel = koinInject<SubjectsViewModel>()
+    val koin = getKoin()
+    val scheduleScreenViewModel = viewModel { koin.get<ScheduleScreenViewModel>() }
+    val menuScreenViewModel = viewModel { koin.get<MenuScreenViewModel>() }
+    val subjectsViewModel = viewModel { koin.get<SubjectsViewModel>() }
 
     NavHost(
         navController = navController,
