@@ -56,11 +56,6 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
             implementation(libs.kotlinx.datetime)
 
-            // Navigation
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.tabNavigator)
-            implementation(libs.voyager.transitions)
-
             // Web
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.logging)
