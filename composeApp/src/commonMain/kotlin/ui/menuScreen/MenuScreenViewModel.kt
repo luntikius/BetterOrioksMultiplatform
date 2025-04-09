@@ -23,6 +23,14 @@ class MenuScreenViewModel(
     private val _uiState = MutableStateFlow(MenuScreenUiState())
     val uiState = _uiState.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            userPreferencesRepository.settings.collect { settings ->
+                _uiState.update { uis -> uis.copy(iosNotificationsEnabled = settings.enableIosNotifications) }
+            }
+        }
+    }
+
     private suspend fun updateUserInfo() {
         _uiState.update { uis -> uis.copy(userInfoState = UserInfoState.Loading) }
         try {

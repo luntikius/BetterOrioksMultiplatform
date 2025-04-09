@@ -5,4 +5,5 @@ data class SettingsState(
     val softenDarkTheme: Boolean,
     val pinkMode: Boolean,
     val coloredBorders: Boolean,
+    val enableIosNotifications: Boolean,
 )

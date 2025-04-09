@@ -8,6 +8,7 @@ data class SettingsUiState(
     val pinkMode: Boolean = false,
     val showFunSettings: Boolean = false,
     val enableColoredBorders: Boolean = false,
+    val enableIosNotifications: Boolean = false,
 ) {
     val showSoftenDarkThemeSwitch = selectedTheme != Theme.Light
 }
