@@ -2,8 +2,6 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,6 +43,8 @@ import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import ui.common.ColoredBorders
 import ui.common.LocalColoredBorders
+import ui.common.getSlideInAnimation
+import ui.common.getSlideOutAnimation
 import ui.controlEventsScreen.ControlEventsScreen
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
@@ -129,14 +129,10 @@ inline fun <reified T : Any> NavGraphBuilder.betterOrioksSlidable(
     noinline content: @Composable (AnimatedContentScope.(NavBackStackEntry) -> Unit)
 ) {
     composable<T>(
-        enterTransition = {
-            fadeIn(animationSpec = tween(ANIMATION_DURATION)) + slideInHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it / 2 }
-        },
+        enterTransition = { getSlideInAnimation() },
         exitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
         popEnterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
-        popExitTransition = {
-            fadeOut(animationSpec = tween(ANIMATION_DURATION)) + slideOutHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it / 2 }
-        },
+        popExitTransition = { getSlideOutAnimation() },
         content = { scope ->
             Surface(
                 color = MaterialTheme.colorScheme.background
