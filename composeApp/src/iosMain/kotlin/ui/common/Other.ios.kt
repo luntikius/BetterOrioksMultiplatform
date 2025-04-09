@@ -9,18 +9,20 @@ import androidx.compose.runtime.Composable
 @Composable
 actual fun UpdateEdgeToEdge(darkVariant: Boolean) = Unit
 
-const val IOS_SLIDE_ANIMATION_DURATION = 300
+const val ANIMATION_DURATION = 300
 
 actual fun getSlideInAnimation() = slideInHorizontally(
     animationSpec = tween(
-        durationMillis = IOS_SLIDE_ANIMATION_DURATION,
+        durationMillis = ANIMATION_DURATION,
         easing = LinearEasing
     )
 ) { it }
 
 actual fun getSlideOutAnimation() = slideOutHorizontally(
     animationSpec = tween(
-        durationMillis = IOS_SLIDE_ANIMATION_DURATION,
+        durationMillis = ANIMATION_DURATION,
         easing = LinearEasing
     )
 ) { it }
+
+actual fun getAnimationDuration() = ANIMATION_DURATION

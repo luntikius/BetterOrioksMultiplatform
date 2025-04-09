@@ -196,3 +196,5 @@ expect fun UpdateEdgeToEdge(darkVariant: Boolean)
 expect fun getSlideInAnimation(): EnterTransition
 
 expect fun getSlideOutAnimation(): ExitTransition
+
+expect fun getAnimationDuration(): Int

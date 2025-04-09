@@ -30,6 +30,12 @@ actual fun UpdateEdgeToEdge(darkVariant: Boolean) {
 
 const val ANIMATION_DURATION = 500
 
-actual fun getSlideInAnimation() = fadeIn(animationSpec = tween(ANIMATION_DURATION)) + slideInHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it / 2 }
+actual fun getSlideInAnimation() =
+    fadeIn(animationSpec = tween(ANIMATION_DURATION)) +
+        slideInHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it / 2 }
 
-actual fun getSlideOutAnimation() = fadeOut(animationSpec = tween(ANIMATION_DURATION)) + slideOutHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it / 2 }
+actual fun getSlideOutAnimation() =
+    fadeOut(animationSpec = tween(ANIMATION_DURATION)) +
+        slideOutHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it / 2 }
+
+actual fun getAnimationDuration() = ANIMATION_DURATION

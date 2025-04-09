@@ -43,6 +43,7 @@ import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import ui.common.ColoredBorders
 import ui.common.LocalColoredBorders
+import ui.common.getAnimationDuration
 import ui.common.getSlideInAnimation
 import ui.common.getSlideOutAnimation
 import ui.controlEventsScreen.ControlEventsScreen
@@ -65,8 +66,6 @@ private val BOTTOM_NAV_SCREENS = listOf(
     BottomNavItem.Subjects,
     BottomNavItem.Menu
 )
-
-const val ANIMATION_DURATION = 500
 
 @Composable
 fun BetterOrioksApp(
@@ -117,10 +116,10 @@ inline fun <reified T : Any> NavGraphBuilder.betterOrioksFadeable(
     noinline content: @Composable (AnimatedContentScope.(NavBackStackEntry) -> Unit)
 ) {
     composable<T>(
-        enterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
-        exitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
-        popEnterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
-        popExitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
+        enterTransition = { fadeIn(animationSpec = tween(getAnimationDuration())) },
+        exitTransition = { fadeOut(animationSpec = tween(getAnimationDuration())) },
+        popEnterTransition = { fadeIn(animationSpec = tween(getAnimationDuration())) },
+        popExitTransition = { fadeOut(animationSpec = tween(getAnimationDuration())) },
         content = content
     )
 }
@@ -130,8 +129,8 @@ inline fun <reified T : Any> NavGraphBuilder.betterOrioksSlidable(
 ) {
     composable<T>(
         enterTransition = { getSlideInAnimation() },
-        exitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
-        popEnterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
+        exitTransition = { fadeOut(animationSpec = tween(getAnimationDuration())) },
+        popEnterTransition = { fadeIn(animationSpec = tween(getAnimationDuration())) },
         popExitTransition = { getSlideOutAnimation() },
         content = { scope ->
             Surface(
