@@ -2,7 +2,7 @@ import androidx.compose.runtime.Composable
 import model.BetterOrioksScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 @Preview
@@ -11,7 +11,7 @@ fun App(
 ) {
     KoinContext {
         BetterOrioksApp(
-            appViewModel = koinViewModel(),
+            appViewModel = koinInject(),
             openScreenAction = openScreenAction
         )
     }

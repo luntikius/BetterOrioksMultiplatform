@@ -107,13 +107,15 @@ fun UserInfoBlock(
 @Composable
 fun NavigationItemsRow(
     navController: NavController,
+    viewModel: MenuScreenViewModel,
     modifier: Modifier = Modifier
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        if (getPlatform().os == PlatformOs.Android) { // TODO add IOS support
+        if (getPlatform().os == PlatformOs.Android || uiState.iosNotificationsEnabled) { // TODO add IOS support
             SimpleIconButton(
                 icon = painterResource(Res.drawable.notifications),
                 text = stringResource(Res.string.notifications),
@@ -210,7 +212,7 @@ fun MenuScreenContent(
     ) {
         item { UserInfoBlock(viewModel, Modifier.fillParentMaxWidth().padding(16.dp)) }
         item { LargeSpacer() }
-        item { NavigationItemsRow(navController) }
+        item { NavigationItemsRow(navController, viewModel) }
         item { XLargeSpacer() }
         item { TextButtonColumn() }
         item { XLargeSpacer() }

@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.content_description_clear
@@ -47,7 +48,7 @@ import betterorioks.composeapp.generated.resources.web
 import model.database.notifications.NotificationEntity
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.getKoin
 import ui.common.BetterOrioksPopup
 import ui.common.Bullet
 import ui.common.DefaultHeader
@@ -64,7 +65,8 @@ fun NotificationsScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: NotificationsViewModel = koinViewModel()
+    val koin = getKoin()
+    val viewModel: NotificationsViewModel = viewModel { koin.get<NotificationsViewModel>() }
     val uiState by viewModel.uiState.collectAsState()
     val notifications by viewModel.notificationsHistoryFlow.collectAsState(listOf())
 

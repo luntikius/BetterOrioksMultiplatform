@@ -24,7 +24,8 @@ class SettingsViewModel(
                         selectedTheme = settings.theme,
                         softenDarkTheme = settings.softenDarkTheme,
                         pinkMode = settings.pinkMode,
-                        enableColoredBorders = settings.coloredBorders
+                        enableColoredBorders = settings.coloredBorders,
+                        enableIosNotifications = settings.enableIosNotifications,
                     )
                 }
             }
@@ -46,6 +47,12 @@ class SettingsViewModel(
     fun setPinkMode(enabled: Boolean) {
         viewModelScope.launch {
             userPreferencesRepository.setPinkMode(enabled)
+        }
+    }
+
+    fun setEnableIosNotifications(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setEnableIosNotifications(enabled)
         }
     }
 

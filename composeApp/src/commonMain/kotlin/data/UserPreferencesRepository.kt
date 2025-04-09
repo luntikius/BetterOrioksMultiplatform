@@ -65,7 +65,8 @@ class UserPreferencesRepository(
             theme = preferences[SETTINGS_THEME]?.let { Theme.valueOf(it) } ?: Theme.System,
             softenDarkTheme = preferences[SETTINGS_SOFTEN_DARK_THEME] ?: false,
             pinkMode = preferences[SETTINGS_PINK_MODE] ?: false,
-            coloredBorders = preferences[SETTINGS_ENABLE_COLORED_BORDERS] ?: false
+            coloredBorders = preferences[SETTINGS_ENABLE_COLORED_BORDERS] ?: false,
+            enableIosNotifications = preferences[SETTINGS_ENABLE_IOS_NOTIFICATIONS] ?: false
         )
     }
 
@@ -118,6 +119,7 @@ class UserPreferencesRepository(
             preferences[IS_SUBJECT_NOTIFICATION_ENABLED] = enable
         }
     }
+
     suspend fun enableNewsNotifications(enable: Boolean) {
         dataStore.edit { preferences ->
             preferences[IS_NEWS_NOTIFICATION_ENABLED] = enable
@@ -148,7 +150,14 @@ class UserPreferencesRepository(
         }
     }
 
+    suspend fun setEnableIosNotifications(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[SETTINGS_ENABLE_IOS_NOTIFICATIONS] = enabled
+        }
+    }
+
     private companion object {
+
         private val CSRF = stringPreferencesKey("CSRF")
         private val ORIOKS_IDENTITY = stringPreferencesKey("ORIOKS_IDENTITY")
         private val ORIOKS_SESSION = stringPreferencesKey("ORIOKS_SESSION")
@@ -167,5 +176,6 @@ class UserPreferencesRepository(
         private val SETTINGS_SOFTEN_DARK_THEME = booleanPreferencesKey("SETTINGS_SOFTEN_DARK_MODE")
         private val SETTINGS_PINK_MODE = booleanPreferencesKey("SETTINGS_PINK_MODE")
         private val SETTINGS_ENABLE_COLORED_BORDERS = booleanPreferencesKey("SETTINGS_ENABLE_COLORED_BORDERS")
+        private val SETTINGS_ENABLE_IOS_NOTIFICATIONS = booleanPreferencesKey("SETTINGS_ENABLE_IOS_NOTIFICATIONS")
     }
 }

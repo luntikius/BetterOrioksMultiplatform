@@ -175,4 +175,6 @@
     <string name="settings_enable_colored_borders_theme_subtitle">Добавляет цветную обводку вокруг оценок, сами оценки становятся белыми</string>
     <string name="settings_title_fun">Fun</string>
     <string name="settings_pink_mode">🌸Пинк мод🌸</string>
+    <string name="settings_enable_ios_notifications_title">[experimental] Включить уведомления на IOS</string>
+    <string name="settings_enable_ios_notifications_subtitle">Открывает точку входа на экран уведомлений на IOS, функция еще в разработке</string>
 </resources>

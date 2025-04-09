@@ -2,8 +2,6 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -40,9 +39,13 @@ import androidx.navigation.toRoute
 import model.BetterOrioksScreen
 import model.BottomNavItem
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import ui.common.ColoredBorders
 import ui.common.LocalColoredBorders
+import ui.common.getAnimationDuration
+import ui.common.getSlideInAnimation
+import ui.common.getSlideOutAnimation
 import ui.controlEventsScreen.ControlEventsScreen
 import ui.loginScreen.LoginScreen
 import ui.menuScreen.MenuScreen
@@ -63,8 +66,6 @@ private val BOTTOM_NAV_SCREENS = listOf(
     BottomNavItem.Subjects,
     BottomNavItem.Menu
 )
-
-const val ANIMATION_DURATION = 500
 
 @Composable
 fun BetterOrioksApp(
@@ -115,10 +116,10 @@ inline fun <reified T : Any> NavGraphBuilder.betterOrioksFadeable(
     noinline content: @Composable (AnimatedContentScope.(NavBackStackEntry) -> Unit)
 ) {
     composable<T>(
-        enterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
-        exitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
-        popEnterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
-        popExitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
+        enterTransition = { fadeIn(animationSpec = tween(getAnimationDuration())) },
+        exitTransition = { fadeOut(animationSpec = tween(getAnimationDuration())) },
+        popEnterTransition = { fadeIn(animationSpec = tween(getAnimationDuration())) },
+        popExitTransition = { fadeOut(animationSpec = tween(getAnimationDuration())) },
         content = content
     )
 }
@@ -127,14 +128,10 @@ inline fun <reified T : Any> NavGraphBuilder.betterOrioksSlidable(
     noinline content: @Composable (AnimatedContentScope.(NavBackStackEntry) -> Unit)
 ) {
     composable<T>(
-        enterTransition = {
-            fadeIn(animationSpec = tween(ANIMATION_DURATION)) + slideInHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it / 2 }
-        },
-        exitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
-        popEnterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
-        popExitTransition = {
-            fadeOut(animationSpec = tween(ANIMATION_DURATION)) + slideOutHorizontally(animationSpec = tween(ANIMATION_DURATION)) { it / 2 }
-        },
+        enterTransition = { getSlideInAnimation() },
+        exitTransition = { fadeOut(animationSpec = tween(getAnimationDuration())) },
+        popEnterTransition = { fadeIn(animationSpec = tween(getAnimationDuration())) },
+        popExitTransition = { getSlideOutAnimation() },
         content = { scope ->
             Surface(
                 color = MaterialTheme.colorScheme.background
@@ -150,9 +147,10 @@ fun AppNavigation(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val scheduleScreenViewModel = koinInject<ScheduleScreenViewModel>()
-    val menuScreenViewModel = koinInject<MenuScreenViewModel>()
-    val subjectsViewModel = koinInject<SubjectsViewModel>()
+    val koin = getKoin()
+    val scheduleScreenViewModel = viewModel { koin.get<ScheduleScreenViewModel>() }
+    val menuScreenViewModel = viewModel { koin.get<MenuScreenViewModel>() }
+    val subjectsViewModel = viewModel { koin.get<SubjectsViewModel>() }
 
     NavHost(
         navController = navController,

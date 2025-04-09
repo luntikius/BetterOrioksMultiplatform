@@ -10,7 +10,6 @@ import data.SubjectsWebRepository
 import data.UserPreferencesRepository
 import data.database.NotificationsDatabase
 import data.database.ScheduleDatabase
-import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ui.controlEventsScreen.ControlEventsViewModel
@@ -45,17 +44,17 @@ fun sharedModule() = module {
     single { UserPreferencesRepository(get()) }
 
     // view models
-    viewModel { ScheduleScreenViewModel(get(), get(), get(), get(), get()) }
-    viewModel { AppViewModel(get()) }
-    viewModel { MenuScreenViewModel(get(), get(), get(), get()) }
-    viewModel { LoginScreenViewModel(get(), get()) }
-    viewModel { parameters -> NewsViewModel(parameters.getOrNull(String::class), get(), get(), get()) }
-    viewModel { parameters -> NewsViewViewModel(parameters.get(), parameters.get(), get(), get()) }
-    viewModel { SubjectsViewModel(get(), get()) }
-    viewModel { parameters -> ControlEventsViewModel(parameters.get(), parameters.get(), get()) }
-    viewModel { parameters -> ResourcesViewModel(parameters.get(), parameters.get(), get(), get()) }
-    viewModel { NotificationsViewModel(get(), get(), get(), get(), get()) }
-    viewModel { SettingsViewModel(get()) }
+    factory { ScheduleScreenViewModel(get(), get(), get(), get(), get()) }
+    factory { AppViewModel(get()) }
+    factory { MenuScreenViewModel(get(), get(), get(), get()) }
+    factory { LoginScreenViewModel(get(), get()) }
+    factory { parameters -> NewsViewModel(parameters.getOrNull(String::class), get(), get(), get()) }
+    factory { parameters -> NewsViewViewModel(parameters.get(), parameters.get(), get(), get()) }
+    factory { SubjectsViewModel(get(), get()) }
+    factory { parameters -> ControlEventsViewModel(parameters.get(), parameters.get(), get()) }
+    factory { parameters -> ResourcesViewModel(parameters.get(), parameters.get(), get(), get()) }
+    factory { NotificationsViewModel(get(), get(), get(), get(), get()) }
+    factory { SettingsViewModel(get()) }
 }
 
 const val SCHEDULE_DATABASE_BUILDER_NAME = "schedule_database_builder"

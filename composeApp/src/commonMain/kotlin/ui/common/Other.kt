@@ -1,5 +1,7 @@
 package ui.common
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -190,3 +192,9 @@ fun SwipeRefreshBox(
 
 @Composable
 expect fun UpdateEdgeToEdge(darkVariant: Boolean)
+
+expect fun getSlideInAnimation(): EnterTransition
+
+expect fun getSlideOutAnimation(): ExitTransition
+
+expect fun getAnimationDuration(): Int

@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.attached_files
@@ -37,8 +38,9 @@ import model.news.newsViewScreen.NewsViewContent
 import model.news.newsViewScreen.NewsViewState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.getKoin
 import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
+
 import org.koin.core.parameter.parametersOf
 import ui.common.DefaultHeader
 import ui.common.ErrorScreenWithReloadButton
@@ -184,11 +186,14 @@ fun NewsViewScreen(
     modifier: Modifier = Modifier,
     urlHandler: UrlHandler = koinInject()
 ) {
-    val newsViewViewModel = koinViewModel<NewsViewViewModel>(
-        parameters = {
-            parametersOf(id, newsType)
-        }
-    )
+    val koin = getKoin()
+    val newsViewViewModel = viewModel {
+        koin.get<NewsViewViewModel>(
+            parameters = {
+                parametersOf(id, newsType)
+            }
+        )
+    }
     val uiState by newsViewViewModel.uiState.collectAsState()
 
     Column(

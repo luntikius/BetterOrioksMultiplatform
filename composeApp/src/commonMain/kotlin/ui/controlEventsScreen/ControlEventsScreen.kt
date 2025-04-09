@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.Resources
@@ -74,8 +75,8 @@ import model.subjects.SubjectListItem
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.getKoin
 import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ui.common.BetterOrioksPopup
 import ui.common.ErrorScreenWithReloadButton
@@ -586,9 +587,12 @@ fun ControlEventsContent(
 
 @Composable
 fun ControlEventsScreen(id: String, semesterId: String?, navController: NavController) {
-    val controlEventsViewViewModel = koinViewModel<ControlEventsViewModel>(
-        parameters = { parametersOf(id, semesterId) }
-    )
+    val koin = getKoin()
+    val controlEventsViewViewModel = viewModel {
+        koin.get<ControlEventsViewModel>(
+            parameters = { parametersOf(id, semesterId) }
+        )
+    }
     val controlEventsUiState by controlEventsViewViewModel.controlEventsUiState.collectAsState()
 
     when (val displaySubjectPerformanceState = controlEventsUiState.displaySubjectPerformanceState) {
