@@ -8,6 +8,7 @@ import model.subjectPerformance.DisplaySubjectPerformance
 import model.subjects.SubjectListItem
 import model.subjects.subjectsJson.jsonElements.ControlEvent
 import model.subjects.subjectsJson.jsonElements.SubjectFromWeb
+import utils.trimTrailingZerosIfNumber
 
 interface SubjectsData {
     val subjects: List<SubjectFromWeb>
@@ -81,8 +82,8 @@ interface SubjectsData {
                         subjectId = subject.id.toString(),
                         subjectName = subject.name,
                         controlEventName = controlEvent.fullName,
-                        currentPoints = controlEvent.currentPoints,
-                        maxPoints = controlEvent.maxPoints
+                        currentPoints = controlEvent.currentPoints.trimTrailingZerosIfNumber(),
+                        maxPoints = controlEvent.maxPoints.trimTrailingZerosIfNumber(),
                     )
                 )
             }

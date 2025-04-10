@@ -18,7 +18,7 @@ import model.database.notifications.NotificationsSubjectEntity
         NotificationsNewsEntity::class,
         NotificationEntity::class,
     ],
-    version = 3,
+    version = 4,
     exportSchema = true,
 )
 @TypeConverters(OrioksConverter::class)
@@ -37,7 +37,7 @@ abstract class NotificationsDatabase : RoomDatabase() {
                 .setDriver(BundledSQLiteDriver())
                 .setQueryCoroutineContext(Dispatchers.IO)
                 .fallbackToDestructiveMigrationOnDowngrade(true)
-                .fallbackToDestructiveMigrationFrom(true, 1, 2)
+                .fallbackToDestructiveMigrationFrom(true, 1, 2, 3)
                 .build()
                 .also { Instance = it }
         }
