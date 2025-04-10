@@ -1,5 +1,6 @@
 package ui.loginScreen
 
+import PlatformOs
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +17,10 @@ import betterorioks.composeapp.generated.resources.help
 import betterorioks.composeapp.generated.resources.news
 import betterorioks.composeapp.generated.resources.notifications
 import betterorioks.composeapp.generated.resources.profile
-import betterorioks.composeapp.generated.resources.star_shine
+import betterorioks.composeapp.generated.resources.schedule
+import betterorioks.composeapp.generated.resources.settings
+import betterorioks.composeapp.generated.resources.subjects
+import getPlatform
 import org.jetbrains.compose.resources.painterResource
 import ui.common.Bullet
 import ui.common.GradientButton
@@ -40,7 +44,7 @@ fun Slide1(
         )
         LargeSpacer()
         Text(
-            "BetterOrioks обновился, сейчас расскажем, что к чему",
+            "BetterOrioks — приложение для студентов МИЭТ, сейчас расскажем, что к чему",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
@@ -60,27 +64,35 @@ fun Slide2(
     ) {
         Spacer(Modifier.weight(1f))
         Text(
-            "Вот что у нас нового:",
+            "Вот что у нас есть:",
             style = MaterialTheme.typography.headlineMedium
         )
         XLargeSpacer()
         Bullet(
-            title = "Обновили дизайн",
-            subtitle = "Темы выглядят четче, цвета ярче!",
-            image = painterResource(Res.drawable.star_shine)
+            title = "Расписание",
+            subtitle = "Теперь не нужно запоминать, числитель сейчас или знаменатель",
+            image = painterResource(Res.drawable.schedule)
         )
         XLargeSpacer()
         Bullet(
-            title = "Уведомления и их история теперь в отдельной вкладке",
-            subtitle = "А еще при нажатии на них вы сразу попадаете на нужный экран",
-            image = painterResource(Res.drawable.notifications)
+            title = "Информация по предметам",
+            subtitle = "Оценки, контрольные мероприятия, ресурсы, преподаватели, экзамены и даже Moodle",
+            image = painterResource(Res.drawable.subjects)
         )
         XLargeSpacer()
         Bullet(
-            title = "Появился экран с новостями",
-            subtitle = "Да, новости дисциплины теперь тоже можно смотреть!",
+            title = "Новости",
+            subtitle = "Со всего ОРИОКСа и по каждому предмету",
             image = painterResource(Res.drawable.news)
         )
+        if (getPlatform().os == PlatformOs.Android) {
+            XLargeSpacer()
+            Bullet(
+                title = "Уведомления о новых оценках",
+                subtitle = "А еще о выходе новостей",
+                image = painterResource(Res.drawable.notifications)
+            )
+        }
         Spacer(Modifier.weight(1f))
         GradientButton("Дальше", onClick, modifier = Modifier.padding(horizontal = 32.dp))
         XLargeSpacer()
@@ -102,14 +114,20 @@ fun Slide3(
         )
         XLargeSpacer()
         Bullet(
-            title = "После обновления необходимо перезайти в аккаунт ОРИОКС",
-            subtitle = "Мы поменяли базу данных, и ваши токены потерялись",
+            title = "Для работы с BetterOrioks необходимо войти в аккаунт ОРИОКС",
+            subtitle = "Мы автоматически загрузим ваше расписание и оценки",
             image = painterResource(Res.drawable.profile)
         )
         XLargeSpacer()
         Bullet(
+            title = "Не забудьте заглянуть на экран настроек",
+            subtitle = "Подстройте приложение под себя и не забудьте понажимать на все, что нажимается",
+            image = painterResource(Res.drawable.settings)
+        )
+        XLargeSpacer()
+        Bullet(
             title = "А если проблемы?",
-            subtitle = "Приходите в телеграм-канал, ссылка на него на следующем экране",
+            subtitle = "Приходите в телеграм-канал, ссылка на него на следующем экране и в меню приложения",
             image = painterResource(Res.drawable.help)
         )
         Spacer(Modifier.weight(1f))
