@@ -26,6 +26,7 @@ class SettingsViewModel(
                         pinkMode = settings.pinkMode,
                         enableColoredBorders = settings.coloredBorders,
                         enableIosNotifications = settings.enableIosNotifications,
+                        enableForceNotifications = settings.enableForceNotification
                     )
                 }
             }
@@ -53,6 +54,12 @@ class SettingsViewModel(
     fun setEnableIosNotifications(enabled: Boolean) {
         viewModelScope.launch {
             userPreferencesRepository.setEnableIosNotifications(enabled)
+        }
+    }
+
+    fun setEnableForceNotification(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setEnableForceNotification(enabled)
         }
     }
 

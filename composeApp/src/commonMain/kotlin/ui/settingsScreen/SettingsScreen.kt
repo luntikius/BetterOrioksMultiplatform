@@ -32,6 +32,8 @@ import betterorioks.composeapp.generated.resources.light_mode
 import betterorioks.composeapp.generated.resources.settings
 import betterorioks.composeapp.generated.resources.settings_enable_colored_borders_theme_subtitle
 import betterorioks.composeapp.generated.resources.settings_enable_colored_borders_theme_title
+import betterorioks.composeapp.generated.resources.settings_enable_force_notification_subtitle
+import betterorioks.composeapp.generated.resources.settings_enable_force_notification_title
 import betterorioks.composeapp.generated.resources.settings_enable_ios_notifications_subtitle
 import betterorioks.composeapp.generated.resources.settings_enable_ios_notifications_title
 import betterorioks.composeapp.generated.resources.settings_pink_mode
@@ -41,6 +43,7 @@ import betterorioks.composeapp.generated.resources.settings_theme_dark
 import betterorioks.composeapp.generated.resources.settings_theme_light
 import betterorioks.composeapp.generated.resources.settings_theme_system
 import betterorioks.composeapp.generated.resources.settings_title_fun
+import betterorioks.composeapp.generated.resources.settings_title_functionality
 import betterorioks.composeapp.generated.resources.theme
 import getPlatform
 import model.AppInfo
@@ -64,6 +67,7 @@ fun SettingsScreen(
     val viewModel = viewModel {
         koin.get<SettingsViewModel>()
     }
+    val uiState by viewModel.uiState.collectAsState()
 
     LazyColumn(
         modifier = modifier.padding(8.dp)
@@ -76,6 +80,7 @@ fun SettingsScreen(
             MediumSpacer()
             SettingsTitle(stringResource(Res.string.theme))
             ThemeButtons(viewModel)
+            FunctionalitySettings(viewModel)
             FunSettings(viewModel)
             XLargeSpacer()
             BuildInfo(
@@ -148,6 +153,29 @@ fun ThemeButtons(
         subtitle = stringResource(Res.string.settings_enable_colored_borders_theme_subtitle),
         onClick = { viewModel.enableColoredBorders(it) }
     )
+}
+
+@Composable
+fun FunctionalitySettings(
+    viewModel: SettingsViewModel,
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    Column(
+        modifier = Modifier.animateContentSize().fillMaxWidth()
+    ) {
+        if (getPlatform().os == PlatformOs.Android || uiState.enableIosNotifications) {
+            LargeSpacer()
+            SettingsTitle(
+                text = stringResource(Res.string.settings_title_functionality)
+            )
+            SettingsItem(
+                isChecked = uiState.enableForceNotifications,
+                onClick = viewModel::setEnableForceNotification,
+                title = stringResource(Res.string.settings_enable_force_notification_title),
+                subtitle = stringResource(Res.string.settings_enable_force_notification_subtitle)
+            )
+        }
+    }
 }
 
 @Composable

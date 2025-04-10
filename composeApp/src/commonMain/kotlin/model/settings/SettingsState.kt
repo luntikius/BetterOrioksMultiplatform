@@ -6,4 +6,5 @@ data class SettingsState(
     val pinkMode: Boolean,
     val coloredBorders: Boolean,
     val enableIosNotifications: Boolean,
+    val enableForceNotification: Boolean,
 )

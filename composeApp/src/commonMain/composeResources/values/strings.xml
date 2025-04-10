@@ -177,4 +177,7 @@
     <string name="settings_pink_mode">🌸Пинк мод🌸</string>
     <string name="settings_enable_ios_notifications_title">[experimental] Включить уведомления на IOS</string>
     <string name="settings_enable_ios_notifications_subtitle">Открывает точку входа на экран уведомлений на IOS, функция еще в разработке</string>
+    <string name="settings_title_functionality">Функциональность</string>
+    <string name="settings_enable_force_notification_title">Уведомлять обо всех изменениях</string>
+    <string name="settings_enable_force_notification_subtitle">При включенных уведомлениях, если настройка включена, вы будете получать уведомления обо всех событиях, включая те, которые вы уже могли видеть в приложении</string>
 </resources>
