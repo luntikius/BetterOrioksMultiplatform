@@ -147,8 +147,7 @@ class ScheduleScreenViewModel(
                 }
                 selectToday()
             } catch (e: Exception) {
-                println(e.stackTraceToString())
-                if (!scheduleDatabaseRepository.isScheduleStored()) {
+                if (!(::_uiState.isInitialized)) {
                     _scheduleState.update { ScheduleState.Error(e) }
                 } else {
                     makeToast(false)
