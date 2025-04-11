@@ -26,6 +26,8 @@ class SettingsViewModel(
                         pinkMode = settings.pinkMode,
                         enableColoredBorders = settings.coloredBorders,
                         enableIosNotifications = settings.enableIosNotifications,
+                        enableForceNotifications = settings.enableForceNotification,
+                        showDonationWidget = settings.showDonationWidget
                     )
                 }
             }
@@ -56,6 +58,12 @@ class SettingsViewModel(
         }
     }
 
+    fun setEnableForceNotification(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setEnableForceNotification(enabled)
+        }
+    }
+
     fun onBuildNumberClick() {
         if (counter < 4) {
             counter++
@@ -67,6 +75,12 @@ class SettingsViewModel(
     fun enableColoredBorders(enabled: Boolean) {
         viewModelScope.launch {
             userPreferencesRepository.setEnableColoredBorders(enabled)
+        }
+    }
+
+    fun setShowDonationWidget(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setShowDonationWidget(enabled)
         }
     }
 }

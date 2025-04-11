@@ -118,7 +118,8 @@ fun NewsBodyItem(
     SelectionContainer {
         ClickableText(
             text = text,
-            modifier.padding(horizontal = 8.dp)
+            modifier = modifier.padding(horizontal = 8.dp),
+            style = MaterialTheme.typography.bodyMedium
         ) { offset ->
             text.getStringAnnotations(tag = NewsViewContent.URL_TAG, start = offset, end = offset).firstOrNull()?.let {
                 urlHandler.handleUrl(it.item)

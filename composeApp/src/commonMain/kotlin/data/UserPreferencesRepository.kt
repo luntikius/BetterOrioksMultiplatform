@@ -66,8 +66,16 @@ class UserPreferencesRepository(
             softenDarkTheme = preferences[SETTINGS_SOFTEN_DARK_THEME] ?: false,
             pinkMode = preferences[SETTINGS_PINK_MODE] ?: false,
             coloredBorders = preferences[SETTINGS_ENABLE_COLORED_BORDERS] ?: false,
-            enableIosNotifications = preferences[SETTINGS_ENABLE_IOS_NOTIFICATIONS] ?: false
+            enableIosNotifications = preferences[SETTINGS_ENABLE_IOS_NOTIFICATIONS] ?: false,
+            enableForceNotification = preferences[SETTINGS_ENABLE_FORCE_NOTIFICATION] ?: true,
+            showDonationWidget = preferences[SETTINGS_SHOW_DONATION_WIDGET] ?: true
         )
+    }
+
+    suspend fun isForceNotificationEnabled(): Boolean {
+        return dataStore.data.map { preferences ->
+            preferences[SETTINGS_ENABLE_FORCE_NOTIFICATION] ?: true
+        }.first()
     }
 
     suspend fun isSessionInvalidated(): Boolean {
@@ -156,6 +164,18 @@ class UserPreferencesRepository(
         }
     }
 
+    suspend fun setEnableForceNotification(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[SETTINGS_ENABLE_FORCE_NOTIFICATION] = enabled
+        }
+    }
+
+    suspend fun setShowDonationWidget(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[SETTINGS_SHOW_DONATION_WIDGET] = enabled
+        }
+    }
+
     private companion object {
 
         private val CSRF = stringPreferencesKey("CSRF")
@@ -177,5 +197,7 @@ class UserPreferencesRepository(
         private val SETTINGS_PINK_MODE = booleanPreferencesKey("SETTINGS_PINK_MODE")
         private val SETTINGS_ENABLE_COLORED_BORDERS = booleanPreferencesKey("SETTINGS_ENABLE_COLORED_BORDERS")
         private val SETTINGS_ENABLE_IOS_NOTIFICATIONS = booleanPreferencesKey("SETTINGS_ENABLE_IOS_NOTIFICATIONS")
+        private val SETTINGS_ENABLE_FORCE_NOTIFICATION = booleanPreferencesKey("SETTINGS_ENABLE_FORCE_NOTIFICATION")
+        private val SETTINGS_SHOW_DONATION_WIDGET = booleanPreferencesKey("SETTINGS_SHOW_DONATION_WIDGET")
     }
 }

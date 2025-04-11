@@ -34,7 +34,12 @@ class SubjectsRepository(
                         semesters = subjects.semesters
                     )
                 }
-                runCatching { subjectNotificationsBackgroundTask.executeWithData(subjects, true) }
+                runCatching {
+                    subjectNotificationsBackgroundTask.executeWithData(
+                        subjects = subjects,
+                        silently = !userPreferencesRepository.isForceNotificationEnabled()
+                    )
+                }
             } catch (e: Exception) {
                 _subjectsState.update { SubjectsState.Error(e) }
             }

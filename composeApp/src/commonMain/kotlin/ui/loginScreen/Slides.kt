@@ -1,9 +1,12 @@
 package ui.loginScreen
 
+import PlatformOs
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,12 +18,38 @@ import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.help
 import betterorioks.composeapp.generated.resources.news
 import betterorioks.composeapp.generated.resources.notifications
+import betterorioks.composeapp.generated.resources.onboarding_slide_1_button
+import betterorioks.composeapp.generated.resources.onboarding_slide_1_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_1_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_1_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_1_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_2_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_2_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_3_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_3_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_4_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_4_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_button
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_1_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_1_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_2_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_2_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_3_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_3_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_button
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_title
 import betterorioks.composeapp.generated.resources.profile
-import betterorioks.composeapp.generated.resources.star_shine
+import betterorioks.composeapp.generated.resources.schedule
+import betterorioks.composeapp.generated.resources.settings
+import betterorioks.composeapp.generated.resources.subjects
+import getPlatform
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import ui.common.Bullet
 import ui.common.GradientButton
 import ui.common.LargeSpacer
+import ui.common.MediumSpacer
 import ui.common.XLargeSpacer
 
 @Composable
@@ -28,24 +57,30 @@ fun Slide1(
     onClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(Modifier.weight(1f))
+        MediumSpacer()
         StaticLogo(showSubtitle = false)
         LargeSpacer()
         Text(
-            "Привет!",
+            stringResource(Res.string.onboarding_slide_1_title),
             style = MaterialTheme.typography.headlineMedium
         )
         LargeSpacer()
         Text(
-            "BetterOrioks обновился, сейчас расскажем, что к чему",
+            stringResource(Res.string.onboarding_slide_1_subtitle),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
+        MediumSpacer()
         Spacer(Modifier.weight(1f))
-        GradientButton("Давайте", onClick, modifier = Modifier.padding(horizontal = 32.dp))
+        GradientButton(
+            text = stringResource(Res.string.onboarding_slide_1_button),
+            onClick = onClick,
+            modifier = Modifier.padding(horizontal = 32.dp)
+        )
         XLargeSpacer()
     }
 }
@@ -55,34 +90,48 @@ fun Slide2(
     onClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.weight(1f))
+        MediumSpacer()
         Text(
-            "Вот что у нас нового:",
+            stringResource(Res.string.onboarding_slide_2_title),
             style = MaterialTheme.typography.headlineMedium
         )
         XLargeSpacer()
         Bullet(
-            title = "Обновили дизайн",
-            subtitle = "Темы выглядят четче, цвета ярче!",
-            image = painterResource(Res.drawable.star_shine)
+            title = stringResource(Res.string.onboarding_slide_2_bullet_1_title),
+            subtitle = stringResource(Res.string.onboarding_slide_2_bullet_1_subtitle),
+            image = painterResource(Res.drawable.schedule)
         )
         XLargeSpacer()
         Bullet(
-            title = "Уведомления и их история теперь в отдельной вкладке",
-            subtitle = "А еще при нажатии на них вы сразу попадаете на нужный экран",
-            image = painterResource(Res.drawable.notifications)
+            title = stringResource(Res.string.onboarding_slide_2_bullet_2_title),
+            subtitle = stringResource(Res.string.onboarding_slide_2_bullet_2_subtitle),
+            image = painterResource(Res.drawable.subjects)
         )
         XLargeSpacer()
         Bullet(
-            title = "Появился экран с новостями",
-            subtitle = "Да, новости дисциплины теперь тоже можно смотреть!",
+            title = stringResource(Res.string.onboarding_slide_2_bullet_3_title),
+            subtitle = stringResource(Res.string.onboarding_slide_2_bullet_3_subtitle),
             image = painterResource(Res.drawable.news)
         )
+        if (getPlatform().os == PlatformOs.Android) {
+            XLargeSpacer()
+            Bullet(
+                title = stringResource(Res.string.onboarding_slide_2_bullet_4_title),
+                subtitle = stringResource(Res.string.onboarding_slide_2_bullet_4_subtitle),
+                image = painterResource(Res.drawable.notifications)
+            )
+        }
+        MediumSpacer()
         Spacer(Modifier.weight(1f))
-        GradientButton("Дальше", onClick, modifier = Modifier.padding(horizontal = 32.dp))
+        GradientButton(
+            text = stringResource(Res.string.onboarding_slide_2_button),
+            onClick = onClick,
+            modifier = Modifier.padding(horizontal = 32.dp)
+        )
         XLargeSpacer()
     }
 }
@@ -92,28 +141,40 @@ fun Slide3(
     onClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.weight(1f))
+        MediumSpacer()
         Text(
-            "Ваши оценки и расписание уже близко!",
+            stringResource(Res.string.onboarding_slide_3_title),
             style = MaterialTheme.typography.headlineMedium
         )
         XLargeSpacer()
         Bullet(
-            title = "После обновления необходимо перезайти в аккаунт ОРИОКС",
-            subtitle = "Мы поменяли базу данных, и ваши токены потерялись",
+            title = stringResource(Res.string.onboarding_slide_3_bullet_1_title),
+            subtitle = stringResource(Res.string.onboarding_slide_3_bullet_1_subtitle),
             image = painterResource(Res.drawable.profile)
         )
         XLargeSpacer()
         Bullet(
-            title = "А если проблемы?",
-            subtitle = "Приходите в телеграм-канал, ссылка на него на следующем экране",
+            title = stringResource(Res.string.onboarding_slide_3_bullet_2_title),
+            subtitle = stringResource(Res.string.onboarding_slide_3_bullet_2_subtitle),
+            image = painterResource(Res.drawable.settings)
+        )
+        XLargeSpacer()
+        Bullet(
+            title = stringResource(Res.string.onboarding_slide_3_bullet_3_title),
+            subtitle = stringResource(Res.string.onboarding_slide_3_bullet_3_subtitle),
             image = painterResource(Res.drawable.help)
         )
+        MediumSpacer()
         Spacer(Modifier.weight(1f))
-        GradientButton("Ок", onClick, modifier = Modifier.padding(horizontal = 32.dp))
+        GradientButton(
+            text = stringResource(Res.string.onboarding_slide_3_button),
+            onClick = onClick,
+            modifier = Modifier.padding(horizontal = 32.dp)
+        )
         XLargeSpacer()
     }
 }

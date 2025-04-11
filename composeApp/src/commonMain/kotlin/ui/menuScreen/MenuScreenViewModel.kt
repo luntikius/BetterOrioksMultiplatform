@@ -26,7 +26,12 @@ class MenuScreenViewModel(
     init {
         viewModelScope.launch {
             userPreferencesRepository.settings.collect { settings ->
-                _uiState.update { uis -> uis.copy(iosNotificationsEnabled = settings.enableIosNotifications) }
+                _uiState.update { uis ->
+                    uis.copy(
+                        iosNotificationsEnabled = settings.enableIosNotifications,
+                        showDonationWidget = settings.showDonationWidget
+                    )
+                }
             }
         }
     }
@@ -48,6 +53,12 @@ class MenuScreenViewModel(
             viewModelScope.launch {
                 updateUserInfo()
             }
+        }
+    }
+
+    fun hideDonationWidget() {
+        viewModelScope.launch {
+            userPreferencesRepository.setShowDonationWidget(false)
         }
     }
 

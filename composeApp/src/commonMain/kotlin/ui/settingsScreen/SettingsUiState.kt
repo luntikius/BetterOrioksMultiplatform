@@ -9,6 +9,8 @@ data class SettingsUiState(
     val showFunSettings: Boolean = false,
     val enableColoredBorders: Boolean = false,
     val enableIosNotifications: Boolean = false,
+    val enableForceNotifications: Boolean = true,
+    val showDonationWidget: Boolean = true,
 ) {
     val showSoftenDarkThemeSwitch = selectedTheme != Theme.Light
 }
