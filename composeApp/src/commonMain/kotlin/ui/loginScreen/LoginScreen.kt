@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -145,16 +148,25 @@ fun LoginScreenContent(
     modifier: Modifier = Modifier
 ) {
     val uiState by loginScreenViewModel.uiState.collectAsState()
+    val scrollState = rememberScrollState()
 
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.weight(1f))
-        StaticLogo()
-        ErrorText(uiState.loginState)
-        LoginInfoInput(loginScreenViewModel)
-        Spacer(Modifier.weight(1f))
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(scrollState)
+                .imePadding(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(Modifier.weight(1f))
+            StaticLogo()
+            ErrorText(uiState.loginState)
+            LoginInfoInput(loginScreenViewModel)
+            Spacer(Modifier.weight(1f))
+        }
         TelegramIconButton(onClick = { urlHandler.handleUrl(UsefulUrls.TELEGRAM_URL) })
     }
 }

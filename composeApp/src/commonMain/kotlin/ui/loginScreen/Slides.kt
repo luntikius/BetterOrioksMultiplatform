@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,6 +49,7 @@ import org.jetbrains.compose.resources.stringResource
 import ui.common.Bullet
 import ui.common.GradientButton
 import ui.common.LargeSpacer
+import ui.common.MediumSpacer
 import ui.common.XLargeSpacer
 
 @Composable
@@ -54,10 +57,11 @@ fun Slide1(
     onClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(Modifier.weight(1f))
+        MediumSpacer()
         StaticLogo(showSubtitle = false)
         LargeSpacer()
         Text(
@@ -70,6 +74,7 @@ fun Slide1(
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
+        MediumSpacer()
         Spacer(Modifier.weight(1f))
         GradientButton(
             text = stringResource(Res.string.onboarding_slide_1_button),
@@ -85,10 +90,11 @@ fun Slide2(
     onClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.weight(1f))
+        MediumSpacer()
         Text(
             stringResource(Res.string.onboarding_slide_2_title),
             style = MaterialTheme.typography.headlineMedium
@@ -119,6 +125,7 @@ fun Slide2(
                 image = painterResource(Res.drawable.notifications)
             )
         }
+        MediumSpacer()
         Spacer(Modifier.weight(1f))
         GradientButton(
             text = stringResource(Res.string.onboarding_slide_2_button),
@@ -134,10 +141,11 @@ fun Slide3(
     onClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.weight(1f))
+        MediumSpacer()
         Text(
             stringResource(Res.string.onboarding_slide_3_title),
             style = MaterialTheme.typography.headlineMedium
@@ -160,6 +168,7 @@ fun Slide3(
             subtitle = stringResource(Res.string.onboarding_slide_3_bullet_3_subtitle),
             image = painterResource(Res.drawable.help)
         )
+        MediumSpacer()
         Spacer(Modifier.weight(1f))
         GradientButton(
             text = stringResource(Res.string.onboarding_slide_3_button),
