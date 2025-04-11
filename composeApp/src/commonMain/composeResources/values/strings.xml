@@ -1,80 +1,132 @@
 <resources>
+    <!-- App basics -->
     <string name="app_name">BetterOrioks</string>
-    <string name="blank">blank</string>  <!-- TODO: not sure if needed -->
     <string name="back_button">Кнопка: назад</string>
-    <string name="control_form">Форма контроля: %1$s</string>
-    <string name="teachers">Преподаватели </string>
-    <string name="teacher">Преподаватель </string>
-    <string name="no_teachers">Преподаватели не указаны</string>
-    <string name="loading_failed">Не удалось загрузить данные</string>
+    <string name="cancel">Отмена</string>
+    <string name="settings">Настройки</string>
+    <string name="reload">Перезагрузить</string>
+    <string name="Refresh">Перезагрузить</string>
+    <string name="exit">Выйти</string>
+    
+    <!-- Authentication -->
     <string name="login">Номер студенческого билета</string>
     <string name="password">Пароль</string>
     <string name="visibility">Видимость пароля</string>
     <string name="LogIn">Войти</string>
-    <string name="exit">Выйти</string>
-    <string name="Debts">Долги</string>
-    <string name="MONDAY">Пн</string>
-    <string name="TUESDAY">Вт</string>
-    <string name="WEDNESDAY">Ср</string>
-    <string name="THURSDAY">Чт</string>
-    <string name="FRIDAY">Пт</string>
-    <string name="SATURDAY">Сб</string>
-    <string name="SUNDAY">Вс</string>
-    <string name="error_short">err</string>  <!-- TODO: not sure if needed -->
-    <string name="JANUARY">Январь</string>
-    <string name="FEBRUARY">Февраль</string>
-    <string name="MARCH">Март</string>
-    <string name="APRIL">Апрель</string>
-    <string name="MAY">Май</string>
-    <string name="JUNE">Июнь</string>
-    <string name="JULY">Июль</string>
-    <string name="AUGUST">Август</string>
-    <string name="SEPTEMBER">Сентябрь</string>
-    <string name="OCTOBER">Октябрь</string>
-    <string name="NOVEMBER">Ноябрь</string>
-    <string name="DECEMBER">Декабрь</string>
-    <string name="january_short">Янв.</string>
-    <string name="february_short">Фев.</string>
-    <string name="march_short">Март</string>
-    <string name="april_short">Апр.</string>
-    <string name="may_short">Май</string>
-    <string name="june_short">Июнь</string>
-    <string name="july_short">Июль</string>
-    <string name="august_short">Авг.</string>
-    <string name="september_short">Сен.</string>
-    <string name="october_short">Окт.</string>
-    <string name="november_short">Нояб.</string>
-    <string name="december_short">Дек.</string>
+    <string name="login_required_reason_was_not_logged_in">Войдите в свой аккаунт ОРИОКС</string>
+    <string name="login_required_reason_session_expired">Ваша сессия истекла, пожалуйста, войдите заново</string>
+    <string name="login_required_reason_bad_login_or_password">Неверный логин или пароль</string>
+    <string name="login_required_reason_unexpected_exception">Непредвиденная ошибка при входе, проверьте подключение к интернету или зайдите позже</string>
+    
+    <!-- Schedule -->
     <string name="room_number">Аудитория: %1$s</string>
     <string name="free_day">В этот день пар нет, отличный повод провести время с друзьями и отдохнуть на свежем воздухе!</string>
-    <string name="notifications">Уведомления</string>
-    <string name="notifications_permission_required">Для включения этой функции необходимо предоставить разрешение на отправку уведомлений</string>
-    <string name="moodle_course">Курс Moodle</string>
-    <string name="Resources">Ресурсы</string>
-    <string name="academic_performance_caps">Успеваемость</string>
-    <string name="theme">Тема</string>
-    <string name="cancel">Отмена</string>
-    <string name="settings">Настройки</string>
-    <string name="news_notifications">О новостях</string>
-    <string name="subjects_notifications">Об оценках</string>
     <string name="change_lesson_time">Изменить время пары</string>
-    <string name="Refresh">Перезагрузить</string>
     <string name="refresh_alert_text">Если вы перезагрузите расписание, все ваши изменения в нем будут удалены. Вы уверены, что хотите перезагрузить расписание?</string>
-    <string name="attention">Внимание!</string>
-    <string name="exit_alert_text">Вы уверены, что хотите выйти?</string>
-    <string name="bad_mark">Неудовлетворительно</string>
-    <string name="ok_mark">Удовлетворительно</string>
-    <string name="good_mark">Хорошо</string>
-    <string name="excellent_mark">Отлично</string>
     <string name="first_higher">Числитель - 1</string>
     <string name="first_lower">Знаменатель - 1</string>
     <string name="second_higher">Числитель - 2</string>
     <string name="second_lower">Знаменатель - 2</string>
-    <string name="error_message">Текст ошибки</string>  <!-- TODO: not sure if needed -->
+    <string name="week_number">%1$d - неделя</string>
+    <string name="schedule_scroll_to_today">Выбрать сегодняшний день в расписании</string>
+    <string name="schedule_loading_failed_string">Не удалось загрузить новое расписание. Используется расписание из памяти</string>
+    <string name="schedule_loading_success_string">Расписание успешно обновлено!</string>
+    <string name="loading_schedule">Загружаем расписание</string>
+    <string name="loading_schedule_from_web">Загружаем расписание из сети</string>
+    <string name="no_schedule">Расписание отсутствует</string>
+    <string name="no_schedule_full">Расписание, сохраненное в памяти устройства, пустое, попробуйте перезагрузить его, потянув пальцем вниз</string>
+    <string name="switch_options_every_week">На каждой неделе</string>
+    <string name="switch_options_every_two_weeks">Только в %1$s</string>
+    <string name="switch_options_every_four_weeks">Только в %1$s</string>
+    <string name="switch_options_title">Изменить время этой пары</string>
+    <string name="higher">Числитель</string>
+    <string name="lower">Знаменатель</string>
+    <string name="semester_end">Ура – конец семестра! Самое время закрыть все долги и отдохнуть</string>
+    
+    <!-- Academic performance -->
+    <string name="academic_performance_caps">Успеваемость</string>
+    <string name="control_form">Форма контроля: %1$s</string>
+    <string name="teachers">Преподаватели </string>
+    <string name="teacher">Преподаватель </string>
+    <string name="no_teachers">Преподаватели не указаны</string>
+    <string name="Debts">Долги</string>
+    <string name="bad_mark">Неудовлетворительно</string>
+    <string name="ok_mark">Удовлетворительно</string>
+    <string name="good_mark">Хорошо</string>
+    <string name="excellent_mark">Отлично</string>
     <string name="Credit">Зачет</string>
     <string name="Semester">Семестр</string>
-
-    <!--    new-->
+    <string name="loading_subjects">Загружаем успеваемость</string>
+    <string name="no_subjects">Ой, почему-то тут пусто, возможно, этот семестр еще не начался</string>
+    <string name="exam_info_exam">Экзамен</string>
+    <string name="exam_info_consultation">Консультация</string>
+    
+    <!-- Resources -->
+    <string name="Resources">Ресурсы</string>
+    <string name="loading_resources">Загружаем ресурсы</string>
+    <string name="moodle_course">Курс Moodle</string>
+    
+    <!-- News -->
+    <string name="news">Новости</string>
+    <string name="subject_news">Новости по предмету</string>
+    <string name="news_date">От %1$s</string>
+    <string name="news_view">Просмотр новости</string>
+    <string name="attached_files">Прикрепленные файлы</string>
+    <string name="no_news">Новостей еще нет</string>
+    <string name="loading_news">Загружаем новости</string>
+    
+    <!-- Notifications -->
+    <string name="notifications">Уведомления</string>
+    <string name="notifications_permission_required">Для включения этой функции необходимо предоставить разрешение на отправку уведомлений</string>
+    <string name="news_notifications">О новостях</string>
+    <string name="subjects_notifications">Об оценках</string>
+    <string name="no_notifications">В истории уведомлений ничего нет</string>
+    <string name="notifications_history">История уведомлений</string>
+    <string name="notifications_settings">Настройки уведомлений</string>
+    <string name="notifications_info_title">Как работают уведомления?</string>
+    <string name="notifications_info_pt1_title">Сбор информации</string>
+    <string name="notifications_info_pt2_title">Отправка уведомлений</string>
+    <string name="notifications_info_pt1_subtitle">BetterOrioks собирает информацию об обновлении оценок/новостей из сети раз в определенный промежуток времени</string>
+    <string name="notifications_info_pt2_subtitle">Если информация обновилась, запись об этом появляется в истории уведомлений, а если вы еще не видели обновленной информации (не заходили на страницу оценок/новостей), вам отсылается уведомление</string>
+    <string name="notification_subject_title">Изменение оценки по "%1$s"</string>
+    <string name="notification_subject_subtitle">Оценка за "%1$s" изменена: %2$s/%3$s -> %4$s/%5$s</string>
+    <string name="notification_news_title">В ОРИОКС вышла новость</string>
+    
+    <!-- Settings -->
+    <string name="theme">Тема</string>
+    <string name="settings_theme_system">Системная</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Темная</string>
+    <string name="settings_soften_dark_theme_title">Смягчать цвета темной темы</string>
+    <string name="settings_soften_dark_theme_subtitle">Делает цвет фона в темной теме светлее, снижая нагрузку на глаза</string>
+    <string name="settings_enable_colored_borders_theme_title">Обводить оценки</string>
+    <string name="settings_enable_colored_borders_theme_subtitle">Добавляет цветную обводку вокруг оценок, сами оценки становятся белыми</string>
+    <string name="settings_title_fun">Fun</string>
+    <string name="settings_pink_mode">🌸Пинк мод🌸</string>
+    <string name="settings_enable_ios_notifications_title">[experimental] Включить уведомления на IOS</string>
+    <string name="settings_enable_ios_notifications_subtitle">Открывает точку входа на экран уведомлений на IOS, функция еще в разработке</string>
+    <string name="settings_title_functionality">Функциональность</string>
+    <string name="settings_enable_force_notification_title">Уведомлять обо всех изменениях</string>
+    <string name="settings_enable_force_notification_subtitle">При включенных уведомлениях, если настройка включена, вы будете получать уведомления обо всех событиях, включая те, которые вы уже могли видеть в приложении</string>
+    
+    <!-- Social and external links -->
+    <string name="social_telegram">Telegram-канал приложения</string>
+    <string name="social_github">GitHub-репозиторий приложения</string>
+    <string name="social_orioks">Открыть Web-версию</string>
+    
+    <!-- Misc UI elements -->
+    <string name="loading_failed">Не удалось загрузить данные</string>
+    <string name="drop_down_menu">Открыть выпадающее меню</string>
+    <string name="attention">Внимание!</string>
+    <string name="exit_alert_text">Вы уверены, что хотите выйти?</string>
+    <string name="under_construction">Сейчас этот раздел в разработке, но совсем скоро тут будет что-то крутое!</string>
+    <string name="incomplete_poll_text">У вас есть непройденный опрос в ОРИОКС</string>
+    <string name="incomplete_poll_subtitle">Пока опрос не завершен, загрузить страницу не получится</string>
+    <string name="incomplete_poll_button">Пройти опрос</string>
+    <string name="incomplete_poll_completed">Я прошел опрос</string>
+    <string name="buffer_text_exam">%1$s по "%2$s"\nКогда: %3$s\nАудитория: %4$s</string>
+    
+    <!-- Time gaps -->
     <plurals name="gap_minutes">
         <item quantity="one">Окно %1$d минута</item>
         <item quantity="few">Окно %1$d минуты</item>
@@ -102,56 +154,40 @@
     <string name="weeks_before_event_one">На следующей неделе</string>
     <string name="weeks_before_event_passed">Прошло</string>
 
-    <string name="week_number">%1$d - неделя</string>
-    <string name="schedule_scroll_to_today">Выбрать сегодняшний день в расписании</string>
-    <string name="schedule_loading_failed_string">Не удалось загрузить новое расписание. Используется расписание из памяти</string>
-    <string name="schedule_loading_success_string">Расписание успешно обновлено!</string>
-    <string name="drop_down_menu">Открыть выпадающее меню</string>
-    <string name="loading_news">Загружаем новости</string>
-    <string name="loading_schedule">Загружаем расписание</string>
-    <string name="loading_schedule_from_web">Загружаем расписание из сети</string>
-    <string name="loading_subjects">Загружаем успеваемость</string>
-    <string name="loading_resources">Загружаем ресурсы</string>
-    <string name="no_schedule">Расписание отсутствует</string>
-    <string name="no_subjects">Ой, почему-то тут пусто, возможно, этот семестр еще не начался</string>
-    <string name="no_schedule_full">Расписание, сохраненное в памяти устройства, пустое, попробуйте перезагрузить его, потянув пальцем вниз</string>
-    <string name="reload">Перезагрузить</string>
-    <string name="incomplete_poll_text">У вас есть непройденный опрос в ОРИОКС</string>
-    <string name="incomplete_poll_subtitle">Пока опрос не завершен, загрузить страницу не получится</string>
-    <string name="incomplete_poll_button">Пройти опрос</string>
-    <string name="incomplete_poll_completed">Я прошел опрос</string>
-    <string name="switch_options_every_week">На каждой неделе</string>
-    <string name="switch_options_every_two_weeks">Только в %1$s</string>
-    <string name="switch_options_every_four_weeks">Только в %1$s</string>
-    <string name="switch_options_title">Изменить время этой пары</string>
-    <string name="higher">Числитель</string>
-    <string name="lower">Знаменатель</string>
-    <string name="news">Новости</string>
-    <string name="subject_news">Новости по предмету</string>
-    <string name="news_date">От %1$s</string>
-    <string name="news_view">Просмотр новости</string>
-    <string name="attached_files">Прикрепленные файлы</string>
-    <string name="exam_info_exam">Экзамен</string>
-    <string name="exam_info_consultation">Консультация</string>
-    <string name="no_news">Новостей еще нет</string>
-    <string name="no_notifications">В истории уведомлений ничего нет</string>
-    <string name="under_construction">Сейчас этот раздел в разработке, но совсем скоро тут будет что-то крутое!</string>
-    <string name="semester_end">Ура – конец семестра! Самое время закрыть все долги и отдохнуть</string>
-    <string name="notifications_history">История уведомлений</string>
-    <string name="notifications_settings">Настройки уведомлений</string>
-    <string name="social_telegram">Telegram-канал приложения</string>
-    <string name="social_github">GitHub-репозиторий приложения</string>
-    <string name="social_orioks">Открыть Web-версию</string>
-    <string name="notifications_info_title">Как работают уведомления?</string>
-    <string name="notifications_info_pt1_title">Сбор информации</string>
-    <string name="notifications_info_pt2_title">Отправка уведомлений</string>
-    <string name="notifications_info_pt1_subtitle">BetterOrioks собирает информацию об обновлении оценок/новостей из сети раз в определенный промежуток времени</string>
-    <string name="notifications_info_pt2_subtitle">Если информация обновилась, запись об этом появляется в истории уведомлений, а если вы еще не видели обновленной информации (не заходили на страницу оценок/новостей), вам отсылается уведомление</string>
-    <string name="login_required_reason_was_not_logged_in">Войдите в свой аккаунт ОРИОКС</string>
-    <string name="login_required_reason_session_expired">Ваша сессия истекла, пожалуйста, войдите заново</string>
-    <string name="login_required_reason_bad_login_or_password">Неверный логин или пароль</string>
-    <string name="login_required_reason_unexpected_exception">Непредвиденная ошибка при входе, проверьте подключение к интернету или зайдите позже</string>
+    <!-- Date values -->
+    <string name="MONDAY">Пн</string>
+    <string name="TUESDAY">Вт</string>
+    <string name="WEDNESDAY">Ср</string>
+    <string name="THURSDAY">Чт</string>
+    <string name="FRIDAY">Пт</string>
+    <string name="SATURDAY">Сб</string>
+    <string name="SUNDAY">Вс</string>
+    <string name="JANUARY">Январь</string>
+    <string name="FEBRUARY">Февраль</string>
+    <string name="MARCH">Март</string>
+    <string name="APRIL">Апрель</string>
+    <string name="MAY">Май</string>
+    <string name="JUNE">Июнь</string>
+    <string name="JULY">Июль</string>
+    <string name="AUGUST">Август</string>
+    <string name="SEPTEMBER">Сентябрь</string>
+    <string name="OCTOBER">Октябрь</string>
+    <string name="NOVEMBER">Ноябрь</string>
+    <string name="DECEMBER">Декабрь</string>
+    <string name="january_short">Янв.</string>
+    <string name="february_short">Фев.</string>
+    <string name="march_short">Март</string>
+    <string name="april_short">Апр.</string>
+    <string name="may_short">Май</string>
+    <string name="june_short">Июнь</string>
+    <string name="july_short">Июль</string>
+    <string name="august_short">Авг.</string>
+    <string name="september_short">Сен.</string>
+    <string name="october_short">Окт.</string>
+    <string name="november_short">Нояб.</string>
+    <string name="december_short">Дек.</string>
 
+    <!-- Content descriptions -->
     <string name="content_description_group_subjects">Группировать предметы</string>
     <string name="content_description_select_semester">Выбрать семестр</string>
     <string name="content_description_subject_info">Информация о предмете</string>
@@ -160,24 +196,28 @@
     <string name="content_description_clear">Очистить</string>
     <string name="content_description_notifications_info">Информация об уведомлениях</string>
 
-    <string name="buffer_text_exam">%1$s по "%2$s"\nКогда: %3$s\nАудитория: %4$s</string>
+    <!-- Onboarding -->
+    <string name="onboarding_slide_1_title">Привет!</string>
+    <string name="onboarding_slide_1_button">Давайте</string>
+    <string name="onboarding_slide_1_subtitle">BetterOrioks — приложение для студентов МИЭТ, сейчас расскажем, что к чему</string>
 
-    <string name="notification_subject_title">Изменение оценки по "%1$s"</string>
-    <string name="notification_subject_subtitle">Оценка за "%1$s" изменена: %2$s/%3$s -> %4$s/%5$s</string>
-    <string name="notification_news_title">В ОРИОКС вышла новость</string>
+    <string name="onboarding_slide_2_title">Вот что у нас есть:</string>
+    <string name="onboarding_slide_2_button">Дальше</string>
+    <string name="onboarding_slide_2_bullet_1_title">Расписание</string>
+    <string name="onboarding_slide_2_bullet_1_subtitle">Теперь не нужно запоминать, числитель сейчас или знаменатель</string>
+    <string name="onboarding_slide_2_bullet_2_title">Информация по предметам</string>
+    <string name="onboarding_slide_2_bullet_2_subtitle">Оценки, контрольные мероприятия, ресурсы, преподаватели, экзамены и даже Moodle</string>
+    <string name="onboarding_slide_2_bullet_3_title">Новости</string>
+    <string name="onboarding_slide_2_bullet_3_subtitle">Со всего ОРИОКСа и по каждому предмету</string>
+    <string name="onboarding_slide_2_bullet_4_title">Уведомления о новых оценках</string>
+    <string name="onboarding_slide_2_bullet_4_subtitle">А еще о выходе новостей</string>
 
-    <string name="settings_theme_system">Системная</string>
-    <string name="settings_theme_light">Светлая</string>
-    <string name="settings_theme_dark">Темная</string>
-    <string name="settings_soften_dark_theme_title">Смягчать цвета темной темы</string>
-    <string name="settings_soften_dark_theme_subtitle">Делает цвет фона в темной теме светлее, снижая нагрузку на глаза</string>
-    <string name="settings_enable_colored_borders_theme_title">Обводить оценки</string>
-    <string name="settings_enable_colored_borders_theme_subtitle">Добавляет цветную обводку вокруг оценок, сами оценки становятся белыми</string>
-    <string name="settings_title_fun">Fun</string>
-    <string name="settings_pink_mode">🌸Пинк мод🌸</string>
-    <string name="settings_enable_ios_notifications_title">[experimental] Включить уведомления на IOS</string>
-    <string name="settings_enable_ios_notifications_subtitle">Открывает точку входа на экран уведомлений на IOS, функция еще в разработке</string>
-    <string name="settings_title_functionality">Функциональность</string>
-    <string name="settings_enable_force_notification_title">Уведомлять обо всех изменениях</string>
-    <string name="settings_enable_force_notification_subtitle">При включенных уведомлениях, если настройка включена, вы будете получать уведомления обо всех событиях, включая те, которые вы уже могли видеть в приложении</string>
+    <string name="onboarding_slide_3_title">Ваши оценки и расписание уже близко!</string>
+    <string name="onboarding_slide_3_button">Ок</string>
+    <string name="onboarding_slide_3_bullet_1_title">Для работы с BetterOrioks необходимо войти в аккаунт ОРИОКС</string>
+    <string name="onboarding_slide_3_bullet_1_subtitle">Мы автоматически загрузим ваше расписание и оценки</string>
+    <string name="onboarding_slide_3_bullet_2_title">Не забудьте заглянуть на экран настроек</string>
+    <string name="onboarding_slide_3_bullet_2_subtitle">Подстройте приложение под себя и не забудьте понажимать на все, что нажимается</string>
+    <string name="onboarding_slide_3_bullet_3_title">А если проблемы?</string>
+    <string name="onboarding_slide_3_bullet_3_subtitle">Приходите в телеграм-канал, ссылка на него на следующем экране и в меню приложения</string>
 </resources>

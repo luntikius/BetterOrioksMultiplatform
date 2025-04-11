@@ -16,12 +16,34 @@ import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.help
 import betterorioks.composeapp.generated.resources.news
 import betterorioks.composeapp.generated.resources.notifications
+import betterorioks.composeapp.generated.resources.onboarding_slide_1_button
+import betterorioks.composeapp.generated.resources.onboarding_slide_1_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_1_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_1_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_1_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_2_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_2_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_3_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_3_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_4_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_bullet_4_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_button
+import betterorioks.composeapp.generated.resources.onboarding_slide_2_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_1_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_1_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_2_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_2_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_3_subtitle
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_bullet_3_title
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_button
+import betterorioks.composeapp.generated.resources.onboarding_slide_3_title
 import betterorioks.composeapp.generated.resources.profile
 import betterorioks.composeapp.generated.resources.schedule
 import betterorioks.composeapp.generated.resources.settings
 import betterorioks.composeapp.generated.resources.subjects
 import getPlatform
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import ui.common.Bullet
 import ui.common.GradientButton
 import ui.common.LargeSpacer
@@ -39,17 +61,21 @@ fun Slide1(
         StaticLogo(showSubtitle = false)
         LargeSpacer()
         Text(
-            "Привет!",
+            stringResource(Res.string.onboarding_slide_1_title),
             style = MaterialTheme.typography.headlineMedium
         )
         LargeSpacer()
         Text(
-            "BetterOrioks — приложение для студентов МИЭТ, сейчас расскажем, что к чему",
+            stringResource(Res.string.onboarding_slide_1_subtitle),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.weight(1f))
-        GradientButton("Давайте", onClick, modifier = Modifier.padding(horizontal = 32.dp))
+        GradientButton(
+            text = stringResource(Res.string.onboarding_slide_1_button),
+            onClick = onClick,
+            modifier = Modifier.padding(horizontal = 32.dp)
+        )
         XLargeSpacer()
     }
 }
@@ -64,37 +90,41 @@ fun Slide2(
     ) {
         Spacer(Modifier.weight(1f))
         Text(
-            "Вот что у нас есть:",
+            stringResource(Res.string.onboarding_slide_2_title),
             style = MaterialTheme.typography.headlineMedium
         )
         XLargeSpacer()
         Bullet(
-            title = "Расписание",
-            subtitle = "Теперь не нужно запоминать, числитель сейчас или знаменатель",
+            title = stringResource(Res.string.onboarding_slide_2_bullet_1_title),
+            subtitle = stringResource(Res.string.onboarding_slide_2_bullet_1_subtitle),
             image = painterResource(Res.drawable.schedule)
         )
         XLargeSpacer()
         Bullet(
-            title = "Информация по предметам",
-            subtitle = "Оценки, контрольные мероприятия, ресурсы, преподаватели, экзамены и даже Moodle",
+            title = stringResource(Res.string.onboarding_slide_2_bullet_2_title),
+            subtitle = stringResource(Res.string.onboarding_slide_2_bullet_2_subtitle),
             image = painterResource(Res.drawable.subjects)
         )
         XLargeSpacer()
         Bullet(
-            title = "Новости",
-            subtitle = "Со всего ОРИОКСа и по каждому предмету",
+            title = stringResource(Res.string.onboarding_slide_2_bullet_3_title),
+            subtitle = stringResource(Res.string.onboarding_slide_2_bullet_3_subtitle),
             image = painterResource(Res.drawable.news)
         )
         if (getPlatform().os == PlatformOs.Android) {
             XLargeSpacer()
             Bullet(
-                title = "Уведомления о новых оценках",
-                subtitle = "А еще о выходе новостей",
+                title = stringResource(Res.string.onboarding_slide_2_bullet_4_title),
+                subtitle = stringResource(Res.string.onboarding_slide_2_bullet_4_subtitle),
                 image = painterResource(Res.drawable.notifications)
             )
         }
         Spacer(Modifier.weight(1f))
-        GradientButton("Дальше", onClick, modifier = Modifier.padding(horizontal = 32.dp))
+        GradientButton(
+            text = stringResource(Res.string.onboarding_slide_2_button),
+            onClick = onClick,
+            modifier = Modifier.padding(horizontal = 32.dp)
+        )
         XLargeSpacer()
     }
 }
@@ -109,29 +139,33 @@ fun Slide3(
     ) {
         Spacer(Modifier.weight(1f))
         Text(
-            "Ваши оценки и расписание уже близко!",
+            stringResource(Res.string.onboarding_slide_3_title),
             style = MaterialTheme.typography.headlineMedium
         )
         XLargeSpacer()
         Bullet(
-            title = "Для работы с BetterOrioks необходимо войти в аккаунт ОРИОКС",
-            subtitle = "Мы автоматически загрузим ваше расписание и оценки",
+            title = stringResource(Res.string.onboarding_slide_3_bullet_1_title),
+            subtitle = stringResource(Res.string.onboarding_slide_3_bullet_1_subtitle),
             image = painterResource(Res.drawable.profile)
         )
         XLargeSpacer()
         Bullet(
-            title = "Не забудьте заглянуть на экран настроек",
-            subtitle = "Подстройте приложение под себя и не забудьте понажимать на все, что нажимается",
+            title = stringResource(Res.string.onboarding_slide_3_bullet_2_title),
+            subtitle = stringResource(Res.string.onboarding_slide_3_bullet_2_subtitle),
             image = painterResource(Res.drawable.settings)
         )
         XLargeSpacer()
         Bullet(
-            title = "А если проблемы?",
-            subtitle = "Приходите в телеграм-канал, ссылка на него на следующем экране и в меню приложения",
+            title = stringResource(Res.string.onboarding_slide_3_bullet_3_title),
+            subtitle = stringResource(Res.string.onboarding_slide_3_bullet_3_subtitle),
             image = painterResource(Res.drawable.help)
         )
         Spacer(Modifier.weight(1f))
-        GradientButton("Ок", onClick, modifier = Modifier.padding(horizontal = 32.dp))
+        GradientButton(
+            text = stringResource(Res.string.onboarding_slide_3_button),
+            onClick = onClick,
+            modifier = Modifier.padding(horizontal = 32.dp)
+        )
         XLargeSpacer()
     }
 }
