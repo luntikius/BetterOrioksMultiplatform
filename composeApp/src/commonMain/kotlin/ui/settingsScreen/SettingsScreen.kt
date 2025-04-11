@@ -69,7 +69,6 @@ fun SettingsScreen(
     val viewModel = viewModel {
         koin.get<SettingsViewModel>()
     }
-    val uiState by viewModel.uiState.collectAsState()
 
     LazyColumn(
         modifier = modifier.padding(8.dp)
