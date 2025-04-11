@@ -90,8 +90,8 @@ android {
         applicationId = "com.studentapp.betterorioks"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 113
-        versionName = "1.3"
+        versionCode = 114
+        versionName = "1.4"
     }
     packaging {
         resources {
