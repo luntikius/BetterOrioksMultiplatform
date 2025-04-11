@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
-        android:enableOnBackInvokedCallback="true"
+        android:enableOnBackInvokedCallback="@bool/enable_predictive_back"
         android:name=".BetterOrioksApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
