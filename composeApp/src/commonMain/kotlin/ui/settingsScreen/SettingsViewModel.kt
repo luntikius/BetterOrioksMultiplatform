@@ -26,7 +26,8 @@ class SettingsViewModel(
                         pinkMode = settings.pinkMode,
                         enableColoredBorders = settings.coloredBorders,
                         enableIosNotifications = settings.enableIosNotifications,
-                        enableForceNotifications = settings.enableForceNotification
+                        enableForceNotifications = settings.enableForceNotification,
+                        showDonationWidget = settings.showDonationWidget
                     )
                 }
             }
@@ -74,6 +75,12 @@ class SettingsViewModel(
     fun enableColoredBorders(enabled: Boolean) {
         viewModelScope.launch {
             userPreferencesRepository.setEnableColoredBorders(enabled)
+        }
+    }
+
+    fun setShowDonationWidget(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setShowDonationWidget(enabled)
         }
     }
 }

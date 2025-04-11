@@ -7,4 +7,5 @@ data class SettingsState(
     val coloredBorders: Boolean,
     val enableIosNotifications: Boolean,
     val enableForceNotification: Boolean,
+    val showDonationWidget: Boolean,
 )

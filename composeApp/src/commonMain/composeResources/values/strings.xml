@@ -108,6 +108,8 @@
     <string name="settings_title_functionality">Функциональность</string>
     <string name="settings_enable_force_notification_title">Уведомлять обо всех изменениях</string>
     <string name="settings_enable_force_notification_subtitle">При включенных уведомлениях, если настройка включена, вы будете получать уведомления обо всех событиях, включая те, которые вы уже могли видеть в приложении</string>
+    <string name="settings_show_donation_widget_title">Показывать виджет поддержки</string>
+    <string name="settings_show_donation_widget_subtitle">Отображать виджет для поддержки разработки приложения на экране меню</string>
     
     <!-- Social and external links -->
     <string name="social_telegram">Telegram-канал приложения</string>
@@ -220,4 +222,10 @@
     <string name="onboarding_slide_3_bullet_2_subtitle">Подстройте приложение под себя и не забудьте понажимать на все, что нажимается</string>
     <string name="onboarding_slide_3_bullet_3_title">А если проблемы?</string>
     <string name="onboarding_slide_3_bullet_3_subtitle">Приходите в телеграм-канал, ссылка на него на следующем экране и в меню приложения</string>
+
+<!--    donation widget-->
+    <string name="donation_title">Внесите свой вклад в BetterOrioks</string>
+    <string name="donation_subtitle">Ваша денежная поддержка помогает выкладывать приложение в сторы (это платно), улучшать его и добавлять новые функции️ 💖</string>
+    <string name="support">Поддержать</string>
+    <string name="next_time">В другой раз</string>
 </resources>

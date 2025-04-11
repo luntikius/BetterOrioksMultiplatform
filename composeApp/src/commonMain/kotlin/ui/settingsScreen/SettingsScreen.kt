@@ -37,6 +37,8 @@ import betterorioks.composeapp.generated.resources.settings_enable_force_notific
 import betterorioks.composeapp.generated.resources.settings_enable_ios_notifications_subtitle
 import betterorioks.composeapp.generated.resources.settings_enable_ios_notifications_title
 import betterorioks.composeapp.generated.resources.settings_pink_mode
+import betterorioks.composeapp.generated.resources.settings_show_donation_widget_subtitle
+import betterorioks.composeapp.generated.resources.settings_show_donation_widget_title
 import betterorioks.composeapp.generated.resources.settings_soften_dark_theme_subtitle
 import betterorioks.composeapp.generated.resources.settings_soften_dark_theme_title
 import betterorioks.composeapp.generated.resources.settings_theme_dark
@@ -173,6 +175,13 @@ fun FunctionalitySettings(
                 onClick = viewModel::setEnableForceNotification,
                 title = stringResource(Res.string.settings_enable_force_notification_title),
                 subtitle = stringResource(Res.string.settings_enable_force_notification_subtitle)
+            )
+            LargeSpacer()
+            SettingsItem(
+                isChecked = uiState.showDonationWidget,
+                onClick = viewModel::setShowDonationWidget,
+                title = stringResource(Res.string.settings_show_donation_widget_title),
+                subtitle = stringResource(Res.string.settings_show_donation_widget_subtitle)
             )
         }
     }

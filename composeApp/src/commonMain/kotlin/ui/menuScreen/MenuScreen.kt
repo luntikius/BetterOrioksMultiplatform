@@ -1,7 +1,12 @@
 package ui.menuScreen
 
 import PlatformOs
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,8 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -21,20 +28,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import betterorioks.composeapp.generated.resources.Res
+import betterorioks.composeapp.generated.resources.donation_subtitle
+import betterorioks.composeapp.generated.resources.donation_title
 import betterorioks.composeapp.generated.resources.exit
 import betterorioks.composeapp.generated.resources.exit_alert_text
 import betterorioks.composeapp.generated.resources.github
 import betterorioks.composeapp.generated.resources.news
+import betterorioks.composeapp.generated.resources.next_time
 import betterorioks.composeapp.generated.resources.notifications
 import betterorioks.composeapp.generated.resources.profile
 import betterorioks.composeapp.generated.resources.settings
 import betterorioks.composeapp.generated.resources.social_github
 import betterorioks.composeapp.generated.resources.social_orioks
 import betterorioks.composeapp.generated.resources.social_telegram
+import betterorioks.composeapp.generated.resources.support
 import betterorioks.composeapp.generated.resources.telegram
 import betterorioks.composeapp.generated.resources.web
 import getPlatform
@@ -48,10 +60,12 @@ import org.koin.compose.koinInject
 import ui.common.AttentionAlert
 import ui.common.CardButton
 import ui.common.ErrorScreenWithReloadButton
+import ui.common.GradientButton
 import ui.common.GradientIcon
 import ui.common.HorizontalIconTextButton
 import ui.common.LargeSpacer
 import ui.common.LoadingScreen
+import ui.common.MediumSpacer
 import ui.common.SimpleIconButton
 import ui.common.SmallSpacer
 import ui.common.SwipeRefreshBox
@@ -169,6 +183,57 @@ fun TextButtonColumn(
 }
 
 @Composable
+fun DonationWidget(
+    viewModel: MenuScreenViewModel,
+    urlHandler: UrlHandler = koinInject(),
+    modifier: Modifier = Modifier
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    AnimatedVisibility(
+        visible = uiState.showDonationWidget,
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut()
+    ) {
+        Column {
+            XLargeSpacer()
+            Card(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = modifier
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(Res.string.donation_title),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    )
+                    MediumSpacer()
+                    Text(
+                        text = stringResource(Res.string.donation_subtitle),
+                        style = MaterialTheme.typography.labelMedium,
+                        textAlign = TextAlign.Center,
+                    )
+                    XLargeSpacer()
+                    GradientButton(
+                        text = stringResource(Res.string.support),
+                        onClick = { urlHandler.handleUrl("https://www.tbank.ru/cf/2A2tfnRZDLa") },
+                        modifier = Modifier.fillMaxWidth(0.5F)
+                    )
+                    TextButton(
+                        onClick = viewModel::hideDonationWidget
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.next_time)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun MenuScreen(
     navController: NavController,
     viewModel: MenuScreenViewModel,
@@ -213,6 +278,7 @@ fun MenuScreenContent(
         item { UserInfoBlock(viewModel, Modifier.fillParentMaxWidth().padding(16.dp)) }
         item { LargeSpacer() }
         item { NavigationItemsRow(navController, viewModel) }
+        item { DonationWidget(viewModel = viewModel, modifier = Modifier.fillParentMaxWidth()) }
         item { XLargeSpacer() }
         item { TextButtonColumn() }
         item { XLargeSpacer() }
