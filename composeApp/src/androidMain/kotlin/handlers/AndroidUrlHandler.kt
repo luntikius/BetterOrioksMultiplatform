@@ -6,8 +6,10 @@ import android.net.Uri
 
 class AndroidUrlHandler(private val context: Context) : UrlHandler {
     override fun handleUrl(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addCategory(Intent.CATEGORY_BROWSABLE)
+        }
         context.startActivity(intent)
     }
 }
