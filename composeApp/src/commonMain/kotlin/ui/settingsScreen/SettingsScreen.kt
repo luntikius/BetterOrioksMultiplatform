@@ -161,29 +161,24 @@ fun FunctionalitySettings(
     viewModel: SettingsViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    Column(
-        modifier = Modifier.animateContentSize().fillMaxWidth()
-    ) {
-        if (getPlatform().os == PlatformOs.Android || uiState.enableIosNotifications) {
-            LargeSpacer()
-            SettingsTitle(
-                text = stringResource(Res.string.settings_title_functionality)
-            )
-            SettingsItem(
-                isChecked = uiState.enableForceNotifications,
-                onClick = viewModel::setEnableForceNotification,
-                title = stringResource(Res.string.settings_enable_force_notification_title),
-                subtitle = stringResource(Res.string.settings_enable_force_notification_subtitle)
-            )
-            LargeSpacer()
-            SettingsItem(
-                isChecked = uiState.showDonationWidget,
-                onClick = viewModel::setShowDonationWidget,
-                title = stringResource(Res.string.settings_show_donation_widget_title),
-                subtitle = stringResource(Res.string.settings_show_donation_widget_subtitle)
-            )
-        }
-    }
+    LargeSpacer()
+    SettingsTitle(
+        text = stringResource(Res.string.settings_title_functionality)
+    )
+    AnimatedVisibilitySettingsItem(
+        isVisible = getPlatform().os == PlatformOs.Android || uiState.enableIosNotifications,
+        isChecked = uiState.enableForceNotifications,
+        onClick = viewModel::setEnableForceNotification,
+        title = stringResource(Res.string.settings_enable_force_notification_title),
+        subtitle = stringResource(Res.string.settings_enable_force_notification_subtitle)
+    )
+    LargeSpacer()
+    SettingsItem(
+        isChecked = uiState.showDonationWidget,
+        onClick = viewModel::setShowDonationWidget,
+        title = stringResource(Res.string.settings_show_donation_widget_title),
+        subtitle = stringResource(Res.string.settings_show_donation_widget_subtitle)
+    )
 }
 
 @Composable
