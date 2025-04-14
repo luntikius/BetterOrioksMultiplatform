@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -253,7 +254,7 @@ fun MenuScreen(
         MenuScreenContent(
             viewModel = viewModel,
             navController = navController,
-            onExitButtonClick = { isExitAlertVisible = true }
+            onExitButtonClick = { isExitAlertVisible = true },
         )
 
         AttentionAlert(
@@ -273,7 +274,7 @@ fun MenuScreenContent(
     onExitButtonClick: () -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
+        modifier = Modifier.fillMaxSize().padding(16.dp).testTag("Swipable")
     ) {
         item { UserInfoBlock(viewModel, Modifier.fillParentMaxWidth().padding(16.dp)) }
         item { LargeSpacer() }
@@ -287,7 +288,7 @@ fun MenuScreenContent(
                 text = stringResource(Res.string.exit),
                 onClick = onExitButtonClick,
                 textColor = MaterialTheme.colorScheme.error,
-                modifier = Modifier.fillParentMaxWidth()
+                modifier = Modifier.fillParentMaxWidth().testTag("Exit")
             )
         }
         item { XLargeSpacer() }

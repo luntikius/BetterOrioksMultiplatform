@@ -22,6 +22,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -58,7 +59,7 @@ fun AttentionAlert(
             modifier = modifier.fillMaxWidth(0.85f),
             columnModifier = Modifier.wrapContentHeight(),
             buttons = {
-                TextButton(onClick = onActionButtonClick) {
+                TextButton(onClick = onActionButtonClick, modifier = Modifier.testTag("ExitPopupButton")) {
                     Text(actionButtonText, color = MaterialTheme.colorScheme.error)
                 }
                 TextButton(onClick = onDismiss) {
