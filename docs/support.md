@@ -1,11 +1,10 @@
 <h1>Поддержать BetterOrioks</h1>
 
-<img src="https://github.com/luntikius/BetterOrioksMultiplatform/blob/5b7de58c020e73694c2ecec70ba53e2f9442275b/docs/images/logo.png" alt="logo" width="300" height="300">
+<img src="https://github.com/luntikius/BetterOrioksMultiplatform/blob/main/docs/images/logo.png?raw=true" alt="logo" width="300" height="300">
 
 <h2>О проекте</h2>
 <p>
-BetterOrioks появился, когда я, на втором курсе, понял, что искать каждый раз расписание в галлерее – не лучшее из возможных решений. Тогда началась разработка.
-</p>
+BetterOrioks появился из желания иметь возможность посмотреть расписание занятий на любой день без необходимости запоминать, какая сейчас неделя или дата.
 <p>
 Первая версия приложения использовала открытое API ориокса, что позволило легко получить доступ к данным, однако, сами данные были весьма низкого качества. Оценки были не актуальны, а расписание не совпадало с действительностью.
 </p>
