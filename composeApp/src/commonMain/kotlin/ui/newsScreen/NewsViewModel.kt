@@ -40,7 +40,8 @@ class NewsViewModel(
                     runCatching {
                         newsNotificationsBackgroundTask.executeWithData(
                             news = news,
-                            silently = !userPreferencesRepository.isForceNotificationEnabled()
+                            silently = !userPreferencesRepository.isForceNotificationEnabled() ||
+                                !userPreferencesRepository.notificationSettings.first().isSubjectNotificationEnabled
                         )
                     }
                 }

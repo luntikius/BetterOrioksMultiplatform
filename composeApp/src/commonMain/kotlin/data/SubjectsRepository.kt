@@ -37,7 +37,8 @@ class SubjectsRepository(
                 runCatching {
                     subjectNotificationsBackgroundTask.executeWithData(
                         subjects = subjects,
-                        silently = !userPreferencesRepository.isForceNotificationEnabled()
+                        silently = !userPreferencesRepository.isForceNotificationEnabled() ||
+                            !userPreferencesRepository.notificationSettings.first().isSubjectNotificationEnabled
                     )
                 }
             } catch (e: Exception) {

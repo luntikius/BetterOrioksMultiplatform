@@ -217,7 +217,9 @@ fun DonationWidget(
                     XLargeSpacer()
                     GradientButton(
                         text = stringResource(Res.string.support),
-                        onClick = { urlHandler.handleUrl("https://www.tbank.ru/cf/2A2tfnRZDLa") },
+                        onClick = {
+                            urlHandler.handleUrl("https://luntikius.github.io/BetterOrioksMultiplatform/docs/support")
+                        },
                         modifier = Modifier.fillMaxWidth(0.5F)
                     )
                     TextButton(
