@@ -1,5 +1,5 @@
 package model
 
 object AppInfo {
-    const val VERSION: String = "1.4"
+    const val VERSION: String = "1.5"
 }

@@ -3,7 +3,7 @@ package model.schedule.scheduleJson
 import kotlinx.serialization.SerialName
 
 @kotlinx.serialization.Serializable
-class ScheduleFromSiteSubject(
+data class ScheduleFromSiteSubject(
     @SerialName("Name")
     val name: String,
     @SerialName("TeacherFull")

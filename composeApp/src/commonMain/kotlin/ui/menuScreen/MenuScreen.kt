@@ -275,7 +275,7 @@ fun MenuScreenContent(
     onExitButtonClick: () -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
+        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)
     ) {
         item { UserInfoBlock(viewModel, Modifier.fillParentMaxWidth().padding(16.dp)) }
         item { LargeSpacer() }

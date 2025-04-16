@@ -60,6 +60,7 @@ data class FullSchedule(
                     val weekType = (dayId / DAYS_IN_WEEK) % 4
                     val filteredSubjects =
                         schedule.filter { it.day == dayOfTheWeek && it.dayNumber == weekType }
+                            .mergeSubjectsIfNeeded()
                             .sortedBy { it.time.dayOrder }
                     addAll(filteredSubjects.map { it.toScheduleElementEntity(dayId) })
                 }
@@ -72,6 +73,37 @@ data class FullSchedule(
             days,
             elements
         )
+    }
+
+    private fun List<ScheduleFromSiteElement>.mergeSubjectsIfNeeded(): List<ScheduleFromSiteElement> {
+        val grouped = groupBy { it.time.dayOrder }
+        return buildList {
+            grouped.values.forEach { group ->
+                if (group.size > 1 && group.allSameBy { it.subject.name }) {
+                    val mergedTeachers = group.map { it.subject.teacher }.toSet()
+                    val mergedTeachersFull = group.map { it.subject.teacherFull }.toSet()
+                    val mergedRooms = group.map { it.room.name }.toSet()
+
+                    val mergedItem = group.first().copy(
+                        room = group.first().room.copy(name = mergedRooms.joinToString(", ")),
+                        subject = group.first().subject.copy(
+                            teacherFull = mergedTeachersFull.joinToString(", "),
+                            teacher = mergedTeachers.joinToString(", ")
+                        )
+                    )
+                    add(mergedItem)
+                } else {
+                    addAll(group)
+                }
+            }
+        }
+    }
+
+    private fun <T, R> List<T>.allSameBy(selector: (T) -> R): Boolean {
+        if (this.isEmpty()) return true
+
+        val firstValue = selector(this.first())
+        return this.all { selector(it) == firstValue }
     }
 
     companion object {
