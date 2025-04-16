@@ -13,10 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import model.NotificationSettings
 import model.background.BackgroundTaskType
 import org.jetbrains.compose.resources.getString
 
@@ -53,8 +51,13 @@ class NotificationsViewModel(
     fun toggleSubjectNotifications() {
         checkPermissions {
             viewModelScope.launch {
-                userPreferencesRepository
-                    .enableSubjectNotification(!uiState.value.notificationSettings.isSubjectNotificationEnabled)
+                val enable = !uiState.value.notificationSettings.isSubjectNotificationEnabled
+                userPreferencesRepository.enableSubjectNotification(enable)
+                if (enable) {
+                    backgroundHandler.scheduleTask(BackgroundTaskType.SubjectNotifications)
+                } else {
+                    backgroundHandler.removeTask(BackgroundTaskType.SubjectNotifications)
+                }
             }
         }
     }
@@ -62,37 +65,22 @@ class NotificationsViewModel(
     fun toggleNewsNotifications() {
         checkPermissions {
             viewModelScope.launch {
-                userPreferencesRepository
-                    .enableNewsNotifications(!uiState.value.notificationSettings.isNewsNotificationsEnabled)
+                val enable = !uiState.value.notificationSettings.isNewsNotificationsEnabled
+                userPreferencesRepository.enableNewsNotifications(enable)
+                if (enable) {
+                    backgroundHandler.scheduleTask(BackgroundTaskType.NewsNotifications)
+                } else {
+                    backgroundHandler.removeTask(BackgroundTaskType.NewsNotifications)
+                }
             }
         }
     }
 
     private fun handleSettingsChanges() {
         viewModelScope.launch(Dispatchers.IO) {
-            userPreferencesRepository.notificationSettings.collectIndexed { index, notificationSettings ->
-                if (index != 0) applySettings(notificationSettings)
+            userPreferencesRepository.notificationSettings.collect { notificationSettings ->
                 _uiState.update { uis -> uis.copy(notificationSettings = notificationSettings) }
             }
-        }
-    }
-
-    private fun applySettings(notificationSettings: NotificationSettings) {
-        if (
-            notificationSettings.isSubjectNotificationEnabled &&
-            !uiState.value.notificationSettings.isSubjectNotificationEnabled
-        ) {
-            backgroundHandler.scheduleTask(BackgroundTaskType.SubjectNotifications)
-        } else {
-            backgroundHandler.removeTask(BackgroundTaskType.SubjectNotifications)
-        }
-        if (
-            notificationSettings.isNewsNotificationsEnabled &&
-            !uiState.value.notificationSettings.isNewsNotificationsEnabled
-        ) {
-            backgroundHandler.scheduleTask(BackgroundTaskType.NewsNotifications)
-        } else {
-            backgroundHandler.removeTask(BackgroundTaskType.NewsNotifications)
         }
     }
 
