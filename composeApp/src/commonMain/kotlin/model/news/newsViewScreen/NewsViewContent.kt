@@ -16,9 +16,10 @@ data class NewsViewContent(
 ) {
     @Composable
     fun getContentWithAnnotatedStrings(): List<AnnotatedString> = content.map { text ->
+        val allowedURISchemesRegexStr = "https?://|ftp://|mailto:"
         val urlRegex = Regex(
             "(\\S+?\\${SPLITTER_SUFFIX})?" +
-                "(https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}" +
+                "((?:$allowedURISchemesRegexStr)(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}" +
                 "\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)\\b([^\\s)\\]}.,:>?;'\"]*))"
         )
         val fontSize = MaterialTheme.typography.bodyLarge.fontSize
