@@ -11,10 +11,12 @@
 <table>
   <tr>
     <td><a href="https://play.google.com/store/apps/details?id=com.studentapp.betterorioks" target="_blank">Оставьте отзыв в GooglePlay</a></td>
+    <td><a href="https://apps.apple.com/ru/app/betterorioks/id6744414264" target="_blank">Оставьте отзыв в AppStore</a></td>
   </tr>
 </table>
 
 <ul>
+  <li><strong>Финансовая поддержка</strong> – публикация приложений стоит не дешево, подписка для AppStore стоит 100$ в год. Для выражения вашей благодарности и покрытия издержек на разработку, вы можете <a href="https://www.tbank.ru/cf/2A2tfnRZDLa">перевести деньги тут</a>. Все деньги, полученные таким образом, пойдут только на разработку и поддержку BetterOrioks.
   <li><strong>Обратная связь</strong> – любые отзывы, баг-репорты и предложения по улучшению помогают сделать приложение лучше для всех студентов. Если есть идея или нашли баг – приносите в наш <a href="https://t.me/+YQD5-csbrqk4ZjEy" target="_blank">Telegram</a>.</li>
   <li><strong>Участие в разработке</strong> – если вы разбираетесь в Kotlin или хотели бы поразрабатывать мультиплатформенное мобильное приложение, смело пишите в чатик нашего <a href="https://t.me/+YQD5-csbrqk4ZjEy" target="_blank">Telegram-канала</a>, приду к вам в личку и расскажу о проекте подробнее!</li>
 </ul>
