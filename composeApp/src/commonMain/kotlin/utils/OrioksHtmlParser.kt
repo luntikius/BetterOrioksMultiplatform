@@ -151,12 +151,14 @@ class OrioksHtmlParser {
             element.select("a").forEach { link ->
                 val linkText = link.text()
                 val linkHref = link.attr("href")
-                if (linkText.isNotBlank() && linkHref.isNotBlank() &&
-                    (linkText.lowercase().trim(' ', '\n', '\t', '/') != linkHref.lowercase().trim(' ', '\n', '\t', '/'))
-                ) {
-                    paragraphText = paragraphText.replace(linkText, "$linkText$SPLITTER_SUFFIX$linkHref")
-                } else if (linkHref.isNotBlank()) {
-                    paragraphText = paragraphText.replace(linkText, linkHref)
+                if (linkText.isNotBlank() && linkHref.isNotBlank()) {
+                    if (linkText.lowercase().trim(' ', '\n', '\t', '/') !=
+                                    linkHref.lowercase().trim(' ', '\n', '\t', '/')
+                    ) {
+                        paragraphText = paragraphText.replace(linkText, "$linkText$SPLITTER_SUFFIX$linkHref")
+                    } else {
+                        paragraphText = paragraphText.replace(linkText, linkHref)
+                    }
                 }
             }
             paragraphText
