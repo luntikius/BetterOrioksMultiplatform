@@ -3,6 +3,7 @@ package utils
 import betterorioks.composeapp.generated.resources.Res
 import betterorioks.composeapp.generated.resources.files
 import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Element
 import com.fleeksoft.ksoup.nodes.Document
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format.char
@@ -86,21 +87,7 @@ class OrioksHtmlParser {
         val newsBodyElements = document.select("h3:contains(Тело новости:)")
             .first()?.nextElementSiblings()
             ?.takeWhile { it.text().trim() != "Прикреплённые файлы:" } ?: emptyList()
-        val newsBody = newsBodyElements.map { element ->
-            var paragraphText = element.text()
-            element.select("a").forEach { link ->
-                val linkText = link.text()
-                val linkHref = link.attr("href")
-                if (linkText.isNotBlank() && linkHref.isNotBlank() &&
-                    (linkText.lowercase().trim(' ', '\n', '\t', '/') != linkHref.lowercase().trim(' ', '\n', '\t', '/'))
-                ) {
-                    paragraphText = paragraphText.replace(linkText, "$linkText$SPLITTER_SUFFIX$linkHref")
-                } else if (linkHref.isNotBlank()) {
-                    paragraphText = paragraphText.replace(linkText, linkHref)
-                }
-            }
-            paragraphText
-        }
+        val newsBody = processParagraphsWithLinks(newsBodyElements)
         val files = document.select("h3:contains(Прикреплённые файлы:)")
             .first()?.nextElementSibling()?.select("a")
             ?.map { it.ownText() to it.attr("href") } ?: emptyList()
@@ -120,21 +107,7 @@ class OrioksHtmlParser {
         val subtitle = elements[4].ownText().substringAfter(": ").substringBefore(" ,")
         val date = BetterOrioksFormats.NEWS_DATE_TIME_FORMAT.parse(subtitle)
         val bodyElements = elements.getOrNull(5)?.children() ?: emptyList()
-        val newsBody = bodyElements.map { element ->
-            var paragraphText = element.text()
-            element.select("a").forEach { link ->
-                val linkText = link.text()
-                val linkHref = link.attr("href")
-                if (linkText.isNotBlank() && linkHref.isNotBlank() &&
-                    (linkText.lowercase().trim(' ', '\n', '\t', '/') != linkHref.lowercase().trim(' ', '\n', '\t', '/'))
-                ) {
-                    paragraphText = paragraphText.replace(linkText, "$linkText$SPLITTER_SUFFIX$linkHref")
-                } else if (linkHref.isNotBlank()) {
-                    paragraphText = paragraphText.replace(linkText, linkHref)
-                }
-            }
-            paragraphText
-        }
+        val newsBody = processParagraphsWithLinks(bodyElements)
 
         return NewsViewContent(
             title,
@@ -169,6 +142,24 @@ class OrioksHtmlParser {
                     )
                 )
             }
+        }
+    }
+
+    private fun processParagraphsWithLinks(elements: List<Element>): List<String> {
+        return elements.map { element ->
+            var paragraphText = element.text()
+            element.select("a").forEach { link ->
+                val linkText = link.text()
+                val linkHref = link.attr("href")
+                if (linkText.isNotBlank() && linkHref.isNotBlank() &&
+                    (linkText.lowercase().trim(' ', '\n', '\t', '/') != linkHref.lowercase().trim(' ', '\n', '\t', '/'))
+                ) {
+                    paragraphText = paragraphText.replace(linkText, "$linkText$SPLITTER_SUFFIX$linkHref")
+                } else if (linkHref.isNotBlank()) {
+                    paragraphText = paragraphText.replace(linkText, linkHref)
+                }
+            }
+            paragraphText
         }
     }
 
