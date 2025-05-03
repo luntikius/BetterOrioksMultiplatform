@@ -25,7 +25,7 @@ fun platformModule(): Module = module(createdAtStart = true) {
     single(named(SCHEDULE_DATABASE_BUILDER_NAME)) { getScheduleDatabaseBuilder(get()) }
     single(named(NOTIFICATIONS_DATABASE_BUILDER_NAME)) { getNotificationsDatabaseBuilder(get()) }
     single { createDataStore(get()) }
-    single<UrlHandler> { AndroidUrlHandler(get()) }
+    single<UrlHandler> { AndroidUrlHandler(get(), get()) }
     single<ToastHandler> { AndroidToastHandler(get()) }
     single<BufferHandler> { AndroidBufferHandler(get(), get()) }
     single<NotificationsHandler> { AndroidNotificationsHandler(get()) }
