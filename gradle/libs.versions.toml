@@ -19,7 +19,7 @@ ksp = "2.0.20-1.0.24"
 koin = "4.0.3"
 preferencesDataStore = "1.1.4"
 kSoup = "0.1.9"
-work = "2.10.0"
+work = "2.10.1"
 splash = "1.0.1"
 
 [libraries]
