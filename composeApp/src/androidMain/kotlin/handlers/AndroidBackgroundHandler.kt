@@ -2,19 +2,12 @@ package handlers
 
 import android.content.Context
 import androidx.work.Constraints
-import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.WorkerParameters
-import data.background.NewsNotificationsBackgroundTask
-import data.background.SubjectNotificationsBackgroundTask
-import model.background.BackgroundTask
 import model.background.BackgroundTaskType
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import java.util.concurrent.TimeUnit
 
 class AndroidBackgroundHandler(context: Context) : BackgroundHandler {
@@ -52,22 +45,6 @@ class AndroidBackgroundHandler(context: Context) : BackgroundHandler {
 
     companion object {
         private const val PARAM_NAME = "task_type"
-    }
-
-    class DefaultWorker(
-        context: Context,
-        workerParameters: WorkerParameters
-    ) : CoroutineWorker(context, workerParameters), KoinComponent {
-        private val taskType = BackgroundTaskType.valueOf(workerParameters.inputData.getString(PARAM_NAME)!!)
-
-        override suspend fun doWork(): Result {
-            val task: Lazy<BackgroundTask> = when (taskType) {
-                BackgroundTaskType.NewsNotifications -> inject<NewsNotificationsBackgroundTask>()
-                BackgroundTaskType.SubjectNotifications -> inject<SubjectNotificationsBackgroundTask>()
-            }
-            task.value.execute()
-            return Result.success()
-        }
     }
 }
 
