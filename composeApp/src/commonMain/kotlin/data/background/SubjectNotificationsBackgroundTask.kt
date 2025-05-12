@@ -51,6 +51,12 @@ class SubjectNotificationsBackgroundTask(
                 )
             }
         }
+        if (userPreferencesRepository.settings.first().logAllNotificationActivity) {
+            notificationsRepository.addNotification(
+                title = "SubjectNotificationBackgroudTask",
+                text = "task found ${diff.size} diff"
+            )
+        }
     }
 
     override suspend fun execute() {

@@ -34,6 +34,12 @@ class NewsNotificationsBackgroundTask(
             }
             notificationsRepository.addNotification(title, subtitle)
         }
+        if (userPreferencesRepository.settings.first().logAllNotificationActivity) {
+            notificationsRepository.addNotification(
+                title = "NewsNotificationBackgroudTask",
+                text = "task found diff: $diff"
+            )
+        }
     }
 
     override suspend fun execute() {

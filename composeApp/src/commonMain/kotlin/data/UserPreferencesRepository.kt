@@ -56,7 +56,7 @@ class UserPreferencesRepository(
     val notificationSettings: Flow<NotificationSettings> = dataStore.data.map { preferences ->
         NotificationSettings(
             isSubjectNotificationEnabled = preferences[IS_SUBJECT_NOTIFICATION_ENABLED] ?: false,
-            isNewsNotificationsEnabled = preferences[IS_NEWS_NOTIFICATION_ENABLED] ?: false
+            isNewsNotificationsEnabled = preferences[IS_NEWS_NOTIFICATION_ENABLED] ?: false,
         )
     }
 
@@ -68,7 +68,8 @@ class UserPreferencesRepository(
             coloredBorders = preferences[SETTINGS_ENABLE_COLORED_BORDERS] ?: false,
             enableIosNotifications = preferences[SETTINGS_ENABLE_IOS_NOTIFICATIONS] ?: false,
             enableForceNotification = preferences[SETTINGS_ENABLE_FORCE_NOTIFICATION] ?: true,
-            showDonationWidget = preferences[SETTINGS_SHOW_DONATION_WIDGET] ?: true
+            showDonationWidget = preferences[SETTINGS_SHOW_DONATION_WIDGET] ?: true,
+            logAllNotificationActivity = preferences[SETTINGS_LOG_ALL_NOTIFICATION_ACTIVITY] ?: false
         )
     }
 
@@ -134,6 +135,7 @@ class UserPreferencesRepository(
         }
     }
 
+
     suspend fun setTheme(theme: Theme) {
         dataStore.edit { preferences ->
             preferences[SETTINGS_THEME] = theme.name
@@ -176,6 +178,12 @@ class UserPreferencesRepository(
         }
     }
 
+    suspend fun setLogAllNotificationActivity(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[SETTINGS_LOG_ALL_NOTIFICATION_ACTIVITY] = enabled
+        }
+    }
+
     private companion object {
 
         private val CSRF = stringPreferencesKey("CSRF")
@@ -199,5 +207,6 @@ class UserPreferencesRepository(
         private val SETTINGS_ENABLE_IOS_NOTIFICATIONS = booleanPreferencesKey("SETTINGS_ENABLE_IOS_NOTIFICATIONS")
         private val SETTINGS_ENABLE_FORCE_NOTIFICATION = booleanPreferencesKey("SETTINGS_ENABLE_FORCE_NOTIFICATION")
         private val SETTINGS_SHOW_DONATION_WIDGET = booleanPreferencesKey("SETTINGS_SHOW_DONATION_WIDGET")
+         private val SETTINGS_LOG_ALL_NOTIFICATION_ACTIVITY = booleanPreferencesKey("LOG_ALL_NOTIFICATION_ACTIVITY")
     }
 }

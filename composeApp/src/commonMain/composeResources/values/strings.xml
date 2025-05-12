@@ -110,6 +110,8 @@
     <string name="settings_enable_force_notification_subtitle">При включенных уведомлениях, если настройка включена, вы будете получать уведомления обо всех событиях, включая те, которые вы уже могли видеть в приложении</string>
     <string name="settings_show_donation_widget_title">Показывать виджет поддержки</string>
     <string name="settings_show_donation_widget_subtitle">Отображать виджет для поддержки разработки приложения на экране меню</string>
+    <string name="settings_title_developer">Developer settings</string>
+    <string name="settings_log_notification_activity_title">Log all notification activity</string>
     
     <!-- Social and external links -->
     <string name="social_telegram">Telegram-канал приложения</string>

@@ -27,7 +27,8 @@ class SettingsViewModel(
                         enableColoredBorders = settings.coloredBorders,
                         enableIosNotifications = settings.enableIosNotifications,
                         enableForceNotifications = settings.enableForceNotification,
-                        showDonationWidget = settings.showDonationWidget
+                        showDonationWidget = settings.showDonationWidget,
+                        logAllNotificationActivity = settings.logAllNotificationActivity
                     )
                 }
             }
@@ -68,7 +69,7 @@ class SettingsViewModel(
         if (counter < 4) {
             counter++
         } else {
-            _uiState.update { uis -> uis.copy(showFunSettings = true) }
+            _uiState.update { uis -> uis.copy(showHiddenSettings = true) }
         }
     }
 
@@ -81,6 +82,12 @@ class SettingsViewModel(
     fun setShowDonationWidget(enabled: Boolean) {
         viewModelScope.launch {
             userPreferencesRepository.setShowDonationWidget(enabled)
+        }
+    }
+
+    fun setLogAllNotificationActivity(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setLogAllNotificationActivity(enabled)
         }
     }
 }

@@ -8,4 +8,5 @@ data class SettingsState(
     val enableIosNotifications: Boolean,
     val enableForceNotification: Boolean,
     val showDonationWidget: Boolean,
+    val logAllNotificationActivity: Boolean,
 )

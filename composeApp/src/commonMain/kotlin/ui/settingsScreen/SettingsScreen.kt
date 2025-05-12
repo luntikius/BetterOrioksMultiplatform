@@ -36,6 +36,7 @@ import betterorioks.composeapp.generated.resources.settings_enable_force_notific
 import betterorioks.composeapp.generated.resources.settings_enable_force_notification_title
 import betterorioks.composeapp.generated.resources.settings_enable_ios_notifications_subtitle
 import betterorioks.composeapp.generated.resources.settings_enable_ios_notifications_title
+import betterorioks.composeapp.generated.resources.settings_log_notification_activity_title
 import betterorioks.composeapp.generated.resources.settings_pink_mode
 import betterorioks.composeapp.generated.resources.settings_show_donation_widget_subtitle
 import betterorioks.composeapp.generated.resources.settings_show_donation_widget_title
@@ -44,6 +45,7 @@ import betterorioks.composeapp.generated.resources.settings_soften_dark_theme_ti
 import betterorioks.composeapp.generated.resources.settings_theme_dark
 import betterorioks.composeapp.generated.resources.settings_theme_light
 import betterorioks.composeapp.generated.resources.settings_theme_system
+import betterorioks.composeapp.generated.resources.settings_title_developer
 import betterorioks.composeapp.generated.resources.settings_title_fun
 import betterorioks.composeapp.generated.resources.settings_title_functionality
 import betterorioks.composeapp.generated.resources.theme
@@ -82,7 +84,7 @@ fun SettingsScreen(
             SettingsTitle(stringResource(Res.string.theme))
             ThemeButtons(viewModel)
             FunctionalitySettings(viewModel)
-            FunSettings(viewModel)
+            HiddenSettings(viewModel)
             XLargeSpacer()
             BuildInfo(
                 onClick = viewModel::onBuildNumberClick
@@ -182,34 +184,65 @@ fun FunctionalitySettings(
 }
 
 @Composable
-fun FunSettings(
+fun HiddenSettings(
     viewModel: SettingsViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     Column(
         modifier = Modifier.animateContentSize().fillMaxWidth()
     ) {
-        if (uiState.showFunSettings) {
-            LargeSpacer()
-            SettingsTitle(
-                text = stringResource(Res.string.settings_title_fun)
+        if (uiState.showHiddenSettings) {
+            FunSettings(
+                uiState = uiState,
+                viewModel = viewModel,
             )
-            SettingsItem(
-                isChecked = uiState.pinkMode,
-                onClick = viewModel::setPinkMode,
-                title = stringResource(Res.string.settings_pink_mode)
+            DeveloperSettings(
+                uiState = uiState,
+                viewModel = viewModel,
             )
-            if (getPlatform().os == PlatformOs.Ios) {
-                LargeSpacer()
-                SettingsItem(
-                    isChecked = uiState.enableIosNotifications,
-                    onClick = viewModel::setEnableIosNotifications,
-                    title = stringResource(Res.string.settings_enable_ios_notifications_title),
-                    subtitle = stringResource(Res.string.settings_enable_ios_notifications_subtitle)
-                )
-            }
         }
     }
+}
+
+@Composable
+fun FunSettings(
+    uiState: SettingsUiState,
+    viewModel: SettingsViewModel
+) {
+    LargeSpacer()
+    SettingsTitle(
+        text = stringResource(Res.string.settings_title_fun)
+    )
+    SettingsItem(
+        isChecked = uiState.pinkMode,
+        onClick = viewModel::setPinkMode,
+        title = stringResource(Res.string.settings_pink_mode)
+    )
+    if (getPlatform().os == PlatformOs.Ios) {
+        LargeSpacer()
+        SettingsItem(
+            isChecked = uiState.enableIosNotifications,
+            onClick = viewModel::setEnableIosNotifications,
+            title = stringResource(Res.string.settings_enable_ios_notifications_title),
+            subtitle = stringResource(Res.string.settings_enable_ios_notifications_subtitle)
+        )
+    }
+}
+
+@Composable
+fun DeveloperSettings(
+    uiState: SettingsUiState,
+    viewModel: SettingsViewModel
+) {
+    LargeSpacer()
+    SettingsTitle(
+        text = stringResource(Res.string.settings_title_developer)
+    )
+    SettingsItem(
+        isChecked = uiState.logAllNotificationActivity,
+        onClick = viewModel::setLogAllNotificationActivity,
+        title = stringResource(Res.string.settings_log_notification_activity_title),
+    )
 }
 
 @Composable
